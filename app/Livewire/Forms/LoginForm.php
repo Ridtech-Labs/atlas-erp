@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Core\Shared\Enums\UserStatus;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -40,7 +41,31 @@ class LoginForm extends Form
 
         $user = Auth::user();
 
-        if (! $user || ! $user->isActive()) {
+        if (! $user) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'form.email' => trans('auth.failed'),
+            ]);
+        }
+
+        if ($user->tenant === null || ! $user->tenant->is_active) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'form.email' => 'Your company account is not active.',
+            ]);
+        }
+
+        if ($user->isSuspended()) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'form.email' => 'Your account is suspended.',
+            ]);
+        }
+
+        if ($user->isInactive() || $user->getRawOriginal('status') === UserStatus::Invited->value) {
             Auth::logout();
 
             throw ValidationException::withMessages([
@@ -48,11 +73,19 @@ class LoginForm extends Form
             ]);
         }
 
-        $user->forceFill(['last_login_at' => now()])->save();
+        $user->forceFill([
+            'last_login_at' => now(),
+            'last_login_ip' => request()->ip(),
+        ])->save();
+
         activity('auth')
             ->causedBy($user)
             ->performedOn($user)
-            ->withProperties(['ip_address' => request()->ip()])
+            ->withProperties([
+                'tenant_id' => $user->tenant_id,
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
+            ])
             ->event('login')
             ->log('User logged in');
 

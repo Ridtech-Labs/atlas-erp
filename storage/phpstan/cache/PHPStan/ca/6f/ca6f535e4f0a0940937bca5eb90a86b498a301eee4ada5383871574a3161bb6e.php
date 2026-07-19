@@ -20,7 +20,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'model' => 'Illuminate\\Database\\Eloquent\\Model',
           'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
           'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
           'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
           'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
@@ -8512,6 +8514,1009 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           4 => NULL,
         ),
       )),
+      'fff6c6064e4aae12ba154301190da2d3' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => NULL,
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '5503bc11f712516a75697d901a782358' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'bootSoftDeletes',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '304c2a25eec4f48674429ddd52303060' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'initializeSoftDeletes',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'c7f2a3c98d323ce43553fc138791f949' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'forceDelete',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'fb438fd19dc2ca5a5fc9b7f8106a5bc0' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'forceDeleteQuietly',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '8c7ae970f750594b5ce072b8386e5ec2' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'forceDestroy',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'd1e0155704d76a4260d25bde8d9f9362' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'performDeleteOnModel',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '074f16338288af9576e11a4c9feabc30' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'runSoftDelete',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'faf55a665dec5cb00c2e1bcde89d1641' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'restore',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'd95ac11af8bca722ed5fb131d5529694' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'restoreQuietly',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'b5051ca202c66fb032b8af1b27f8c939' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'trashed',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '1d7e45b50c48e0435bf7bb812b15a16f' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'softDeleted',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'a17ee0eaf5e5e49c4f0b4756e92f81b4' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'restoring',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'bf6a398f286ccc8fb2f469061a63c4f7' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'restored',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'a572603f6c4938546b4a5848fe6ad13c' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'forceDeleting',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'bbe7be7ff0fd914615e5876ed33bf198' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'forceDeleted',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '87f1638d7681bc2c32c7b56d2519c9e8' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'isForceDeleting',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '30f95b5c006ec800eb3aefae7af83587' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'getDeletedAtColumn',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '004e0e79adee21a1a5f55ccf5e5c555c' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'getQualifiedDeletedAtColumn',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+          1 => 'App\\Core\\Tenancy\\Models\\Tenant',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
       'f71593c9e029a705b681828976e5e62b' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Core\\Tenancy\\Models',
@@ -8525,7 +9530,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'model' => 'Illuminate\\Database\\Eloquent\\Model',
           'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
           'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
           'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
           'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
@@ -8559,7 +9566,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'model' => 'Illuminate\\Database\\Eloquent\\Model',
           'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
           'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
           'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
           'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
@@ -8593,7 +9602,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'model' => 'Illuminate\\Database\\Eloquent\\Model',
           'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
           'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
           'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
           'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
@@ -8627,7 +9638,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'model' => 'Illuminate\\Database\\Eloquent\\Model',
           'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
           'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
           'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
           'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
@@ -8661,7 +9674,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'model' => 'Illuminate\\Database\\Eloquent\\Model',
           'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
           'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
           'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
           'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
@@ -8682,14 +9697,87 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      '5d6176d37c9fbf0a476769e3f2264ecf' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Core\\Tenancy\\Models',
+         'uses' => 
+        array (
+          'setting' => 'App\\Core\\Settings\\Models\\Setting',
+          'haspublicuuid' => 'App\\Core\\Shared\\Concerns\\HasPublicUuid',
+          'tenantstatus' => 'App\\Core\\Shared\\Enums\\TenantStatus',
+          'user' => 'App\\Models\\User',
+          'tenantfactory' => 'Database\\Factories\\TenantFactory',
+          'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
+          'model' => 'Illuminate\\Database\\Eloquent\\Model',
+          'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
+          'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
+          'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
+          'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'tapActivity',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '65f89e044904bff01beb9085308f6f61' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Core\\Tenancy\\Models',
+         'uses' => 
+        array (
+          'setting' => 'App\\Core\\Settings\\Models\\Setting',
+          'haspublicuuid' => 'App\\Core\\Shared\\Concerns\\HasPublicUuid',
+          'tenantstatus' => 'App\\Core\\Shared\\Enums\\TenantStatus',
+          'user' => 'App\\Models\\User',
+          'tenantfactory' => 'Database\\Factories\\TenantFactory',
+          'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
+          'model' => 'Illuminate\\Database\\Eloquent\\Model',
+          'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'activity' => 'Spatie\\Activitylog\\Models\\Activity',
+          'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
+          'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
+          'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'getIsActiveAttribute',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php' => '69f0a78c298337b8ae9086cd67e33dba0a5e8364a60254abe709cbc08f248ebf',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php' => '17d523b2b445d5cd361c1dec5010f18384cb003b1a90a491241fb1a93153108d',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Database/Eloquent/Factories/HasFactory.php' => 'b6cb2b164e90168e80963a5549541f5f3188a3ec8cfd368bf3611bd94fbd46a7',
       '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Concerns/HasPublicUuid.php' => '1864d5eaaf5f956d8a05319d7daab1259fe5751202d6234020b604c7a0f433cf',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../spatie/laravel-medialibrary/src/InteractsWithMedia.php' => '2fa4c26f5b3757892fb1f79083cefb514993dbef90e48da37597f36e834ace33',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../spatie/laravel-activitylog/src/Traits/LogsActivity.php' => '405d0dcd20bf1b8ce7c5365c9f79b4a46a0e29b75a8e796eecd9a0ca8c766b62',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Database/Eloquent/SoftDeletes.php' => 'da1b0c13d78ba2f62e97e5627c3149f4e81b9cf9b6092d4ca7f02ca5e5bbcfec',
     ),
   ),
 ));

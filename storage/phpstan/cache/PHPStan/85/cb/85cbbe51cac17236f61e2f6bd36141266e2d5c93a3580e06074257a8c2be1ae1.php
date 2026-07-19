@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Administration\Filament\Widgets\CurrentContextWidget
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-7e73d359f3509b080d85433d3a29a0fd856c20226918dc612c66e9ac4b4bf494',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-728e54f0ba5a83984fe46022e3e56b6cc701cc11c086df731073b7715479c2c5',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 11,
-    'endLine' => 32,
+    'startLine' => 13,
+    'endLine' => 45,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Filament\\Widgets\\StatsOverviewWidget',
@@ -65,8 +65,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 13,
-        'endLine' => 31,
+        'startLine' => 15,
+        'endLine' => 44,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

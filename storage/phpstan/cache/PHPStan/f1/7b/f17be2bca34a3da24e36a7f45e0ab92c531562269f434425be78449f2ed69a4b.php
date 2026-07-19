@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Enums/UserStatus.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Shared\Enums\UserStatus
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-03c9a99a515c97baec5f596354056ee003b0821f655cf9ca154ddb6a92994feb',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-0a0106b7879f706d7a15347ecf4fdae1caaad95166273acde5b220984f026ad6',
    'data' => 
   array (
     'locatedSource' => 
@@ -27,7 +27,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 7,
-    'endLine' => 12,
+    'endLine' => 13,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => NULL,
@@ -418,6 +418,31 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'endLine' => 11,
         'startColumn' => 5,
         'endColumn' => 33,
+      ),
+      'Invited' => 
+      array (
+        'name' => 'Invited',
+        'value' => 
+        array (
+          'code' => '\'invited\'',
+          'attributes' => 
+          array (
+            'startLine' => 12,
+            'endLine' => 12,
+            'startTokenPos' => 57,
+            'startFilePos' => 206,
+            'endTokenPos' => 57,
+            'endFilePos' => 214,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 12,
+        'endLine' => 12,
+        'startColumn' => 5,
+        'endColumn' => 29,
       ),
     ),
   ),

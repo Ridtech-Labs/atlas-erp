@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/Filament/AdminPanelProvider.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Providers\Filament\AdminPanelProvider
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-9a739a6d5922c75494f35bde2eaa281ce8128719efcacaf01ef18201ca6be952',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-ce03124f4234a13268c7aacc967b38a41f9e182a40ffac6d09969f156e842ab7',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 21,
-    'endLine' => 58,
+    'startLine' => 23,
+    'endLine' => 62,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Filament\\PanelProvider',
@@ -69,8 +69,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 23,
-            'endLine' => 23,
+            'startLine' => 25,
+            'endLine' => 25,
             'startColumn' => 27,
             'endColumn' => 38,
             'parameterIndex' => 0,
@@ -91,8 +91,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 23,
-        'endLine' => 57,
+        'startLine' => 25,
+        'endLine' => 61,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

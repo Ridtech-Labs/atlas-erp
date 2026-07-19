@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Tenancy\Models\Tenant
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-69f0a78c298337b8ae9086cd67e33dba0a5e8364a60254abe709cbc08f248ebf',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-17d523b2b445d5cd361c1dec5010f18384cb003b1a90a491241fb1a93153108d',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 20,
-    'endLine' => 74,
+    'startLine' => 22,
+    'endLine' => 100,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Model',
@@ -41,6 +41,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       1 => 'App\\Core\\Shared\\Concerns\\HasPublicUuid',
       2 => 'Spatie\\MediaLibrary\\InteractsWithMedia',
       3 => 'Spatie\\Activitylog\\Traits\\LogsActivity',
+      4 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
     ),
     'immediateConstants' => 
     array (
@@ -56,23 +57,58 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'type' => NULL,
         'default' => 
         array (
-          'code' => '[\'uuid\', \'name\', \'slug\', \'timezone\', \'currency\', \'status\', \'logo_path\']',
+          'code' => '[\'uuid\', \'name\', \'slug\', \'email\', \'phone\', \'timezone\', \'currency\', \'status\', \'logo_path\', \'address\', \'city\', \'country\']',
           'attributes' => 
           array (
-            'startLine' => 29,
-            'endLine' => 37,
-            'startTokenPos' => 117,
-            'startFilePos' => 767,
-            'endTokenPos' => 140,
-            'endFilePos' => 900,
+            'startLine' => 32,
+            'endLine' => 45,
+            'startTokenPos' => 132,
+            'startFilePos' => 874,
+            'endTokenPos' => 170,
+            'endFilePos' => 1095,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 29,
-        'endLine' => 37,
+        'startLine' => 32,
+        'endLine' => 45,
+        'startColumn' => 5,
+        'endColumn' => 6,
+        'isPromoted' => false,
+        'declaredAtCompileTime' => true,
+        'immediateVirtual' => false,
+        'immediateHooks' => 
+        array (
+        ),
+      ),
+      'appends' => 
+      array (
+        'declaringClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'implementingClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'name' => 'appends',
+        'modifiers' => 2,
+        'type' => NULL,
+        'default' => 
+        array (
+          'code' => '[\'is_active\']',
+          'attributes' => 
+          array (
+            'startLine' => 47,
+            'endLine' => 49,
+            'startTokenPos' => 179,
+            'startFilePos' => 1124,
+            'endTokenPos' => 184,
+            'endFilePos' => 1151,
+          ),
+        ),
+        'docComment' => NULL,
+        'attributes' => 
+        array (
+        ),
+        'startLine' => 47,
+        'endLine' => 49,
         'startColumn' => 5,
         'endColumn' => 6,
         'isPromoted' => false,
@@ -105,8 +141,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 39,
-        'endLine' => 44,
+        'startLine' => 51,
+        'endLine' => 56,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -140,8 +176,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 46,
-        'endLine' => 49,
+        'startLine' => 58,
+        'endLine' => 61,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -177,8 +213,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * @return HasMany<User, $this>
  */',
-        'startLine' => 54,
-        'endLine' => 57,
+        'startLine' => 66,
+        'endLine' => 69,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -214,8 +250,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * @return HasMany<Setting, $this>
  */',
-        'startLine' => 62,
-        'endLine' => 65,
+        'startLine' => 74,
+        'endLine' => 77,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -249,8 +285,130 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 67,
-        'endLine' => 73,
+        'startLine' => 79,
+        'endLine' => 85,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Core\\Tenancy\\Models',
+        'declaringClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'implementingClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'currentClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'aliasName' => NULL,
+      ),
+      'tapActivity' => 
+      array (
+        'name' => 'tapActivity',
+        'parameters' => 
+        array (
+          'activity' => 
+          array (
+            'name' => 'activity',
+            'default' => NULL,
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'Spatie\\Activitylog\\Models\\Activity',
+                'isIdentifier' => false,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 87,
+            'endLine' => 87,
+            'startColumn' => 33,
+            'endColumn' => 50,
+            'parameterIndex' => 0,
+            'isOptional' => false,
+          ),
+          'eventName' => 
+          array (
+            'name' => 'eventName',
+            'default' => NULL,
+            'type' => 
+            array (
+              'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+              'data' => 
+              array (
+                'name' => 'string',
+                'isIdentifier' => true,
+              ),
+            ),
+            'isVariadic' => false,
+            'byRef' => false,
+            'isPromoted' => false,
+            'attributes' => 
+            array (
+            ),
+            'startLine' => 87,
+            'endLine' => 87,
+            'startColumn' => 53,
+            'endColumn' => 69,
+            'parameterIndex' => 1,
+            'isOptional' => false,
+          ),
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'void',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 87,
+        'endLine' => 94,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Core\\Tenancy\\Models',
+        'declaringClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'implementingClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'currentClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'aliasName' => NULL,
+      ),
+      'getIsActiveAttribute' => 
+      array (
+        'name' => 'getIsActiveAttribute',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'bool',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 96,
+        'endLine' => 99,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php-PHPStan\BetterReflection\Reflection\ReflectionClass-Database\Seeders\DatabaseSeeder
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-a138abeb3fdf2cc1ffc689df4df9fb12de96174232dc58760f5ed4c0dd513245',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-81fcced5e3add79d36bbbb367a45ab19f69bb2df2200ad2df6a495b5ddd596c4',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 15,
-    'endLine' => 97,
+    'startLine' => 14,
+    'endLine' => 94,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Seeder',
@@ -68,8 +68,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Seed the application\'s database.
  */',
-        'startLine' => 22,
-        'endLine' => 96,
+        'startLine' => 21,
+        'endLine' => 93,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
