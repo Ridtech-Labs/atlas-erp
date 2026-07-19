@@ -1,0 +1,73 @@
+name: ci
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_DB: atlas_erp_test
+          POSTGRES_USER: atlas
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U atlas -d atlas_erp_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: mbstring, pdo_pgsql, redis, intl, zip
+          coverage: none
+
+      - name: Copy environment
+        run: cp .env.example .env
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Generate app key
+        run: php artisan key:generate
+
+      - name: Run migrations
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: atlas_erp_test
+          DB_USERNAME: atlas
+          DB_PASSWORD: secret
+          CACHE_STORE: redis
+          QUEUE_CONNECTION: redis
+          REDIS_HOST: 127.0.0.1
+        run: php artisan migrate --force
+
+      - name: Run Pint
+        run: composer pint
+
+      - name: Run PHPStan
+        run: composer analyse
+
+      - name: Run Pest
+        run: php artisan test
+
+      - name: Build Docker image
+        run: docker build -f docker/php/Dockerfile .
