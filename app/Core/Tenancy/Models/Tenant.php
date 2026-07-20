@@ -48,6 +48,11 @@ class Tenant extends Model implements HasMedia
         return TenantFactory::new();
     }
 
+    public function isActive(): bool
+    {
+        return $this->getRawOriginal('status') === TenantStatus::Active->value;
+    }
+
     /**
      * @return HasMany<User, $this>
      */

@@ -33,7 +33,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/routes/web.php' => 
     array (
-      0 => '92926310045a14d98f87b955372cd905902bbbb38198fc19ee9e9281e6babe45',
+      0 => 'acc675a952685ea820c626df2842288f94b9d43e96a221cc57892d51b0cf9357',
       1 => 
       array (
       ),

@@ -21,6 +21,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
           'notifiable' => 'Illuminate\\Notifications\\Notifiable',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -11235,6 +11236,1009 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           4 => NULL,
         ),
       )),
+      '11e58b158f171f79ec85afea9081b1da' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => NULL,
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'e9dad921297f01ab88a43be66418bd02' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'bootSoftDeletes',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'c9b912b0a292776da0d56461307e287a' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'initializeSoftDeletes',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '9cde67cc46a94e013f748f4695919b47' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'forceDelete',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'aebcd379bba95288e7e73d3328cac343' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'forceDeleteQuietly',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '364b455de54586d264edf90c2fcddd5b' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'forceDestroy',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '318bf5225d744b32a6d8883ab844a608' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'performDeleteOnModel',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '36003dc6283a0c84d6e5362ae7e127c5' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'runSoftDelete',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '78c27a25c9321e6b8ca0bc3cb5999e32' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'restore',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '9b5902e882d7ed1a9e47b691113beb26' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'restoreQuietly',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'e514093f15365ac00eda8cec67611d5c' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'trashed',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'fb417ea36cae95f739b3eb476aca24f7' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'softDeleted',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '414a1066725604b3c8ac7d5ccd67462f' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'restoring',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '86200957feed25346e17da5729ce00b0' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'restored',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'b8b11ec76909be5d166aec3df7243201' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'forceDeleting',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      'd6412003ad7ca54a737b9d524f7533c5' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'forceDeleted',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '367f21a850ae5961ebc771e21392c5a6' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'isForceDeleting',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '95335c1c4176ef754117075c17c849ca' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'getDeletedAtColumn',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
+      '84605a316a5d66c9cc5a978969973417' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'Illuminate\\Database\\Eloquent',
+         'uses' => 
+        array (
+          'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+          'basecollection' => 'Illuminate\\Support\\Collection',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'getQualifiedDeletedAtColumn',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => 
+        \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+           'namespace' => 'Illuminate\\Database\\Eloquent',
+           'uses' => 
+          array (
+            'eloquentcollection' => 'Illuminate\\Database\\Eloquent\\Collection',
+            'basecollection' => 'Illuminate\\Support\\Collection',
+          ),
+           'className' => 'App\\Models\\User',
+           'functionName' => NULL,
+           'templatePhpDocNodes' => 
+          array (
+          ),
+           'parent' => NULL,
+           'typeAliasesMap' => 
+          array (
+          ),
+           'bypassTypeAliases' => false,
+           'constUses' => 
+          array (
+          ),
+           'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+           'traitData' => NULL,
+        )),
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+         'traitData' => 
+        array (
+          0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+          1 => 'App\\Models\\User',
+          2 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          3 => NULL,
+          4 => NULL,
+        ),
+      )),
       '69e9848c344f72154fc9b8298961515a' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Models',
@@ -11249,6 +12253,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
           'notifiable' => 'Illuminate\\Notifications\\Notifiable',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -11287,6 +12292,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
           'notifiable' => 'Illuminate\\Notifications\\Notifiable',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -11325,6 +12331,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
           'notifiable' => 'Illuminate\\Notifications\\Notifiable',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -11363,6 +12370,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
           'notifiable' => 'Illuminate\\Notifications\\Notifiable',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -11401,6 +12409,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
           'notifiable' => 'Illuminate\\Notifications\\Notifiable',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -11411,6 +12420,84 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
          'className' => 'App\\Models\\User',
          'functionName' => 'isActive',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      'b34d48091d5521bac4558d71533179d6' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Models',
+         'uses' => 
+        array (
+          'haspublicuuid' => 'App\\Core\\Shared\\Concerns\\HasPublicUuid',
+          'userstatus' => 'App\\Core\\Shared\\Enums\\UserStatus',
+          'tenant' => 'App\\Core\\Tenancy\\Models\\Tenant',
+          'userfactory' => 'Database\\Factories\\UserFactory',
+          'filamentuser' => 'Filament\\Models\\Contracts\\FilamentUser',
+          'panel' => 'Filament\\Panel',
+          'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
+          'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
+          'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
+          'notifiable' => 'Illuminate\\Notifications\\Notifiable',
+          'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
+          'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
+          'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
+          'hasroles' => 'Spatie\\Permission\\Traits\\HasRoles',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'isInactive',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
+      '7bef422948c0fe7ded02a39e00d05d5d' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Models',
+         'uses' => 
+        array (
+          'haspublicuuid' => 'App\\Core\\Shared\\Concerns\\HasPublicUuid',
+          'userstatus' => 'App\\Core\\Shared\\Enums\\UserStatus',
+          'tenant' => 'App\\Core\\Tenancy\\Models\\Tenant',
+          'userfactory' => 'Database\\Factories\\UserFactory',
+          'filamentuser' => 'Filament\\Models\\Contracts\\FilamentUser',
+          'panel' => 'Filament\\Panel',
+          'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
+          'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
+          'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
+          'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
+          'notifiable' => 'Illuminate\\Notifications\\Notifiable',
+          'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
+          'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
+          'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
+          'hasroles' => 'Spatie\\Permission\\Traits\\HasRoles',
+        ),
+         'className' => 'App\\Models\\User',
+         'functionName' => 'isSuspended',
          'templatePhpDocNodes' => 
         array (
         ),
@@ -11439,6 +12526,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
           'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
           'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+          'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
           'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
           'notifiable' => 'Illuminate\\Notifications\\Notifiable',
           'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -11466,7 +12554,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php' => 'dfcfdb8ddabbc1d6a9bfc60b7a2f25df4ddf42392d1a887a6c3762d87940fa53',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php' => 'f25acd495fbccfadc247e69ebd83b21221370f745cd3e6fa3ba1e75eb13ce427',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Database/Eloquent/Factories/HasFactory.php' => 'b6cb2b164e90168e80963a5549541f5f3188a3ec8cfd368bf3611bd94fbd46a7',
       '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Concerns/HasPublicUuid.php' => '1864d5eaaf5f956d8a05319d7daab1259fe5751202d6234020b604c7a0f433cf',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../spatie/laravel-permission/src/Traits/HasRoles.php' => '3412a3f50444dd6c8a836b56c96c8cb47d0c197faad8e0e2963d94326f2fac9a',
@@ -11476,6 +12564,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Notifications/Notifiable.php' => '573fa9bb96fa392434450c9cd9deb8d4e40a5bb93c140a648267b48dfa0433ac',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Notifications/HasDatabaseNotifications.php' => 'a7a163aa1f98a0ae4cd2135905b6852e29a850beb4296aa72c44c37d22832135',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Notifications/RoutesNotifications.php' => '82891713db67f6df9ea3b400c9905d26da7834b51d26f53dd3bdb1d7f6a78497',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Database/Eloquent/SoftDeletes.php' => 'da1b0c13d78ba2f62e97e5627c3149f4e81b9cf9b6092d4ca7f02ca5e5bbcfec',
     ),
   ),
 ));

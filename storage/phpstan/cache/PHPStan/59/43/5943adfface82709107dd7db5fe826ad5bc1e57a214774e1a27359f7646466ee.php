@@ -22,7 +22,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php' => 
     array (
-      0 => '4f17f4662b0d802ea8070939f9d3b3883074e413ab91358cfcfa31e0a0b7917c',
+      0 => '9772cf23677121bd1878cae1f1bf62b6eeccf561092cfed1dd652e09f65b6d44',
       1 => 
       array (
         0 => 'database\\factories\\userfactory',

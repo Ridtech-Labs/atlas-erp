@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Http\Controllers\Auth\VerifyEmailController
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-5f6080a239709740135d9138085ceb1857c5570a0fea35e62c976fc90929631e',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-e876c0f8e1784a19c7aeba5aa5ea0816256d452e64bea9952b360e3501b5a945',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 10,
-    'endLine' => 27,
+    'startLine' => 11,
+    'endLine' => 32,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'App\\Http\\Controllers\\Controller',
@@ -69,8 +69,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 15,
-            'endLine' => 15,
+            'startLine' => 16,
+            'endLine' => 16,
             'startColumn' => 30,
             'endColumn' => 62,
             'parameterIndex' => 0,
@@ -93,8 +93,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Mark the authenticated user\'s email address as verified.
  */',
-        'startLine' => 15,
-        'endLine' => 26,
+        'startLine' => 16,
+        'endLine' => 31,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

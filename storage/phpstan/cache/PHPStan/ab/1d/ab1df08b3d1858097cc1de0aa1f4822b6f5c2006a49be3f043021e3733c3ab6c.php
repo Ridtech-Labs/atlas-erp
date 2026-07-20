@@ -5,97 +5,6 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
    'variableKey' => 'v1-enums',
    'data' => 
   array (
-    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Auth/AuthenticationTest.php' => 
-    array (
-      0 => '499f90c806a5e66ee38bea86e7d0e13efef76de090c71116c994b019353b0d96',
-      1 => 
-      array (
-      ),
-      2 => 
-      array (
-      ),
-      3 => 
-      array (
-      ),
-    ),
-    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Auth/EmailVerificationTest.php' => 
-    array (
-      0 => '30f75cbcf10852091b47cd4482673da4c4aa2e20db87350e23e759e4f0bf1d21',
-      1 => 
-      array (
-      ),
-      2 => 
-      array (
-      ),
-      3 => 
-      array (
-      ),
-    ),
-    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Auth/PasswordConfirmationTest.php' => 
-    array (
-      0 => '4d4323e2a44ea20f4ff8ae2e68ffb326662758cfd77b9ff8c65db1a268950041',
-      1 => 
-      array (
-      ),
-      2 => 
-      array (
-      ),
-      3 => 
-      array (
-      ),
-    ),
-    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Auth/PasswordResetTest.php' => 
-    array (
-      0 => '97ed68908fbb6ede6dbe4b2211970e29acf2c1027e2334485d9e073a7ec67497',
-      1 => 
-      array (
-      ),
-      2 => 
-      array (
-      ),
-      3 => 
-      array (
-      ),
-    ),
-    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Auth/PasswordUpdateTest.php' => 
-    array (
-      0 => '4a7d26da7964449e3aa92802acbb72e8908644c555877068bf8b6b6db9faedcb',
-      1 => 
-      array (
-      ),
-      2 => 
-      array (
-      ),
-      3 => 
-      array (
-      ),
-    ),
-    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Auth/RegistrationTest.php' => 
-    array (
-      0 => 'befaeb63b108fd4bd9b08dd0a71e697ee891685448f61a67f46930103dc44e9c',
-      1 => 
-      array (
-      ),
-      2 => 
-      array (
-      ),
-      3 => 
-      array (
-      ),
-    ),
-    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Authorization/PermissionEnforcementTest.php' => 
-    array (
-      0 => 'b2618a03486a66010af498397c8d567ce1ab34915489a632861334e438b8a450',
-      1 => 
-      array (
-      ),
-      2 => 
-      array (
-      ),
-      3 => 
-      array (
-      ),
-    ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/ExampleTest.php' => 
     array (
       0 => 'bc0ee036fceec475a1430f297305229e94d6a75817adf86bb7b464724ba63f08',
@@ -111,7 +20,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/ProfileTest.php' => 
     array (
-      0 => 'c51a2e3504b4fab4dbe71ba3515f79e4d2bb3ff7b1c5d4e48b96561e5945b84b',
+      0 => '6bb01e7c0f497715742498f55a35a9451e08db73c0c16ed1c82726f993635b1f',
       1 => 
       array (
       ),
@@ -124,7 +33,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Tenancy/TenantIsolationTest.php' => 
     array (
-      0 => 'cb89193058e2c1fff33a0a9ec8b8d6da59f448a8160c3db197f0d9d660748d25',
+      0 => 'bea16e625ba38a73c8821b84d86f9c73660cad7c548c5bcde40b1357015cc1d6',
       1 => 
       array (
       ),
@@ -137,13 +46,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Pest.php' => 
     array (
-      0 => '4219a474d11fe6dfeea61d27ec76eb3c65736f395ec28e6510ff0df472a70a6f',
+      0 => 'dfbaab09cdee8157230ad1a0f5e4b2ba9c8feeb197a67e96ae55ba785e40b954',
       1 => 
       array (
       ),
       2 => 
       array (
-        0 => 'something',
       ),
       3 => 
       array (
@@ -151,13 +59,18 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/tests/TestCase.php' => 
     array (
-      0 => 'c7c209f5579c42647c1f7b2a79ac828e8b54ac62a98442045a6e94fa2c0d0ebc',
+      0 => '40404ebd78da6e2bc79054a870581e278b39c4f8bf48bf21d94e89c61bfc7c13',
       1 => 
       array (
         0 => 'tests\\testcase',
       ),
       2 => 
       array (
+        0 => 'tests\\seedaccesscontrol',
+        1 => 'tests\\tenant',
+        2 => 'tests\\tenantuser',
+        3 => 'tests\\actingasrole',
+        4 => 'tests\\actingascompanyadministrator',
       ),
       3 => 
       array (
@@ -171,6 +84,179 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       ),
       2 => 
       array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/CreatesApplication.php' => 
+    array (
+      0 => '02ba8ca4af1e7170ebfe540c639b338f4b6389e621397cbfaf4222efcc16f45f',
+      1 => 
+      array (
+        0 => 'tests\\createsapplication',
+      ),
+      2 => 
+      array (
+        0 => 'tests\\createapplication',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Administration/AdministrationActionsTest.php' => 
+    array (
+      0 => '4ad84c125f4d3eeaa84f29401a3be72cac1f4fbab1d5822c3f5ce4fb1ad53bd3',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Administration/PermissionEnforcementTest.php' => 
+    array (
+      0 => 'b2618a03486a66010af498397c8d567ce1ab34915489a632861334e438b8a450',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Authentication/AuthenticationTest.php' => 
+    array (
+      0 => 'fe33ce9c8614ce61956b740436787c0494eacf15b333456862c41606b6373f9c',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Authentication/EmailVerificationTest.php' => 
+    array (
+      0 => 'fb5a69ec14324f165297dcf2a8140d99352fe57dae8817946a0ddfe16d773253',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Authentication/PasswordConfirmationTest.php' => 
+    array (
+      0 => '4d4323e2a44ea20f4ff8ae2e68ffb326662758cfd77b9ff8c65db1a268950041',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Authentication/PasswordResetTest.php' => 
+    array (
+      0 => '97ed68908fbb6ede6dbe4b2211970e29acf2c1027e2334485d9e073a7ec67497',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Authentication/PasswordUpdateTest.php' => 
+    array (
+      0 => '4a7d26da7964449e3aa92802acbb72e8908644c555877068bf8b6b6db9faedcb',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Authentication/RegistrationTest.php' => 
+    array (
+      0 => 'befaeb63b108fd4bd9b08dd0a71e697ee891685448f61a67f46930103dc44e9c',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Health/HealthTest.php' => 
+    array (
+      0 => 'c00f443713781a216704f96484daacce1d7f3191933e2853d6368ba87b19c5c3',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Settings/SettingsTest.php' => 
+    array (
+      0 => 'd5be5ddfbb9ab57f63501d31307dc39fa7867eb05ce84b1b7839ebe03ad068f9',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Feature/Tenancy/TenantAuthorizationTest.php' => 
+    array (
+      0 => '92a5759d0f7a298049c5157edf0a685583acc67e53d97c822d9fa333b8222bcd',
+      1 => 
+      array (
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/tests/Support/InteractsWithAtlas.php' => 
+    array (
+      0 => '65b39bad5d2a3eac9b0dcdf4e99e36cc8b5ffbe179f34c34664a173f9e43f839',
+      1 => 
+      array (
+        0 => 'tests\\support\\interactswithatlas',
+      ),
+      2 => 
+      array (
+        0 => 'tests\\support\\settenantcontext',
       ),
       3 => 
       array (

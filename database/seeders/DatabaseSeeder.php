@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Administration\Enums\RoleName;
 use App\Core\Settings\DTOs\SettingData;
 use App\Core\Settings\Services\SettingService;
 use App\Core\Tenancy\Models\Tenant;
@@ -9,8 +10,7 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,10 +21,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(RoleAndPermissionSeeder::class);
+
         DB::transaction(function (): void {
             $tenant = Tenant::query()->firstOrCreate(
                 ['slug' => 'atlas-demo'],
                 [
+                    'uuid' => (string) Str::uuid(),
                     'name' => 'Atlas Demo Company',
                     'timezone' => 'Africa/Accra',
                     'currency' => 'GHS',
@@ -32,41 +35,10 @@ class DatabaseSeeder extends Seeder
                 ],
             );
 
-            $permissions = collect([
-                'users.view',
-                'users.create',
-                'users.update',
-                'users.delete',
-                'companies.view',
-                'companies.update',
-                'roles.manage',
-                'permissions.manage',
-                'settings.manage',
-                'dashboard.view',
-            ])->map(fn (string $permission) => Permission::query()->firstOrCreate(['name' => $permission, 'guard_name' => 'web']));
-
-            $roles = [
-                'Super Administrator',
-                'Company Administrator',
-                'Operations Manager',
-                'Finance Manager',
-                'Fleet Manager',
-                'Warehouse Manager',
-                'HR Manager',
-                'Standard User',
-            ];
-
-            foreach ($roles as $roleName) {
-                $role = Role::query()->firstOrCreate(['name' => $roleName, 'guard_name' => 'web']);
-
-                if (in_array($roleName, ['Super Administrator', 'Company Administrator'], true)) {
-                    $role->syncPermissions($permissions);
-                }
-            }
-
             $admin = User::query()->firstOrCreate(
                 ['email' => 'admin@atlas-erp.test'],
                 [
+                    'uuid' => (string) Str::uuid(),
                     'tenant_id' => $tenant->id,
                     'first_name' => 'Atlas',
                     'last_name' => 'Administrator',
@@ -77,7 +49,7 @@ class DatabaseSeeder extends Seeder
                 ],
             );
 
-            $admin->syncRoles(['Super Administrator']);
+            $admin->syncRoles([RoleName::SuperAdministrator->value]);
 
             app(SettingService::class)->update(new SettingData(
                 tenantId: $tenant->id,

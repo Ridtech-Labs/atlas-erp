@@ -13,6 +13,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\LogOptions;
@@ -31,6 +32,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
     use InteractsWithMedia;
     use LogsActivity;
     use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -48,6 +50,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
         'profile_photo_path',
         'status',
         'last_login_at',
+        'last_login_ip',
     ];
 
     /**
@@ -85,7 +88,9 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->isActive();
+        return $this->tenant !== null
+            && $this->tenant->isActive()
+            && $this->isActive();
     }
 
     public function getFullNameAttribute(): string
@@ -98,11 +103,21 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
         return $this->getRawOriginal('status') === UserStatus::Active->value;
     }
 
+    public function isInactive(): bool
+    {
+        return $this->getRawOriginal('status') === UserStatus::Inactive->value;
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->getRawOriginal('status') === UserStatus::Suspended->value;
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
             ->useLogName('users')
-            ->logOnly(['tenant_id', 'first_name', 'last_name', 'email', 'status', 'last_login_at'])
+            ->logOnly(['tenant_id', 'first_name', 'last_name', 'email', 'status', 'last_login_at', 'last_login_ip'])
             ->logOnlyDirty();
     }
 }

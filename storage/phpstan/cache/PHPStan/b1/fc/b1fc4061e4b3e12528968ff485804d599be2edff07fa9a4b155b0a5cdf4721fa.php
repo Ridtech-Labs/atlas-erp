@@ -13,6 +13,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'controller' => 'App\\Http\\Controllers\\Controller',
+          'user' => 'App\\Models\\User',
           'verified' => 'Illuminate\\Auth\\Events\\Verified',
           'emailverificationrequest' => 'Illuminate\\Foundation\\Auth\\EmailVerificationRequest',
           'redirectresponse' => 'Illuminate\\Http\\RedirectResponse',
@@ -39,6 +40,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'uses' => 
         array (
           'controller' => 'App\\Http\\Controllers\\Controller',
+          'user' => 'App\\Models\\User',
           'verified' => 'Illuminate\\Auth\\Events\\Verified',
           'emailverificationrequest' => 'Illuminate\\Foundation\\Auth\\EmailVerificationRequest',
           'redirectresponse' => 'Illuminate\\Http\\RedirectResponse',
@@ -62,7 +64,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php' => '5f6080a239709740135d9138085ceb1857c5570a0fea35e62c976fc90929631e',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php' => 'e876c0f8e1784a19c7aeba5aa5ea0816256d452e64bea9952b360e3501b5a945',
     ),
   ),
 ));

@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Livewire\Forms\LoginForm
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-e80034f59cfc5825e5741798cb2a014d9b876fcfeeabed74aaf875c89d9445cc',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-1dd2cc3e0a8ea5fa734ec46feb87af7f7d6d19fe1ca20e2af5ef190443ae774f',
    'data' => 
   array (
     'locatedSource' => 
@@ -27,7 +27,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 13,
-    'endLine' => 90,
+    'endLine' => 112,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Livewire\\Form',
@@ -262,7 +262,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
  * @throws ValidationException
  */',
         'startLine' => 29,
-        'endLine' => 60,
+        'endLine' => 82,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => true,
@@ -298,8 +298,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Ensure the authentication request is not rate limited.
  */',
-        'startLine' => 65,
-        'endLine' => 81,
+        'startLine' => 87,
+        'endLine' => 103,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => true,
@@ -335,8 +335,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * Get the authentication rate limiting throttle key.
  */',
-        'startLine' => 86,
-        'endLine' => 89,
+        'startLine' => 108,
+        'endLine' => 111,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

@@ -1,7 +1,7 @@
 <?php declare(strict_types = 1);
 
 return [
-	'lastFullAnalysisTime' => 1784414930,
+	'lastFullAnalysisTime' => 1784507199,
 	'meta' => array (
   'cacheVersion' => 'v13-packageDependencies',
   'phpstanVersion' => '2.2.5',
@@ -10,7 +10,7 @@ return [
   array (
   ),
   'phpVersion' => 80329,
-  'projectConfig' => '{conditionalTags: {Larastan\\Larastan\\Rules\\NoEnvCallsOutsideOfConfigRule: {phpstan.rules.rule: %noEnvCallsOutsideOfConfig%}, Larastan\\Larastan\\Rules\\NoModelMakeRule: {phpstan.rules.rule: %noModelMake%}, Larastan\\Larastan\\Rules\\NoUnnecessaryCollectionCallRule: {phpstan.rules.rule: %noUnnecessaryCollectionCall%}, Larastan\\Larastan\\Rules\\NoUnnecessaryEnumerableToArrayCallsRule: {phpstan.rules.rule: %noUnnecessaryEnumerableToArrayCalls%}, Larastan\\Larastan\\Rules\\OctaneCompatibilityRule: {phpstan.rules.rule: %checkOctaneCompatibility%}, Larastan\\Larastan\\Rules\\UnusedViewsRule: {phpstan.rules.rule: %checkUnusedViews%}, Larastan\\Larastan\\Rules\\NoMissingTranslationsRule: {phpstan.rules.rule: %checkMissingTranslations%}, Larastan\\Larastan\\Rules\\ModelAppendsRule: {phpstan.rules.rule: %checkModelAppends%}, Larastan\\Larastan\\Rules\\NoPublicModelScopeAndAccessorRule: {phpstan.rules.rule: %checkModelMethodVisibility%}, Larastan\\Larastan\\Rules\\NoAuthFacadeInRequestScopeRule: {phpstan.rules.rule: %checkAuthCallsWhenInRequestScope%}, Larastan\\Larastan\\Rules\\NoAuthHelperInRequestScopeRule: {phpstan.rules.rule: %checkAuthCallsWhenInRequestScope%}, Larastan\\Larastan\\ReturnTypes\\Helpers\\EnvFunctionDynamicFunctionReturnTypeExtension: {phpstan.broker.dynamicFunctionReturnTypeExtension: %generalizeEnvReturnType%}, Larastan\\Larastan\\ReturnTypes\\Helpers\\ConfigFunctionDynamicFunctionReturnTypeExtension: {phpstan.broker.dynamicFunctionReturnTypeExtension: %checkConfigTypes%}, Larastan\\Larastan\\ReturnTypes\\ConfigRepositoryDynamicMethodReturnTypeExtension: {phpstan.broker.dynamicMethodReturnTypeExtension: %checkConfigTypes%}, Larastan\\Larastan\\ReturnTypes\\ConfigFacadeCollectionDynamicStaticMethodReturnTypeExtension: {phpstan.broker.dynamicStaticMethodReturnTypeExtension: %checkConfigTypes%}, Larastan\\Larastan\\Rules\\ConfigCollectionRule: {phpstan.rules.rule: %checkConfigTypes%}}, parameters: {universalObjectCratesClasses: [Illuminate\\Http\\Request, Illuminate\\Support\\Optional], earlyTerminatingFunctionCalls: [abort, dd], mixinExcludeClasses: [Eloquent], bootstrapFiles: [bootstrap.php], checkOctaneCompatibility: false, noEnvCallsOutsideOfConfig: true, noModelMake: true, noUnnecessaryCollectionCall: true, noUnnecessaryCollectionCallOnly: [], noUnnecessaryCollectionCallExcept: [], noUnnecessaryEnumerableToArrayCalls: false, squashedMigrationsPath: [], databaseMigrationsPath: [], disableMigrationScan: false, disableSchemaScan: false, configDirectories: [], viewDirectories: [], translationDirectories: [], checkModelProperties: false, checkUnusedViews: false, checkMissingTranslations: false, checkModelAppends: true, checkModelMethodVisibility: false, generalizeEnvReturnType: false, checkConfigTypes: false, checkAuthCallsWhenInRequestScope: false, parseModelCastsMethod: false, enableMigrationCache: false, paths: [/Users/ridwankadri/Desktop/code/atlas-erp/app, /Users/ridwankadri/Desktop/code/atlas-erp/routes, /Users/ridwankadri/Desktop/code/atlas-erp/database/factories, /Users/ridwankadri/Desktop/code/atlas-erp/database/seeders], level: 7, tmpDir: /Users/ridwankadri/Desktop/code/atlas-erp/storage/phpstan}, rules: [Larastan\\Larastan\\Rules\\UselessConstructs\\NoUselessWithFunctionCallsRule, Larastan\\Larastan\\Rules\\UselessConstructs\\NoUselessValueFunctionCallsRule, Larastan\\Larastan\\Rules\\DeferrableServiceProviderMissingProvidesRule, Larastan\\Larastan\\Rules\\ConsoleCommand\\UndefinedArgumentOrOptionRule], services: {{class: Larastan\\Larastan\\Methods\\RelationForwardsCallsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ModelForwardsCallsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\EloquentBuilderForwardsCallsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\HigherOrderTapProxyExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\HigherOrderCollectionProxyExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\StorageMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ContractsMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\FacadesMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ManagersMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\AuthsMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ModelFactoryMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\RedirectResponseMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\MacroMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ViewWithMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Properties\\ModelAccessorExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\Properties\\ModelPropertyExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\Properties\\HigherOrderCollectionProxyPropertyExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\HigherOrderTapProxyExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Contracts\\Container\\Container}}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Container\\Container}}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Foundation\\Application}}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Contracts\\Foundation\\Application}}, {class: Larastan\\Larastan\\Properties\\ModelRelationsExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ModelOnlyDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ModelFactoryDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ModelDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AppMakeDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AuthExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\GuardDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AuthManagerExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\DateExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\GuardExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RequestFileExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RequestRouteExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RequestUserExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\EloquentBuilderExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RelationCollectionExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\TestCaseExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Support\\CollectionHelper}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\AuthExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\CollectExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\NowAndTodayExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ResponseExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ValidatorExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\LiteralExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\CollectionFilterRejectDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\CollectionWhereNotNullDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\NewModelQueryDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\FactoryDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: abort, negate: false}}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: abort, negate: true}}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: throw, negate: false}}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: throw, negate: true}}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\AppExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ValueExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\StrExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\TapExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\StorageDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Types\\GenericEloquentCollectionTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\Types\\ViewStringTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\Rules\\OctaneCompatibilityRule}, {class: Larastan\\Larastan\\Rules\\NoEnvCallsOutsideOfConfigRule, arguments: {configDirectories: %configDirectories%}}, {class: Larastan\\Larastan\\Rules\\NoModelMakeRule}, {class: Larastan\\Larastan\\Rules\\NoUnnecessaryCollectionCallRule, arguments: {onlyMethods: %noUnnecessaryCollectionCallOnly%, excludeMethods: %noUnnecessaryCollectionCallExcept%}}, {class: Larastan\\Larastan\\Rules\\NoUnnecessaryEnumerableToArrayCallsRule}, {class: Larastan\\Larastan\\Rules\\ModelAppendsRule}, {class: Larastan\\Larastan\\Rules\\NoPublicModelScopeAndAccessorRule}, {class: Larastan\\Larastan\\Types\\GenericEloquentBuilderTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AppEnvironmentReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {class: Illuminate\\Foundation\\Application}}, {class: Larastan\\Larastan\\ReturnTypes\\AppEnvironmentReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {class: Illuminate\\Contracts\\Foundation\\Application}}, {class: Larastan\\Larastan\\ReturnTypes\\AppFacadeEnvironmentReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Types\\ModelProperty\\ModelPropertyTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension], arguments: {active: %checkModelProperties%}}, {class: Larastan\\Larastan\\Types\\CollectionOf\\CollectionOfTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\Properties\\MigrationHelper, arguments: {databaseMigrationPath: %databaseMigrationsPath%, disableMigrationScan: %disableMigrationScan%, parser: @migrationsParser, reflectionProvider: @reflectionProvider}}, iamcalSqlParser: {class: Larastan\\Larastan\\SQL\\IamcalSqlParser, autowired: false}, sqlParserFactory: {class: Larastan\\Larastan\\SQL\\SqlParserFactory, arguments: {iamcalSqlParser: @iamcalSqlParser}}, sqlParser: {type: Larastan\\Larastan\\SQL\\SqlParser, factory: [@sqlParserFactory, create]}, {class: Larastan\\Larastan\\Properties\\SquashedMigrationHelper, arguments: {schemaPaths: %squashedMigrationsPath%, disableSchemaScan: %disableSchemaScan%}}, {class: Larastan\\Larastan\\Properties\\ModelCastHelper, arguments: {parser: @currentPhpVersionSimpleDirectParser, parseModelCastsMethod: %parseModelCastsMethod%}}, {class: Larastan\\Larastan\\Properties\\MigrationCache, arguments: {cacheDirectory: %tmpDir%, enabled: %enableMigrationCache%}}, {class: Larastan\\Larastan\\Properties\\ModelPropertyHelper}, {class: Larastan\\Larastan\\Rules\\ModelRuleHelper}, {class: Larastan\\Larastan\\Methods\\BuilderHelper, arguments: {checkProperties: %checkModelProperties%}}, {class: Larastan\\Larastan\\Rules\\RelationExistenceRule, tags: [phpstan.rules.rule]}, {class: Larastan\\Larastan\\Rules\\CheckDispatchArgumentTypesCompatibleWithClassConstructorRule, arguments: {dispatchableClass: Illuminate\\Foundation\\Bus\\Dispatchable}, tags: [phpstan.rules.rule]}, {class: Larastan\\Larastan\\Rules\\CheckDispatchArgumentTypesCompatibleWithClassConstructorRule, arguments: {dispatchableClass: Illuminate\\Foundation\\Events\\Dispatchable}, tags: [phpstan.rules.rule]}, {class: Larastan\\Larastan\\Properties\\Schema\\MySqlDataTypeToPhpTypeConverter}, {class: Larastan\\Larastan\\LarastanStubFilesExtension, tags: [phpstan.stubFilesExtension]}, {class: Larastan\\Larastan\\Rules\\UnusedViewsRule}, {class: Larastan\\Larastan\\Collectors\\UsedViewFunctionCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedEmailViewCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedViewMakeCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedViewFacadeMakeCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedRouteFacadeViewCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedViewInAnotherViewCollector}, {class: Larastan\\Larastan\\Support\\ViewFileHelper, arguments: {viewDirectories: %viewDirectories%}}, {class: Larastan\\Larastan\\Support\\ViewParser, arguments: {parser: @currentPhpVersionSimpleDirectParser}}, {class: Larastan\\Larastan\\Rules\\NoMissingTranslationsRule, arguments: {translationDirectories: %translationDirectories%}}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationFunctionCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationTranslatorCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationFacadeCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationViewCollector}, {class: Larastan\\Larastan\\ReturnTypes\\ApplicationMakeDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerMakeDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\ArgumentDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\HasArgumentDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\OptionDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\HasOptionDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\TranslatorGetReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\LangGetReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\TransHelperReturnTypeExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\DoubleUnderscoreHelperReturnTypeExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AppMakeHelper}, {class: Larastan\\Larastan\\Internal\\ConsoleApplicationResolver}, {class: Larastan\\Larastan\\Internal\\ConsoleApplicationHelper}, {class: Larastan\\Larastan\\Support\\HigherOrderCollectionProxyHelper}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ConfigFunctionDynamicFunctionReturnTypeExtension}, {class: Larastan\\Larastan\\ReturnTypes\\ConfigRepositoryDynamicMethodReturnTypeExtension}, {class: Larastan\\Larastan\\ReturnTypes\\ConfigFacadeCollectionDynamicStaticMethodReturnTypeExtension}, {class: Larastan\\Larastan\\Support\\ConfigParser, arguments: {parser: @currentPhpVersionSimpleDirectParser, configPaths: %configDirectories%, treatPhpDocTypesAsCertain: %treatPhpDocTypesAsCertain%}}, {class: Larastan\\Larastan\\Internal\\ConfigHelper}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\EnvFunctionDynamicFunctionReturnTypeExtension}, {class: Larastan\\Larastan\\ReturnTypes\\FormRequestSafeDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\EloquentCollectionMapDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Rules\\NoAuthFacadeInRequestScopeRule}, {class: Larastan\\Larastan\\Rules\\NoAuthHelperInRequestScopeRule}, {class: Larastan\\Larastan\\Rules\\ConfigCollectionRule}, {class: Illuminate\\Filesystem\\Filesystem, autowired: self}, migrationsParser: {class: PHPStan\\Parser\\CachedParser, arguments: {originalParser: @currentPhpVersionSimpleDirectParser, cachedNodesByStringCountMax: %cache.nodesByStringCountMax%}, autowired: false}}}',
+  'projectConfig' => '{conditionalTags: {Larastan\\Larastan\\Rules\\NoEnvCallsOutsideOfConfigRule: {phpstan.rules.rule: %noEnvCallsOutsideOfConfig%}, Larastan\\Larastan\\Rules\\NoModelMakeRule: {phpstan.rules.rule: %noModelMake%}, Larastan\\Larastan\\Rules\\NoUnnecessaryCollectionCallRule: {phpstan.rules.rule: %noUnnecessaryCollectionCall%}, Larastan\\Larastan\\Rules\\NoUnnecessaryEnumerableToArrayCallsRule: {phpstan.rules.rule: %noUnnecessaryEnumerableToArrayCalls%}, Larastan\\Larastan\\Rules\\OctaneCompatibilityRule: {phpstan.rules.rule: %checkOctaneCompatibility%}, Larastan\\Larastan\\Rules\\UnusedViewsRule: {phpstan.rules.rule: %checkUnusedViews%}, Larastan\\Larastan\\Rules\\NoMissingTranslationsRule: {phpstan.rules.rule: %checkMissingTranslations%}, Larastan\\Larastan\\Rules\\ModelAppendsRule: {phpstan.rules.rule: %checkModelAppends%}, Larastan\\Larastan\\Rules\\NoPublicModelScopeAndAccessorRule: {phpstan.rules.rule: %checkModelMethodVisibility%}, Larastan\\Larastan\\Rules\\NoAuthFacadeInRequestScopeRule: {phpstan.rules.rule: %checkAuthCallsWhenInRequestScope%}, Larastan\\Larastan\\Rules\\NoAuthHelperInRequestScopeRule: {phpstan.rules.rule: %checkAuthCallsWhenInRequestScope%}, Larastan\\Larastan\\ReturnTypes\\Helpers\\EnvFunctionDynamicFunctionReturnTypeExtension: {phpstan.broker.dynamicFunctionReturnTypeExtension: %generalizeEnvReturnType%}, Larastan\\Larastan\\ReturnTypes\\Helpers\\ConfigFunctionDynamicFunctionReturnTypeExtension: {phpstan.broker.dynamicFunctionReturnTypeExtension: %checkConfigTypes%}, Larastan\\Larastan\\ReturnTypes\\ConfigRepositoryDynamicMethodReturnTypeExtension: {phpstan.broker.dynamicMethodReturnTypeExtension: %checkConfigTypes%}, Larastan\\Larastan\\ReturnTypes\\ConfigFacadeCollectionDynamicStaticMethodReturnTypeExtension: {phpstan.broker.dynamicStaticMethodReturnTypeExtension: %checkConfigTypes%}, Larastan\\Larastan\\Rules\\ConfigCollectionRule: {phpstan.rules.rule: %checkConfigTypes%}}, parameters: {universalObjectCratesClasses: [Illuminate\\Http\\Request, Illuminate\\Support\\Optional], earlyTerminatingFunctionCalls: [abort, dd], mixinExcludeClasses: [Eloquent], bootstrapFiles: [bootstrap.php], checkOctaneCompatibility: false, noEnvCallsOutsideOfConfig: true, noModelMake: true, noUnnecessaryCollectionCall: true, noUnnecessaryCollectionCallOnly: [], noUnnecessaryCollectionCallExcept: [], noUnnecessaryEnumerableToArrayCalls: false, squashedMigrationsPath: [], databaseMigrationsPath: [], disableMigrationScan: false, disableSchemaScan: false, configDirectories: [], viewDirectories: [], translationDirectories: [], checkModelProperties: false, checkUnusedViews: false, checkMissingTranslations: false, checkModelAppends: true, checkModelMethodVisibility: false, generalizeEnvReturnType: false, checkConfigTypes: false, checkAuthCallsWhenInRequestScope: false, parseModelCastsMethod: false, enableMigrationCache: false, level: 8, paths: [/Users/ridwankadri/Desktop/code/atlas-erp/app, /Users/ridwankadri/Desktop/code/atlas-erp/routes, /Users/ridwankadri/Desktop/code/atlas-erp/database/factories, /Users/ridwankadri/Desktop/code/atlas-erp/database/seeders], excludePaths: {analyse: [bootstrap/cache/*, database/migrations/*, storage/*, public/build/*, vendor/*]}, tmpDir: /Users/ridwankadri/Desktop/code/atlas-erp/storage/phpstan, treatPhpDocTypesAsCertain: true}, rules: [Larastan\\Larastan\\Rules\\UselessConstructs\\NoUselessWithFunctionCallsRule, Larastan\\Larastan\\Rules\\UselessConstructs\\NoUselessValueFunctionCallsRule, Larastan\\Larastan\\Rules\\DeferrableServiceProviderMissingProvidesRule, Larastan\\Larastan\\Rules\\ConsoleCommand\\UndefinedArgumentOrOptionRule], services: {{class: Larastan\\Larastan\\Methods\\RelationForwardsCallsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ModelForwardsCallsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\EloquentBuilderForwardsCallsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\HigherOrderTapProxyExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\HigherOrderCollectionProxyExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\StorageMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ContractsMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\FacadesMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ManagersMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\AuthsMethodsExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ModelFactoryMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\RedirectResponseMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\MacroMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Methods\\ViewWithMethodsClassReflectionExtension, tags: [phpstan.broker.methodsClassReflectionExtension]}, {class: Larastan\\Larastan\\Properties\\ModelAccessorExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\Properties\\ModelPropertyExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\Properties\\HigherOrderCollectionProxyPropertyExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\HigherOrderTapProxyExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Contracts\\Container\\Container}}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Container\\Container}}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Foundation\\Application}}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerArrayAccessDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {className: Illuminate\\Contracts\\Foundation\\Application}}, {class: Larastan\\Larastan\\Properties\\ModelRelationsExtension, tags: [phpstan.broker.propertiesClassReflectionExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ModelOnlyDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ModelFactoryDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ModelDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AppMakeDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AuthExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\GuardDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AuthManagerExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\DateExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\GuardExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RequestFileExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RequestRouteExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RequestUserExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\EloquentBuilderExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\RelationCollectionExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\TestCaseExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Support\\CollectionHelper}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\AuthExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\CollectExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\NowAndTodayExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ResponseExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ValidatorExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\LiteralExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\CollectionFilterRejectDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\CollectionWhereNotNullDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\NewModelQueryDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\FactoryDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: abort, negate: false}}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: abort, negate: true}}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: throw, negate: false}}, {class: Larastan\\Larastan\\Types\\AbortIfFunctionTypeSpecifyingExtension, tags: [phpstan.typeSpecifier.functionTypeSpecifyingExtension], arguments: {methodName: throw, negate: true}}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\AppExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ValueExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\StrExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\TapExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\StorageDynamicStaticMethodReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Types\\GenericEloquentCollectionTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\Types\\ViewStringTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\Rules\\OctaneCompatibilityRule}, {class: Larastan\\Larastan\\Rules\\NoEnvCallsOutsideOfConfigRule, arguments: {configDirectories: %configDirectories%}}, {class: Larastan\\Larastan\\Rules\\NoModelMakeRule}, {class: Larastan\\Larastan\\Rules\\NoUnnecessaryCollectionCallRule, arguments: {onlyMethods: %noUnnecessaryCollectionCallOnly%, excludeMethods: %noUnnecessaryCollectionCallExcept%}}, {class: Larastan\\Larastan\\Rules\\NoUnnecessaryEnumerableToArrayCallsRule}, {class: Larastan\\Larastan\\Rules\\ModelAppendsRule}, {class: Larastan\\Larastan\\Rules\\NoPublicModelScopeAndAccessorRule}, {class: Larastan\\Larastan\\Types\\GenericEloquentBuilderTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AppEnvironmentReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {class: Illuminate\\Foundation\\Application}}, {class: Larastan\\Larastan\\ReturnTypes\\AppEnvironmentReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension], arguments: {class: Illuminate\\Contracts\\Foundation\\Application}}, {class: Larastan\\Larastan\\ReturnTypes\\AppFacadeEnvironmentReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Types\\ModelProperty\\ModelPropertyTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension], arguments: {active: %checkModelProperties%}}, {class: Larastan\\Larastan\\Types\\CollectionOf\\CollectionOfTypeNodeResolverExtension, tags: [phpstan.phpDoc.typeNodeResolverExtension]}, {class: Larastan\\Larastan\\Properties\\MigrationHelper, arguments: {databaseMigrationPath: %databaseMigrationsPath%, disableMigrationScan: %disableMigrationScan%, parser: @migrationsParser, reflectionProvider: @reflectionProvider}}, iamcalSqlParser: {class: Larastan\\Larastan\\SQL\\IamcalSqlParser, autowired: false}, sqlParserFactory: {class: Larastan\\Larastan\\SQL\\SqlParserFactory, arguments: {iamcalSqlParser: @iamcalSqlParser}}, sqlParser: {type: Larastan\\Larastan\\SQL\\SqlParser, factory: [@sqlParserFactory, create]}, {class: Larastan\\Larastan\\Properties\\SquashedMigrationHelper, arguments: {schemaPaths: %squashedMigrationsPath%, disableSchemaScan: %disableSchemaScan%}}, {class: Larastan\\Larastan\\Properties\\ModelCastHelper, arguments: {parser: @currentPhpVersionSimpleDirectParser, parseModelCastsMethod: %parseModelCastsMethod%}}, {class: Larastan\\Larastan\\Properties\\MigrationCache, arguments: {cacheDirectory: %tmpDir%, enabled: %enableMigrationCache%}}, {class: Larastan\\Larastan\\Properties\\ModelPropertyHelper}, {class: Larastan\\Larastan\\Rules\\ModelRuleHelper}, {class: Larastan\\Larastan\\Methods\\BuilderHelper, arguments: {checkProperties: %checkModelProperties%}}, {class: Larastan\\Larastan\\Rules\\RelationExistenceRule, tags: [phpstan.rules.rule]}, {class: Larastan\\Larastan\\Rules\\CheckDispatchArgumentTypesCompatibleWithClassConstructorRule, arguments: {dispatchableClass: Illuminate\\Foundation\\Bus\\Dispatchable}, tags: [phpstan.rules.rule]}, {class: Larastan\\Larastan\\Rules\\CheckDispatchArgumentTypesCompatibleWithClassConstructorRule, arguments: {dispatchableClass: Illuminate\\Foundation\\Events\\Dispatchable}, tags: [phpstan.rules.rule]}, {class: Larastan\\Larastan\\Properties\\Schema\\MySqlDataTypeToPhpTypeConverter}, {class: Larastan\\Larastan\\LarastanStubFilesExtension, tags: [phpstan.stubFilesExtension]}, {class: Larastan\\Larastan\\Rules\\UnusedViewsRule}, {class: Larastan\\Larastan\\Collectors\\UsedViewFunctionCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedEmailViewCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedViewMakeCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedViewFacadeMakeCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedRouteFacadeViewCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedViewInAnotherViewCollector}, {class: Larastan\\Larastan\\Support\\ViewFileHelper, arguments: {viewDirectories: %viewDirectories%}}, {class: Larastan\\Larastan\\Support\\ViewParser, arguments: {parser: @currentPhpVersionSimpleDirectParser}}, {class: Larastan\\Larastan\\Rules\\NoMissingTranslationsRule, arguments: {translationDirectories: %translationDirectories%}}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationFunctionCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationTranslatorCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationFacadeCollector, tags: [phpstan.collector]}, {class: Larastan\\Larastan\\Collectors\\UsedTranslationViewCollector}, {class: Larastan\\Larastan\\ReturnTypes\\ApplicationMakeDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ContainerMakeDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\ArgumentDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\HasArgumentDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\OptionDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\ConsoleCommand\\HasOptionDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\TranslatorGetReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\LangGetReturnTypeExtension, tags: [phpstan.broker.dynamicStaticMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\TransHelperReturnTypeExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\DoubleUnderscoreHelperReturnTypeExtension, tags: [phpstan.broker.dynamicFunctionReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\AppMakeHelper}, {class: Larastan\\Larastan\\Internal\\ConsoleApplicationResolver}, {class: Larastan\\Larastan\\Internal\\ConsoleApplicationHelper}, {class: Larastan\\Larastan\\Support\\HigherOrderCollectionProxyHelper}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\ConfigFunctionDynamicFunctionReturnTypeExtension}, {class: Larastan\\Larastan\\ReturnTypes\\ConfigRepositoryDynamicMethodReturnTypeExtension}, {class: Larastan\\Larastan\\ReturnTypes\\ConfigFacadeCollectionDynamicStaticMethodReturnTypeExtension}, {class: Larastan\\Larastan\\Support\\ConfigParser, arguments: {parser: @currentPhpVersionSimpleDirectParser, configPaths: %configDirectories%, treatPhpDocTypesAsCertain: %treatPhpDocTypesAsCertain%}}, {class: Larastan\\Larastan\\Internal\\ConfigHelper}, {class: Larastan\\Larastan\\ReturnTypes\\Helpers\\EnvFunctionDynamicFunctionReturnTypeExtension}, {class: Larastan\\Larastan\\ReturnTypes\\FormRequestSafeDynamicMethodReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\ReturnTypes\\EloquentCollectionMapDynamicReturnTypeExtension, tags: [phpstan.broker.dynamicMethodReturnTypeExtension]}, {class: Larastan\\Larastan\\Rules\\NoAuthFacadeInRequestScopeRule}, {class: Larastan\\Larastan\\Rules\\NoAuthHelperInRequestScopeRule}, {class: Larastan\\Larastan\\Rules\\ConfigCollectionRule}, {class: Illuminate\\Filesystem\\Filesystem, autowired: self}, migrationsParser: {class: PHPStan\\Parser\\CachedParser, arguments: {originalParser: @currentPhpVersionSimpleDirectParser, cachedNodesByStringCountMax: %cache.nodesByStringCountMax%}, autowired: false}}}',
   'analysedPaths' => 
   array (
     0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app',
@@ -2717,7 +2717,7 @@ return [
   'stubFiles' => 
   array (
   ),
-  'level' => '7',
+  'level' => '8',
 ),
 	'projectExtensionFiles' => array (
 ),
@@ -2730,6 +2730,116 @@ return [
 	'unmatchedLineIgnores' => array (
 ),
 	'collectedDataCallback' => static function (): array { return array (
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\ConstructorWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Actions\\Companies\\CreateCompanyAction',
+        1 => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\ConstructorWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Actions\\Companies\\UpdateCompanyAction',
+        1 => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\ConstructorWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Actions\\Settings\\UpdateSettingsAction',
+        1 => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\ConstructorWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Actions\\Users\\CreateUserAction',
+        1 => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\ConstructorWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Actions\\Users\\UpdateUserAction',
+        1 => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\ConstructorWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Actions\\Users\\UpdateUserStatusAction',
+        1 => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/PermissionName.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\MethodWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Enums\\PermissionName',
+        1 => 'values',
+        2 => 'App\\Administration\\Enums\\PermissionName',
+        3 => 
+        array (
+          0 => 'f' . "\0" . 'array_map',
+        ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/RoleName.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\MethodWithoutImpurePointsCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'App\\Administration\\Enums\\RoleName',
+        1 => 'values',
+        2 => 'App\\Administration\\Enums\\RoleName',
+        3 => 
+        array (
+          0 => 'f' . "\0" . 'array_map',
+        ),
+      ),
+    ),
+  ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Pages/Dashboard.php' => 
   array (
     'PHPStan\\Rules\\DeadCode\\MethodWithoutImpurePointsCollector' => 
@@ -2761,6 +2871,36 @@ return [
           2 => 'm' . "\0" . 'app\\core\\administration\\filament\\widgets\\systemstatuswidget' . "\0" . 'redisstatus',
           3 => 'f' . "\0" . 'config',
         ),
+      ),
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php' => 
+  array (
+    'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
+    array (
+      0 => 
+      array (
+        0 => 'Illuminate\\Support\\Facades\\Gate',
+        1 => 'policy',
+        2 => 29,
+      ),
+      1 => 
+      array (
+        0 => 'Illuminate\\Support\\Facades\\Gate',
+        1 => 'policy',
+        2 => 30,
+      ),
+      2 => 
+      array (
+        0 => 'Illuminate\\Support\\Facades\\Gate',
+        1 => 'define',
+        2 => 32,
+      ),
+      3 => 
+      array (
+        0 => 'Illuminate\\Support\\Facades\\Gate',
+        1 => 'define',
+        2 => 33,
       ),
     ),
   ),
@@ -3244,7 +3384,7 @@ return [
       0 => 
       array (
         0 => 'event',
-        1 => 22,
+        1 => 27,
       ),
     ),
   ),
@@ -3271,8 +3411,13 @@ return [
       ),
       1 => 
       array (
+        0 => 'auth.failed',
+        1 => 47,
+      ),
+      2 => 
+      array (
         0 => 'auth.throttle',
-        1 => 76,
+        1 => 98,
       ),
     ),
     'PHPStan\\Rules\\DeadCode\\PossiblyPureFuncCallCollector' => 
@@ -3280,7 +3425,7 @@ return [
       0 => 
       array (
         0 => 'event',
-        1 => 71,
+        1 => 93,
       ),
     ),
     'PHPStan\\Rules\\DeadCode\\PossiblyPureStaticCallCollector' => 
@@ -3390,6 +3535,10 @@ return [
       5 => 
       array (
         0 => 'Illuminate\\Notifications\\Notifiable',
+      ),
+      6 => 
+      array (
+        0 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
       ),
     ),
   ),
@@ -3593,7 +3742,7 @@ return [
       array (
         0 => 'Illuminate\\Database\\Connection',
         1 => 'transaction',
-        2 => 24,
+        2 => 26,
       ),
     ),
     'PHPStan\\Rules\\Traits\\TraitUseCollector' => 
@@ -3624,6 +3773,115 @@ return [
   ),
 ); },
 	'dependencies' => array (
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php' => 
+  array (
+    'fileHash' => 'aceeb5ff27a1954dcf25297f7725c063f87837317cf4a64d444d8b9da7bc139c',
+    'dependentFiles' => 
+    array (
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php' => 
+  array (
+    'fileHash' => '26c177381f75c73816698da6ac480212db2945ab56afd775e69499b93aace508',
+    'dependentFiles' => 
+    array (
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php' => 
+  array (
+    'fileHash' => 'eb13e4690b35e20970e4a0c58624efd65b11a7fba229fb9496224b88daeaa9dc',
+    'dependentFiles' => 
+    array (
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php' => 
+  array (
+    'fileHash' => '44f3bce4108f018f1b45879d4ae2e69718c4e1f9847dc8da8d1a01c4b5de2222',
+    'dependentFiles' => 
+    array (
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php' => 
+  array (
+    'fileHash' => '26b9e17034dc4907e2a5398ec09cd734e9f706309c0e167339346a8c5c5a1c2b',
+    'dependentFiles' => 
+    array (
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php' => 
+  array (
+    'fileHash' => 'b148ca9cc540a9ad48021afb4a54ca3ad95aaa4569e3ff4b11e93e703b7a8662',
+    'dependentFiles' => 
+    array (
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/PermissionName.php' => 
+  array (
+    'fileHash' => 'dce50ccc25d848acc2bcddd99f7eba49252ba3f55c84fe658dd4ea5bd82e39b8',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/RoleAndPermissionSeeder.php',
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/RoleName.php' => 
+  array (
+    'fileHash' => 'f5f20a58095474a28843507cca28dc24b5b1b1e0aaafeae1b5f7b64058d31c16',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/RoleAndPermissionSeeder.php',
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php' => 
+  array (
+    'fileHash' => 'a273de1dc0c09547e03d773e5712daeaccd0dd7d185943451ee4b742f179ae94',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php' => 
+  array (
+    'fileHash' => 'dbf2809a41869ddb582c61d9f9bf63ec08d35b741ac5ef607c888eb18793ea47',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php' => 
+  array (
+    'fileHash' => '859c7fbe0e6a796c86915234c8af85f4a880823b8aac757408cde2be25e5fcf1',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationActivityLogger.php' => 
+  array (
+    'fileHash' => '633935a06473590ab2f72f83c829bab12965401a35bd54afcb094baf82299124',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
+    ),
+  ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Pages/Dashboard.php' => 
   array (
     'fileHash' => '1d03d505d3459a3d3459a22f1bd73f9c0adc282f65038a10cedbf8de370e627e',
@@ -3666,7 +3924,7 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php' => 
   array (
-    'fileHash' => 'caf4fe61c2905bd1c5154a60f841a725c44f12e2bd552dc9b2f29aebc3081db5',
+    'fileHash' => '2ab73202cf0ea73e33a2b055f3200ff749031c1bc95410fbf44d5c52277b5bee',
     'dependentFiles' => 
     array (
     ),
@@ -3683,11 +3941,12 @@ return [
     'fileHash' => '72ac780b000892f11098d56b2c5b38d50b20a7d634ae89755656f9dc31130f9a',
     'dependentFiles' => 
     array (
-      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Actions/UpdateSettingAction.php',
-      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php',
-      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/SettingRepositoryInterface.php',
-      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Services/SettingService.php',
-      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Actions/UpdateSettingAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/SettingRepositoryInterface.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Services/SettingService.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Models/Setting.php' => 
@@ -3704,7 +3963,7 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php' => 
   array (
-    'fileHash' => 'f7855d5d38471a2d4a2a7c47daeb5c89153d98b5ec41f82d2cf9ef93deb39179',
+    'fileHash' => 'eea09f64c062cb04ffc880258a7f6c5506fb05481c36fb685cc2e706d87c376a',
     'dependentFiles' => 
     array (
       0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
@@ -3725,8 +3984,9 @@ return [
     'fileHash' => '908992baf24b425a6236ba3c706adb930b7f1fda74d81082b620e21a0e6ace0b',
     'dependentFiles' => 
     array (
-      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Actions/UpdateSettingAction.php',
-      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Actions/UpdateSettingAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Concerns/BelongsToTenant.php' => 
@@ -3751,23 +4011,34 @@ return [
     'fileHash' => '1864d5eaaf5f956d8a05319d7daab1259fe5751202d6234020b604c7a0f433cf',
     'dependentFiles' => 
     array (
-      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php',
-      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Models/Setting.php',
-      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php',
-      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/SettingRepositoryInterface.php',
-      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Services/SettingService.php',
-      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Http/Middleware/ResolveTenant.php',
-      6 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
-      7 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Support/TenantContext.php',
-      8 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php',
-      9 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Actions/Logout.php',
-      10 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php',
-      11 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
-      12 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php',
-      13 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/TenantFactory.php',
-      14 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
-      15 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
-      16 => '/Users/ridwankadri/Desktop/code/atlas-erp/routes/web.php',
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php',
+      6 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php',
+      7 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php',
+      8 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php',
+      9 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationActivityLogger.php',
+      10 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php',
+      11 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
+      12 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Models/Setting.php',
+      13 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php',
+      14 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/SettingRepositoryInterface.php',
+      15 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Services/SettingService.php',
+      16 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Http/Middleware/ResolveTenant.php',
+      17 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+      18 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Support/TenantContext.php',
+      19 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php',
+      20 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Actions/Logout.php',
+      21 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php',
+      22 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+      23 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php',
+      24 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/TenantFactory.php',
+      25 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
+      26 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
+      27 => '/Users/ridwankadri/Desktop/code/atlas-erp/routes/web.php',
     ),
     'usedTraitDependentFiles' => 
     array (
@@ -3790,8 +4061,10 @@ return [
     'fileHash' => '03c9a99a515c97baec5f596354056ee003b0821f655cf9ca154ddb6a92994feb',
     'dependentFiles' => 
     array (
-      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
-      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Exceptions/BusinessException.php' => 
@@ -3799,6 +4072,12 @@ return [
     'fileHash' => 'ac2e52e1161266305b643e474facee83fb76a83933e2ff7b295ce49023deb653',
     'dependentFiles' => 
     array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php',
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Notifications/SystemNotification.php' => 
@@ -3818,19 +4097,24 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php' => 
   array (
-    'fileHash' => '69f0a78c298337b8ae9086cd67e33dba0a5e8364a60254abe709cbc08f248ebf',
+    'fileHash' => 'a282a63ecedee36a6dd061f8bc1386c727f6e11c5a7e79f0e3008cab232fecb7',
     'dependentFiles' => 
     array (
-      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php',
-      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Models/Setting.php',
-      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Http/Middleware/ResolveTenant.php',
-      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Support/TenantContext.php',
-      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
-      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php',
-      6 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/TenantFactory.php',
-      7 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
-      8 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
-      9 => '/Users/ridwankadri/Desktop/code/atlas-erp/routes/web.php',
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Models/Setting.php',
+      6 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Http/Middleware/ResolveTenant.php',
+      7 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Support/TenantContext.php',
+      8 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php',
+      9 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
+      10 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php',
+      11 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/TenantFactory.php',
+      12 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
+      13 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
+      14 => '/Users/ridwankadri/Desktop/code/atlas-erp/routes/web.php',
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Support/TenantContext.php' => 
@@ -3847,7 +4131,7 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php' => 
   array (
-    'fileHash' => '5f6080a239709740135d9138085ceb1857c5570a0fea35e62c976fc90929631e',
+    'fileHash' => 'e876c0f8e1784a19c7aeba5aa5ea0816256d452e64bea9952b360e3501b5a945',
     'dependentFiles' => 
     array (
       0 => '/Users/ridwankadri/Desktop/code/atlas-erp/routes/auth.php',
@@ -3871,25 +4155,36 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php' => 
   array (
-    'fileHash' => 'e80034f59cfc5825e5741798cb2a014d9b876fcfeeabed74aaf875c89d9445cc',
+    'fileHash' => '1dd2cc3e0a8ea5fa734ec46feb87af7f7d6d19fe1ca20e2af5ef190443ae774f',
     'dependentFiles' => 
     array (
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php' => 
   array (
-    'fileHash' => 'dfcfdb8ddabbc1d6a9bfc60b7a2f25df4ddf42392d1a887a6c3762d87940fa53',
+    'fileHash' => 'f25acd495fbccfadc247e69ebd83b21221370f745cd3e6fa3ba1e75eb13ce427',
     'dependentFiles' => 
     array (
-      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php',
-      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Http/Middleware/ResolveTenant.php',
-      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
-      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php',
-      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Actions/Logout.php',
-      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php',
-      6 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php',
-      7 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
-      8 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php',
+      1 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php',
+      2 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php',
+      3 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php',
+      4 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php',
+      5 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php',
+      6 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php',
+      7 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php',
+      8 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php',
+      9 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationActivityLogger.php',
+      10 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php',
+      11 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php',
+      12 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Http/Middleware/ResolveTenant.php',
+      13 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php',
+      14 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php',
+      15 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Actions/Logout.php',
+      16 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php',
+      17 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php',
+      18 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php',
+      19 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php' => 
@@ -3952,7 +4247,7 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php' => 
   array (
-    'fileHash' => '4f17f4662b0d802ea8070939f9d3b3883074e413ab91358cfcfa31e0a0b7917c',
+    'fileHash' => '9772cf23677121bd1878cae1f1bf62b6eeccf561092cfed1dd652e09f65b6d44',
     'dependentFiles' => 
     array (
       0 => '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php',
@@ -3960,9 +4255,17 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php' => 
   array (
-    'fileHash' => 'a138abeb3fdf2cc1ffc689df4df9fb12de96174232dc58760f5ed4c0dd513245',
+    'fileHash' => 'effe40fd26e93f37f06d7eec9ad15c2db09603019118987b66dc089a033a796f',
     'dependentFiles' => 
     array (
+    ),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/RoleAndPermissionSeeder.php' => 
+  array (
+    'fileHash' => '879e571a8599129e29b4379ed15e2f1c1b91f7dcaa9f11d3914c4ea8c93acf48',
+    'dependentFiles' => 
+    array (
+      0 => '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php',
     ),
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/routes/auth.php' => 
@@ -3981,37 +4284,60 @@ return [
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/routes/web.php' => 
   array (
-    'fileHash' => '92926310045a14d98f87b955372cd905902bbbb38198fc19ee9e9281e6babe45',
+    'fileHash' => 'acc675a952685ea820c626df2842288f94b9d43e96a221cc57892d51b0cf9357',
     'dependentFiles' => 
     array (
     ),
   ),
 ),
 	'packageDependencies' => array (
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php' => 
+  array (
+    0 => 'spatie/laravel-medialibrary',
+    1 => 'laravel/framework',
+    2 => 'spatie/laravel-activitylog',
+    3 => 'filament/filament',
+    4 => 'spatie/laravel-permission',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationActivityLogger.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+    5 => 'symfony/http-foundation',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/SystemStatusWidget.php' => 
+  array (
+    0 => 'filament/schemas',
+    1 => 'filament/widgets',
+    2 => 'livewire/livewire',
+    3 => 'filament/support',
+    4 => 'laravel/framework',
+  ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php' => 
   array (
     0 => 'laravel/framework',
     1 => 'psr/container',
+    2 => 'spatie/laravel-medialibrary',
+    3 => 'spatie/laravel-activitylog',
+    4 => 'filament/filament',
+    5 => 'spatie/laravel-permission',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Actions/UpdateSettingAction.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Models/Setting.php' => 
   array (
-  ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/DTOs/SettingData.php' => 
-  array (
+    0 => 'laravel/framework',
+    1 => 'ramsey/uuid',
+    2 => 'spatie/laravel-medialibrary',
+    3 => 'spatie/laravel-activitylog',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Services/SettingService.php' => 
   array (
     0 => 'laravel/framework',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Concerns/BelongsToTenant.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Exceptions/BusinessException.php' => 
   array (
-  ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Enums/TenantStatus.php' => 
-  array (
-  ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Notifications/SystemNotification.php' => 
-  array (
-    0 => 'laravel/framework',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Support/TenantContext.php' => 
   array (
@@ -4040,16 +4366,25 @@ return [
     4 => 'spatie/laravel-medialibrary',
     5 => 'spatie/laravel-permission',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php' => 
   array (
-    0 => 'laravel/framework',
-    1 => 'livewire/livewire',
-    2 => 'symfony/http-foundation',
-    3 => 'filament/filament',
-    4 => 'spatie/laravel-medialibrary',
-    5 => 'spatie/laravel-permission',
-    6 => 'spatie/laravel-activitylog',
-    7 => 'nesbot/carbon',
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+    5 => 'ramsey/uuid',
+    6 => 'filament/support',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/Filament/AdminPanelProvider.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'laravel/framework',
+    2 => 'filament/support',
+    3 => 'filament/actions',
+    4 => 'filament/schemas',
+    5 => 'danharrin/livewire-rate-limiting',
+    6 => 'livewire/livewire',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/VoltServiceProvider.php' => 
   array (
@@ -4058,10 +4393,6 @@ return [
     2 => 'livewire/livewire',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/View/Components/AppLayout.php' => 
-  array (
-    0 => 'laravel/framework',
-  ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/View/Components/vendor/health/Logo.php' => 
   array (
     0 => 'laravel/framework',
   ),
@@ -4079,30 +4410,56 @@ return [
     3 => 'spatie/laravel-medialibrary',
     4 => 'spatie/laravel-activitylog',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/routes/console.php' => 
   array (
     0 => 'laravel/framework',
-    1 => 'fakerphp/faker',
-    2 => 'nesbot/carbon',
-    3 => 'ramsey/uuid',
-    4 => 'spatie/laravel-medialibrary',
-    5 => 'spatie/laravel-activitylog',
+    1 => 'symfony/console',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php' => 
   array (
-    0 => 'laravel/framework',
+    0 => 'filament/filament',
     1 => 'spatie/laravel-medialibrary',
-    2 => 'spatie/laravel-activitylog',
+    2 => 'laravel/framework',
     3 => 'spatie/laravel-permission',
-    4 => 'filament/filament',
-    5 => 'nesbot/carbon',
+    4 => 'spatie/laravel-activitylog',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/routes/auth.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php' => 
   array (
-    0 => 'laravel/framework',
-    1 => 'symfony/http-foundation',
-    2 => 'livewire/volt',
-    3 => 'livewire/livewire',
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/PermissionName.php' => 
+  array (
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/RoleName.php' => 
+  array (
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Pages/Dashboard.php' => 
   array (
@@ -4114,18 +4471,6 @@ return [
     5 => 'laravel/framework',
     6 => 'filament/widgets',
     7 => 'filament/support',
-  ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php' => 
-  array (
-    0 => 'filament/schemas',
-    1 => 'filament/widgets',
-    2 => 'livewire/livewire',
-    3 => 'filament/support',
-    4 => 'laravel/framework',
-    5 => 'filament/filament',
-    6 => 'spatie/laravel-medialibrary',
-    7 => 'spatie/laravel-permission',
-    8 => 'spatie/laravel-activitylog',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/QuickNavigationWidget.php' => 
   array (
@@ -4143,36 +4488,99 @@ return [
     4 => 'spatie/laravel-activitylog',
     5 => 'nesbot/carbon',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/SystemStatusWidget.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/DTOs/SettingData.php' => 
+  array (
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/SettingRepositoryInterface.php' => 
+  array (
+    0 => 'laravel/framework',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Enums/TenantStatus.php' => 
+  array (
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Notifications/SystemNotification.php' => 
+  array (
+    0 => 'laravel/framework',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php' => 
+  array (
+    0 => 'laravel/framework',
+    1 => 'livewire/livewire',
+    2 => 'symfony/http-foundation',
+    3 => 'filament/filament',
+    4 => 'spatie/laravel-medialibrary',
+    5 => 'spatie/laravel-permission',
+    6 => 'spatie/laravel-activitylog',
+    7 => 'nesbot/carbon',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php' => 
+  array (
+    0 => 'laravel/framework',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'spatie/laravel-activitylog',
+    3 => 'filament/filament',
+    4 => 'spatie/laravel-permission',
+    5 => 'nesbot/carbon',
+    6 => 'ramsey/uuid',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/routes/auth.php' => 
+  array (
+    0 => 'laravel/framework',
+    1 => 'symfony/http-foundation',
+    2 => 'livewire/volt',
+    3 => 'livewire/livewire',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php' => 
+  array (
+    0 => 'filament/filament',
+    1 => 'spatie/laravel-medialibrary',
+    2 => 'laravel/framework',
+    3 => 'spatie/laravel-permission',
+    4 => 'spatie/laravel-activitylog',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php' => 
   array (
     0 => 'filament/schemas',
     1 => 'filament/widgets',
     2 => 'livewire/livewire',
     3 => 'filament/support',
     4 => 'laravel/framework',
+    5 => 'filament/filament',
+    6 => 'spatie/laravel-medialibrary',
+    7 => 'spatie/laravel-permission',
+    8 => 'spatie/laravel-activitylog',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Models/Setting.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Actions/UpdateSettingAction.php' => 
   array (
-    0 => 'laravel/framework',
-    1 => 'ramsey/uuid',
-    2 => 'spatie/laravel-medialibrary',
-    3 => 'spatie/laravel-activitylog',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php' => 
   array (
     0 => 'laravel/framework',
+    1 => 'ramsey/uuid',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/SettingRepositoryInterface.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Concerns/BelongsToTenant.php' => 
   array (
-    0 => 'laravel/framework',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Concerns/HasPublicUuid.php' => 
   array (
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Enums/UserStatus.php' => 
-  array (
-  ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Exceptions/BusinessException.php' => 
   array (
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Http/Middleware/ResolveTenant.php' => 
@@ -4193,16 +4601,6 @@ return [
     4 => 'filament/filament',
     5 => 'spatie/laravel-permission',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php' => 
-  array (
-    0 => 'filament/filament',
-    1 => 'spatie/laravel-medialibrary',
-    2 => 'laravel/framework',
-    3 => 'spatie/laravel-permission',
-    4 => 'spatie/laravel-activitylog',
-    5 => 'ramsey/uuid',
-    6 => 'filament/support',
-  ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/AppServiceProvider.php' => 
   array (
     0 => 'laravel/framework',
@@ -4212,24 +4610,27 @@ return [
     4 => 'filament/filament',
     5 => 'spatie/laravel-permission',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/Filament/AdminPanelProvider.php' => 
-  array (
-    0 => 'filament/filament',
-    1 => 'laravel/framework',
-    2 => 'filament/support',
-    3 => 'filament/actions',
-    4 => 'filament/schemas',
-    5 => 'danharrin/livewire-rate-limiting',
-    6 => 'livewire/livewire',
-  ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/View/Components/GuestLayout.php' => 
   array (
     0 => 'laravel/framework',
   ),
-  '/Users/ridwankadri/Desktop/code/atlas-erp/routes/console.php' => 
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/View/Components/vendor/health/Logo.php' => 
   array (
     0 => 'laravel/framework',
-    1 => 'symfony/console',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/UserFactory.php' => 
+  array (
+    0 => 'laravel/framework',
+    1 => 'fakerphp/faker',
+    2 => 'nesbot/carbon',
+    3 => 'ramsey/uuid',
+    4 => 'spatie/laravel-medialibrary',
+    5 => 'spatie/laravel-activitylog',
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/RoleAndPermissionSeeder.php' => 
+  array (
+    0 => 'laravel/framework',
+    1 => 'spatie/laravel-permission',
   ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/routes/web.php' => 
   array (
@@ -4240,6 +4641,1521 @@ return [
   ),
 ),
 	'exportedNodesCallback' => static function (): array { return array (
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Actions\\Companies\\CreateCompanyAction',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'logger',
+               'type' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'execute',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * @param  array<string, mixed>  $data
+     */',
+             'namespace' => 'App\\Administration\\Actions\\Companies',
+             'uses' => 
+            array (
+              'permissionname' => 'App\\Administration\\Enums\\PermissionName',
+              'administrationactivitylogger' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+              'businessexception' => 'App\\Core\\Shared\\Exceptions\\BusinessException',
+              'tenant' => 'App\\Core\\Tenancy\\Models\\Tenant',
+              'user' => 'App\\Models\\User',
+              'db' => 'Illuminate\\Support\\Facades\\DB',
+              'str' => 'Illuminate\\Support\\Str',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'data',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Actions\\Companies\\UpdateCompanyAction',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'access',
+               'type' => 'App\\Administration\\Services\\AdministrationAccessService',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'logger',
+               'type' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'execute',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * @param  array<string, mixed>  $data
+     */',
+             'namespace' => 'App\\Administration\\Actions\\Companies',
+             'uses' => 
+            array (
+              'permissionname' => 'App\\Administration\\Enums\\PermissionName',
+              'administrationaccessservice' => 'App\\Administration\\Services\\AdministrationAccessService',
+              'administrationactivitylogger' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+              'businessexception' => 'App\\Core\\Shared\\Exceptions\\BusinessException',
+              'tenant' => 'App\\Core\\Tenancy\\Models\\Tenant',
+              'user' => 'App\\Models\\User',
+              'db' => 'Illuminate\\Support\\Facades\\DB',
+              'str' => 'Illuminate\\Support\\Str',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'App\\Core\\Tenancy\\Models\\Tenant',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'tenant',
+               'type' => 'App\\Core\\Tenancy\\Models\\Tenant',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'data',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            2 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Actions\\Settings\\UpdateSettingsAction',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'access',
+               'type' => 'App\\Administration\\Services\\AdministrationAccessService',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'settings',
+               'type' => 'App\\Core\\Settings\\Services\\SettingService',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'execute',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'void',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'settingData',
+               'type' => 'App\\Core\\Settings\\DTOs\\SettingData',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Actions\\Users\\CreateUserAction',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'access',
+               'type' => 'App\\Administration\\Services\\AdministrationAccessService',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'logger',
+               'type' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'execute',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * @param  array<string, mixed>  $data
+     * @param  list<string>  $roleNames
+     */',
+             'namespace' => 'App\\Administration\\Actions\\Users',
+             'uses' => 
+            array (
+              'administrationaccessservice' => 'App\\Administration\\Services\\AdministrationAccessService',
+              'administrationactivitylogger' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+              'userstatus' => 'App\\Core\\Shared\\Enums\\UserStatus',
+              'businessexception' => 'App\\Core\\Shared\\Exceptions\\BusinessException',
+              'user' => 'App\\Models\\User',
+              'db' => 'Illuminate\\Support\\Facades\\DB',
+              'hash' => 'Illuminate\\Support\\Facades\\Hash',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'App\\Models\\User',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'data',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'roleNames',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            2 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Actions\\Users\\UpdateUserAction',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'access',
+               'type' => 'App\\Administration\\Services\\AdministrationAccessService',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'logger',
+               'type' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'execute',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * @param  array<string, mixed>  $data
+     * @param  list<string>  $roleNames
+     */',
+             'namespace' => 'App\\Administration\\Actions\\Users',
+             'uses' => 
+            array (
+              'administrationaccessservice' => 'App\\Administration\\Services\\AdministrationAccessService',
+              'administrationactivitylogger' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+              'businessexception' => 'App\\Core\\Shared\\Exceptions\\BusinessException',
+              'user' => 'App\\Models\\User',
+              'arr' => 'Illuminate\\Support\\Arr',
+              'db' => 'Illuminate\\Support\\Facades\\DB',
+              'hash' => 'Illuminate\\Support\\Facades\\Hash',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'App\\Models\\User',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'subject',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'data',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            2 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'roleNames',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            3 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Actions\\Users\\UpdateUserStatusAction',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => '__construct',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => NULL,
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'access',
+               'type' => 'App\\Administration\\Services\\AdministrationAccessService',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'logger',
+               'type' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 68,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'execute',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'App\\Models\\User',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'subject',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'status',
+               'type' => 'App\\Core\\Shared\\Enums\\UserStatus',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            2 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/PermissionName.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedEnumNode::__set_state(array(
+       'name' => 'App\\Administration\\Enums\\PermissionName',
+       'scalarType' => 'string',
+       'phpDoc' => NULL,
+       'implements' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'DashboardView',
+           'value' => '\'dashboard.view\'',
+           'phpDoc' => NULL,
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'CompaniesView',
+           'value' => '\'companies.view\'',
+           'phpDoc' => NULL,
+        )),
+        2 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'CompaniesCreate',
+           'value' => '\'companies.create\'',
+           'phpDoc' => NULL,
+        )),
+        3 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'CompaniesUpdate',
+           'value' => '\'companies.update\'',
+           'phpDoc' => NULL,
+        )),
+        4 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'UsersView',
+           'value' => '\'users.view\'',
+           'phpDoc' => NULL,
+        )),
+        5 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'UsersCreate',
+           'value' => '\'users.create\'',
+           'phpDoc' => NULL,
+        )),
+        6 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'UsersUpdate',
+           'value' => '\'users.update\'',
+           'phpDoc' => NULL,
+        )),
+        7 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'UsersDelete',
+           'value' => '\'users.delete\'',
+           'phpDoc' => NULL,
+        )),
+        8 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'UsersManageStatus',
+           'value' => '\'users.manage_status\'',
+           'phpDoc' => NULL,
+        )),
+        9 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'SettingsManage',
+           'value' => '\'settings.manage\'',
+           'phpDoc' => NULL,
+        )),
+        10 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'HealthView',
+           'value' => '\'health.view\'',
+           'phpDoc' => NULL,
+        )),
+        11 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'values',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * @return list<string>
+     */',
+             'namespace' => 'App\\Administration\\Enums',
+             'uses' => 
+            array (
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => 'array',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/RoleName.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedEnumNode::__set_state(array(
+       'name' => 'App\\Administration\\Enums\\RoleName',
+       'scalarType' => 'string',
+       'phpDoc' => NULL,
+       'implements' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'SuperAdministrator',
+           'value' => '\'Super Administrator\'',
+           'phpDoc' => NULL,
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'CompanyAdministrator',
+           'value' => '\'Company Administrator\'',
+           'phpDoc' => NULL,
+        )),
+        2 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'OperationsManager',
+           'value' => '\'Operations Manager\'',
+           'phpDoc' => NULL,
+        )),
+        3 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'FinanceManager',
+           'value' => '\'Finance Manager\'',
+           'phpDoc' => NULL,
+        )),
+        4 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'FleetManager',
+           'value' => '\'Fleet Manager\'',
+           'phpDoc' => NULL,
+        )),
+        5 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'WarehouseManager',
+           'value' => '\'Warehouse Manager\'',
+           'phpDoc' => NULL,
+        )),
+        6 => 
+        \PHPStan\Dependency\ExportedNode\ExportedEnumCaseNode::__set_state(array(
+           'name' => 'StandardUser',
+           'value' => '\'Standard User\'',
+           'phpDoc' => NULL,
+        )),
+        7 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'values',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * @return list<string>
+     */',
+             'namespace' => 'App\\Administration\\Enums',
+             'uses' => 
+            array (
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => true,
+           'returnType' => 'array',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Policies\\TenantPolicy',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'view',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'user',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'tenant',
+               'type' => 'App\\Core\\Tenancy\\Models\\Tenant',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'update',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'user',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'tenant',
+               'type' => 'App\\Core\\Tenancy\\Models\\Tenant',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Policies\\UserPolicy',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'view',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'user',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'subject',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'update',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'user',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'subject',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Services\\AdministrationAccessService',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'isSuperAdministrator',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'user',
+               'type' => '?App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'canManageTenant',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'user',
+               'type' => '?App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'tenantId',
+               'type' => '?int',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        2 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'canAssignRole',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => 'App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'roleName',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationActivityLogger.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'App\\Administration\\Services\\AdministrationActivityLogger',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => NULL,
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'log',
+           'phpDoc' => 
+          \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
+             'phpDocString' => '/**
+     * @param  array<string, mixed>  $properties
+     */',
+             'namespace' => 'App\\Administration\\Services',
+             'uses' => 
+            array (
+              'user' => 'App\\Models\\User',
+              'model' => 'Illuminate\\Database\\Eloquent\\Model',
+            ),
+             'constUses' => 
+            array (
+            ),
+          )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'void',
+           'parameters' => 
+          array (
+            0 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'event',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            1 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'description',
+               'type' => 'string',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => false,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            2 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'actor',
+               'type' => '?App\\Models\\User',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            3 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'subject',
+               'type' => '?Illuminate\\Database\\Eloquent\\Model',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+            4 => 
+            \PHPStan\Dependency\ExportedNode\ExportedParameterNode::__set_state(array(
+               'name' => 'properties',
+               'type' => 'array',
+               'byRef' => false,
+               'variadic' => false,
+               'hasDefault' => true,
+               'attributes' => 
+              array (
+              ),
+               'phpDoc' => NULL,
+               'flags' => 0,
+            )),
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
   '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Pages/Dashboard.php' => 
   array (
     0 => 
@@ -4540,6 +6456,24 @@ return [
         0 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
            'name' => 'register',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'void',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        1 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'boot',
            'phpDoc' => NULL,
            'byRef' => false,
            'public' => true,
@@ -4899,6 +6833,7 @@ return [
               'settingdata' => 'App\\Core\\Settings\\DTOs\\SettingData',
               'setting' => 'App\\Core\\Settings\\Models\\Setting',
               'collection' => 'Illuminate\\Support\\Collection',
+              'str' => 'Illuminate\\Support\\Str',
             ),
              'constUses' => 
             array (
@@ -5810,6 +7745,24 @@ return [
         )),
         3 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'isActive',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        4 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
            'name' => 'users',
            'phpDoc' => 
           \PHPStan\Dependency\ExportedNode\ExportedPhpDocNode::__set_state(array(
@@ -5850,7 +7803,7 @@ return [
           array (
           ),
         )),
-        4 => 
+        5 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
            'name' => 'settings',
            'phpDoc' => 
@@ -5892,7 +7845,7 @@ return [
           array (
           ),
         )),
-        5 => 
+        6 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
            'name' => 'getActivitylogOptions',
            'phpDoc' => NULL,
@@ -6041,6 +7994,7 @@ return [
              'uses' => 
             array (
               'controller' => 'App\\Http\\Controllers\\Controller',
+              'user' => 'App\\Models\\User',
               'verified' => 'Illuminate\\Auth\\Events\\Verified',
               'emailverificationrequest' => 'Illuminate\\Foundation\\Auth\\EmailVerificationRequest',
               'redirectresponse' => 'Illuminate\\Http\\RedirectResponse',
@@ -6427,6 +8381,7 @@ return [
         3 => 'Spatie\\MediaLibrary\\InteractsWithMedia',
         4 => 'Spatie\\Activitylog\\Traits\\LogsActivity',
         5 => 'Illuminate\\Notifications\\Notifiable',
+        6 => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
       ),
        'traitUseAdaptations' => 
       array (
@@ -6458,6 +8413,7 @@ return [
               'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
               'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
               'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+              'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
               'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
               'notifiable' => 'Illuminate\\Notifications\\Notifiable',
               'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -6513,6 +8469,7 @@ return [
               'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
               'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
               'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+              'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
               'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
               'notifiable' => 'Illuminate\\Notifications\\Notifiable',
               'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -6565,6 +8522,7 @@ return [
               'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
               'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
               'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+              'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
               'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
               'notifiable' => 'Illuminate\\Notifications\\Notifiable',
               'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -6611,6 +8569,7 @@ return [
               'mustverifyemail' => 'Illuminate\\Contracts\\Auth\\MustVerifyEmail',
               'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
               'belongsto' => 'Illuminate\\Database\\Eloquent\\Relations\\BelongsTo',
+              'softdeletes' => 'Illuminate\\Database\\Eloquent\\SoftDeletes',
               'authenticatable' => 'Illuminate\\Foundation\\Auth\\User',
               'notifiable' => 'Illuminate\\Notifications\\Notifiable',
               'logoptions' => 'Spatie\\Activitylog\\LogOptions',
@@ -6705,6 +8664,42 @@ return [
           ),
         )),
         7 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'isInactive',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        8 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'isSuspended',
+           'phpDoc' => NULL,
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'bool',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+        9 => 
         \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
            'name' => 'getActivitylogOptions',
            'phpDoc' => NULL,
@@ -7579,6 +9574,7 @@ return [
              'namespace' => 'Database\\Seeders',
              'uses' => 
             array (
+              'rolename' => 'App\\Administration\\Enums\\RoleName',
               'settingdata' => 'App\\Core\\Settings\\DTOs\\SettingData',
               'settingservice' => 'App\\Core\\Settings\\Services\\SettingService',
               'tenant' => 'App\\Core\\Tenancy\\Models\\Tenant',
@@ -7586,13 +9582,56 @@ return [
               'withoutmodelevents' => 'Illuminate\\Database\\Console\\Seeds\\WithoutModelEvents',
               'seeder' => 'Illuminate\\Database\\Seeder',
               'db' => 'Illuminate\\Support\\Facades\\DB',
-              'permission' => 'Spatie\\Permission\\Models\\Permission',
-              'role' => 'Spatie\\Permission\\Models\\Role',
+              'str' => 'Illuminate\\Support\\Str',
             ),
              'constUses' => 
             array (
             ),
           )),
+           'byRef' => false,
+           'public' => true,
+           'private' => false,
+           'abstract' => false,
+           'final' => false,
+           'static' => false,
+           'returnType' => 'void',
+           'parameters' => 
+          array (
+          ),
+           'attributes' => 
+          array (
+          ),
+        )),
+      ),
+       'attributes' => 
+      array (
+      ),
+    )),
+  ),
+  '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/RoleAndPermissionSeeder.php' => 
+  array (
+    0 => 
+    \PHPStan\Dependency\ExportedNode\ExportedClassNode::__set_state(array(
+       'name' => 'Database\\Seeders\\RoleAndPermissionSeeder',
+       'phpDoc' => NULL,
+       'abstract' => false,
+       'final' => false,
+       'extends' => 'Illuminate\\Database\\Seeder',
+       'implements' => 
+      array (
+      ),
+       'usedTraits' => 
+      array (
+      ),
+       'traitUseAdaptations' => 
+      array (
+      ),
+       'statements' => 
+      array (
+        0 => 
+        \PHPStan\Dependency\ExportedNode\ExportedMethodNode::__set_state(array(
+           'name' => 'run',
+           'phpDoc' => NULL,
            'byRef' => false,
            'public' => true,
            'private' => false,

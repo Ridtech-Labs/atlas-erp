@@ -8580,6 +8580,40 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'typeAliasClassName' => NULL,
          'traitData' => NULL,
       )),
+      '5278293aca8c9b041f2f28c8f888b7e5' => 
+      \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
+         'namespace' => 'App\\Core\\Tenancy\\Models',
+         'uses' => 
+        array (
+          'setting' => 'App\\Core\\Settings\\Models\\Setting',
+          'haspublicuuid' => 'App\\Core\\Shared\\Concerns\\HasPublicUuid',
+          'tenantstatus' => 'App\\Core\\Shared\\Enums\\TenantStatus',
+          'user' => 'App\\Models\\User',
+          'tenantfactory' => 'Database\\Factories\\TenantFactory',
+          'hasfactory' => 'Illuminate\\Database\\Eloquent\\Factories\\HasFactory',
+          'model' => 'Illuminate\\Database\\Eloquent\\Model',
+          'hasmany' => 'Illuminate\\Database\\Eloquent\\Relations\\HasMany',
+          'logoptions' => 'Spatie\\Activitylog\\LogOptions',
+          'logsactivity' => 'Spatie\\Activitylog\\Traits\\LogsActivity',
+          'hasmedia' => 'Spatie\\MediaLibrary\\HasMedia',
+          'interactswithmedia' => 'Spatie\\MediaLibrary\\InteractsWithMedia',
+        ),
+         'className' => 'App\\Core\\Tenancy\\Models\\Tenant',
+         'functionName' => 'isActive',
+         'templatePhpDocNodes' => 
+        array (
+        ),
+         'parent' => NULL,
+         'typeAliasesMap' => 
+        array (
+        ),
+         'bypassTypeAliases' => false,
+         'constUses' => 
+        array (
+        ),
+         'typeAliasClassName' => NULL,
+         'traitData' => NULL,
+      )),
       'd2da7e58181351421e717963a6938c7c' => 
       \PHPStan\Analyser\IntermediaryNameScope::__set_state(array(
          'namespace' => 'App\\Core\\Tenancy\\Models',
@@ -8685,7 +8719,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php' => '69f0a78c298337b8ae9086cd67e33dba0a5e8364a60254abe709cbc08f248ebf',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php' => 'a282a63ecedee36a6dd061f8bc1386c727f6e11c5a7e79f0e3008cab232fecb7',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Database/Eloquent/Factories/HasFactory.php' => 'b6cb2b164e90168e80963a5549541f5f3188a3ec8cfd368bf3611bd94fbd46a7',
       '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Concerns/HasPublicUuid.php' => '1864d5eaaf5f956d8a05319d7daab1259fe5751202d6234020b604c7a0f433cf',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../spatie/laravel-medialibrary/src/InteractsWithMedia.php' => '2fa4c26f5b3757892fb1f79083cefb514993dbef90e48da37597f36e834ace33',

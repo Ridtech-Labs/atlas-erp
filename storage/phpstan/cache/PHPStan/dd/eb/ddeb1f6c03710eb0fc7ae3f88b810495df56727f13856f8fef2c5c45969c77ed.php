@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Tenancy\Models\Tenant
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-69f0a78c298337b8ae9086cd67e33dba0a5e8364a60254abe709cbc08f248ebf',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-a282a63ecedee36a6dd061f8bc1386c727f6e11c5a7e79f0e3008cab232fecb7',
    'data' => 
   array (
     'locatedSource' => 
@@ -27,7 +27,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 20,
-    'endLine' => 74,
+    'endLine' => 79,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Model',
@@ -155,6 +155,41 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'currentClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
         'aliasName' => NULL,
       ),
+      'isActive' => 
+      array (
+        'name' => 'isActive',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'bool',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 51,
+        'endLine' => 54,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Core\\Tenancy\\Models',
+        'declaringClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'implementingClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'currentClassName' => 'App\\Core\\Tenancy\\Models\\Tenant',
+        'aliasName' => NULL,
+      ),
       'users' => 
       array (
         'name' => 'users',
@@ -177,8 +212,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * @return HasMany<User, $this>
  */',
-        'startLine' => 54,
-        'endLine' => 57,
+        'startLine' => 59,
+        'endLine' => 62,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -214,8 +249,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * @return HasMany<Setting, $this>
  */',
-        'startLine' => 62,
-        'endLine' => 65,
+        'startLine' => 67,
+        'endLine' => 70,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -249,8 +284,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 67,
-        'endLine' => 73,
+        'startLine' => 72,
+        'endLine' => 78,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

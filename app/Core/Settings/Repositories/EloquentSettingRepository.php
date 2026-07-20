@@ -7,6 +7,7 @@ namespace App\Core\Settings\Repositories;
 use App\Core\Settings\DTOs\SettingData;
 use App\Core\Settings\Models\Setting;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 class EloquentSettingRepository implements SettingRepositoryInterface
 {
@@ -24,16 +25,18 @@ class EloquentSettingRepository implements SettingRepositoryInterface
 
     public function upsert(SettingData $settingData): void
     {
-        Setting::query()->updateOrCreate(
-            [
-                'tenant_id' => $settingData->tenantId,
-                'group' => $settingData->group,
-                'key' => $settingData->key,
-            ],
-            [
-                'value' => $settingData->value,
-                'is_encrypted' => $settingData->isEncrypted,
-            ],
-        );
+        $setting = Setting::query()->firstOrNew([
+            'tenant_id' => $settingData->tenantId,
+            'group' => $settingData->group,
+            'key' => $settingData->key,
+        ]);
+
+        if (! $setting->exists && ! $setting->getAttribute('uuid')) {
+            $setting->uuid = (string) Str::uuid();
+        }
+
+        $setting->value = $settingData->value;
+        $setting->is_encrypted = $settingData->isEncrypted;
+        $setting->save();
     }
 }

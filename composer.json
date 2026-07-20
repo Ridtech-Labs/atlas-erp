@@ -52,8 +52,11 @@
             "npm install",
             "npm run build"
         ],
+        "db:reset": [
+            "@php artisan migrate:fresh --seed"
+        ],
         "ci": [
-            "@composer pint",
+            "@composer format:test",
             "@composer analyse",
             "@composer test"
         ],
@@ -64,12 +67,23 @@
         "analyse": [
             "@php vendor/bin/phpstan analyse --memory-limit=1G"
         ],
+        "format": [
+            "@php vendor/bin/pint"
+        ],
+        "format:test": [
+            "@php vendor/bin/pint --test"
+        ],
         "pint": [
             "@php vendor/bin/pint --test"
         ],
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "quality": [
+            "@composer format:test",
+            "@composer analyse",
+            "@composer test"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

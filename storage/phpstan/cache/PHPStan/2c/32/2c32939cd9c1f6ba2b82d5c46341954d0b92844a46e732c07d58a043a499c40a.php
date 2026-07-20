@@ -15,6 +15,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'settingdata' => 'App\\Core\\Settings\\DTOs\\SettingData',
           'setting' => 'App\\Core\\Settings\\Models\\Setting',
           'collection' => 'Illuminate\\Support\\Collection',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Core\\Settings\\Repositories\\EloquentSettingRepository',
          'functionName' => NULL,
@@ -40,6 +41,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'settingdata' => 'App\\Core\\Settings\\DTOs\\SettingData',
           'setting' => 'App\\Core\\Settings\\Models\\Setting',
           'collection' => 'Illuminate\\Support\\Collection',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Core\\Settings\\Repositories\\EloquentSettingRepository',
          'functionName' => 'allForTenant',
@@ -65,6 +67,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'settingdata' => 'App\\Core\\Settings\\DTOs\\SettingData',
           'setting' => 'App\\Core\\Settings\\Models\\Setting',
           'collection' => 'Illuminate\\Support\\Collection',
+          'str' => 'Illuminate\\Support\\Str',
         ),
          'className' => 'App\\Core\\Settings\\Repositories\\EloquentSettingRepository',
          'functionName' => 'upsert',
@@ -85,7 +88,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php' => 'f7855d5d38471a2d4a2a7c47daeb5c89153d98b5ec41f82d2cf9ef93deb39179',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php' => 'eea09f64c062cb04ffc880258a7f6c5506fb05481c36fb685cc2e706d87c376a',
     ),
   ),
 ));

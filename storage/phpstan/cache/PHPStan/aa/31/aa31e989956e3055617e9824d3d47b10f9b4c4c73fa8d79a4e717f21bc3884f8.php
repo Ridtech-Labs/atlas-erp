@@ -110,7 +110,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/database/migrations/2026_07_18_222646_create_permission_tables.php' => 'bd097ba10f37a131a9a8885ed4723387521a2f222f636b37b911e7b9ed34eec2',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/database/migrations/2026_07_18_222646_create_permission_tables.php' => 'a25c020770eff57713698122c8a11e75a7ba92aaacbe32bfc146039c871569ae',
     ),
   ),
 ));

@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Settings\Repositories\EloquentSettingRepository
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-f7855d5d38471a2d4a2a7c47daeb5c89153d98b5ec41f82d2cf9ef93deb39179',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-eea09f64c062cb04ffc880258a7f6c5506fb05481c36fb685cc2e706d87c376a',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 11,
-    'endLine' => 39,
+    'startLine' => 12,
+    'endLine' => 42,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => NULL,
@@ -89,8 +89,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 16,
-            'endLine' => 16,
+            'startLine' => 17,
+            'endLine' => 17,
             'startColumn' => 34,
             'endColumn' => 47,
             'parameterIndex' => 0,
@@ -113,8 +113,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         'docComment' => '/**
  * @return Collection<int, Setting>
  */',
-        'startLine' => 16,
-        'endLine' => 23,
+        'startLine' => 17,
+        'endLine' => 24,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -152,8 +152,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
             'attributes' => 
             array (
             ),
-            'startLine' => 25,
-            'endLine' => 25,
+            'startLine' => 26,
+            'endLine' => 26,
             'startColumn' => 28,
             'endColumn' => 51,
             'parameterIndex' => 0,
@@ -174,8 +174,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 25,
-        'endLine' => 38,
+        'startLine' => 26,
+        'endLine' => 41,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

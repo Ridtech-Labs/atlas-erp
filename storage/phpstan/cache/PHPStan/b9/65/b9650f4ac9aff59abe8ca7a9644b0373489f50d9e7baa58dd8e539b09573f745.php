@@ -83,7 +83,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php' => 
     array (
-      0 => 'caf4fe61c2905bd1c5154a60f841a725c44f12e2bd552dc9b2f29aebc3081db5',
+      0 => '2ab73202cf0ea73e33a2b055f3200ff749031c1bc95410fbf44d5c52277b5bee',
       1 => 
       array (
         0 => 'app\\core\\administration\\providers\\coreserviceprovider',
@@ -91,6 +91,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       2 => 
       array (
         0 => 'app\\core\\administration\\providers\\register',
+        1 => 'app\\core\\administration\\providers\\boot',
       ),
       3 => 
       array (
@@ -145,7 +146,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Settings/Repositories/EloquentSettingRepository.php' => 
     array (
-      0 => 'f7855d5d38471a2d4a2a7c47daeb5c89153d98b5ec41f82d2cf9ef93deb39179',
+      0 => 'eea09f64c062cb04ffc880258a7f6c5506fb05481c36fb685cc2e706d87c376a',
       1 => 
       array (
         0 => 'app\\core\\settings\\repositories\\eloquentsettingrepository',
@@ -301,7 +302,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php' => 
     array (
-      0 => '69f0a78c298337b8ae9086cd67e33dba0a5e8364a60254abe709cbc08f248ebf',
+      0 => 'a282a63ecedee36a6dd061f8bc1386c727f6e11c5a7e79f0e3008cab232fecb7',
       1 => 
       array (
         0 => 'app\\core\\tenancy\\models\\tenant',
@@ -310,9 +311,10 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       array (
         0 => 'app\\core\\tenancy\\models\\casts',
         1 => 'app\\core\\tenancy\\models\\newfactory',
-        2 => 'app\\core\\tenancy\\models\\users',
-        3 => 'app\\core\\tenancy\\models\\settings',
-        4 => 'app\\core\\tenancy\\models\\getactivitylogoptions',
+        2 => 'app\\core\\tenancy\\models\\isactive',
+        3 => 'app\\core\\tenancy\\models\\users',
+        4 => 'app\\core\\tenancy\\models\\settings',
+        5 => 'app\\core\\tenancy\\models\\getactivitylogoptions',
       ),
       3 => 
       array (
@@ -337,7 +339,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Http/Controllers/Auth/VerifyEmailController.php' => 
     array (
-      0 => '5f6080a239709740135d9138085ceb1857c5570a0fea35e62c976fc90929631e',
+      0 => 'e876c0f8e1784a19c7aeba5aa5ea0816256d452e64bea9952b360e3501b5a945',
       1 => 
       array (
         0 => 'app\\http\\controllers\\auth\\verifyemailcontroller',
@@ -381,7 +383,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php' => 
     array (
-      0 => 'e80034f59cfc5825e5741798cb2a014d9b876fcfeeabed74aaf875c89d9445cc',
+      0 => '1dd2cc3e0a8ea5fa734ec46feb87af7f7d6d19fe1ca20e2af5ef190443ae774f',
       1 => 
       array (
         0 => 'app\\livewire\\forms\\loginform',
@@ -398,7 +400,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php' => 
     array (
-      0 => 'dfcfdb8ddabbc1d6a9bfc60b7a2f25df4ddf42392d1a887a6c3762d87940fa53',
+      0 => 'f25acd495fbccfadc247e69ebd83b21221370f745cd3e6fa3ba1e75eb13ce427',
       1 => 
       array (
         0 => 'app\\models\\user',
@@ -410,7 +412,9 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         2 => 'app\\models\\canaccesspanel',
         3 => 'app\\models\\getfullnameattribute',
         4 => 'app\\models\\isactive',
-        5 => 'app\\models\\getactivitylogoptions',
+        5 => 'app\\models\\isinactive',
+        6 => 'app\\models\\issuspended',
+        7 => 'app\\models\\getactivitylogoptions',
       ),
       3 => 
       array (
@@ -522,6 +526,196 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         2 => 'spatie\\health\\components\\getbackgroundcolor',
         3 => 'spatie\\health\\components\\geticoncolor',
         4 => 'spatie\\health\\components\\geticon',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php' => 
+    array (
+      0 => 'aceeb5ff27a1954dcf25297f7725c063f87837317cf4a64d444d8b9da7bc139c',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\createcompanyaction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\__construct',
+        1 => 'app\\administration\\actions\\companies\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php' => 
+    array (
+      0 => '26c177381f75c73816698da6ac480212db2945ab56afd775e69499b93aace508',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\updatecompanyaction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\__construct',
+        1 => 'app\\administration\\actions\\companies\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Settings/UpdateSettingsAction.php' => 
+    array (
+      0 => 'eb13e4690b35e20970e4a0c58624efd65b11a7fba229fb9496224b88daeaa9dc',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\settings\\updatesettingsaction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\settings\\__construct',
+        1 => 'app\\administration\\actions\\settings\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php' => 
+    array (
+      0 => '44f3bce4108f018f1b45879d4ae2e69718c4e1f9847dc8da8d1a01c4b5de2222',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\createuseraction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\__construct',
+        1 => 'app\\administration\\actions\\users\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php' => 
+    array (
+      0 => '26b9e17034dc4907e2a5398ec09cd734e9f706309c0e167339346a8c5c5a1c2b',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\updateuseraction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\__construct',
+        1 => 'app\\administration\\actions\\users\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php' => 
+    array (
+      0 => 'b148ca9cc540a9ad48021afb4a54ca3ad95aaa4569e3ff4b11e93e703b7a8662',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\updateuserstatusaction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\__construct',
+        1 => 'app\\administration\\actions\\users\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/PermissionName.php' => 
+    array (
+      0 => 'dce50ccc25d848acc2bcddd99f7eba49252ba3f55c84fe658dd4ea5bd82e39b8',
+      1 => 
+      array (
+        0 => 'app\\administration\\enums\\permissionname',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\enums\\values',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/RoleName.php' => 
+    array (
+      0 => 'f5f20a58095474a28843507cca28dc24b5b1b1e0aaafeae1b5f7b64058d31c16',
+      1 => 
+      array (
+        0 => 'app\\administration\\enums\\rolename',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\enums\\values',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php' => 
+    array (
+      0 => 'a273de1dc0c09547e03d773e5712daeaccd0dd7d185943451ee4b742f179ae94',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\tenantpolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\view',
+        1 => 'app\\administration\\policies\\update',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php' => 
+    array (
+      0 => 'dbf2809a41869ddb582c61d9f9bf63ec08d35b741ac5ef607c888eb18793ea47',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\userpolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\view',
+        1 => 'app\\administration\\policies\\update',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php' => 
+    array (
+      0 => '859c7fbe0e6a796c86915234c8af85f4a880823b8aac757408cde2be25e5fcf1',
+      1 => 
+      array (
+        0 => 'app\\administration\\services\\administrationaccessservice',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\services\\issuperadministrator',
+        1 => 'app\\administration\\services\\canmanagetenant',
+        2 => 'app\\administration\\services\\canassignrole',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationActivityLogger.php' => 
+    array (
+      0 => '633935a06473590ab2f72f83c829bab12965401a35bd54afcb094baf82299124',
+      1 => 
+      array (
+        0 => 'app\\administration\\services\\administrationactivitylogger',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\services\\log',
       ),
       3 => 
       array (
