@@ -9,6 +9,7 @@ use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Core\Tenancy\Models\Tenant;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -29,7 +30,7 @@ class CreateCompanyAction
 
         return DB::transaction(function () use ($data, $actor): Tenant {
             $tenant = Tenant::query()->create([
-                'name' => (string) $data['name'],
+                ...Arr::except($data, ['logo']),
                 'slug' => (string) ($data['slug'] ?? Str::slug((string) $data['name'])),
                 'timezone' => (string) ($data['timezone'] ?? 'Africa/Accra'),
                 'currency' => (string) ($data['currency'] ?? 'GHS'),

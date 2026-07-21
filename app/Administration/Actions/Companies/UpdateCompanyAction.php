@@ -10,6 +10,7 @@ use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Core\Tenancy\Models\Tenant;
 use App\Models\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -31,7 +32,7 @@ class UpdateCompanyAction
 
         return DB::transaction(function () use ($tenant, $data, $actor): Tenant {
             $tenant->fill([
-                'name' => (string) ($data['name'] ?? $tenant->name),
+                ...Arr::except($data, ['logo']),
                 'slug' => (string) ($data['slug'] ?? Str::slug((string) ($data['name'] ?? $tenant->name))),
                 'timezone' => (string) ($data['timezone'] ?? $tenant->timezone),
                 'currency' => (string) ($data['currency'] ?? $tenant->currency),

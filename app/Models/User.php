@@ -9,6 +9,7 @@ use App\Core\Shared\Enums\UserStatus;
 use App\Core\Tenancy\Models\Tenant;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,12 +18,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasMedia, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasMedia, HasName, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
@@ -35,8 +37,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var list<string>
      */
     protected $fillable = [
@@ -47,15 +47,14 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
         'email',
         'password',
         'phone',
-        'profile_photo_path',
+        'avatar_path',
         'status',
         'last_login_at',
         'last_login_ip',
+        'email_verified_at',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var list<string>
      */
     protected $hidden = [
@@ -63,11 +62,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -90,12 +84,29 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
     {
         return $this->tenant !== null
             && $this->tenant->isActive()
-            && $this->isActive();
+            && ! $this->isInactive()
+            && ! $this->isSuspended();
     }
 
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    public function getFilamentName(): string
+    {
+        $name = $this->getFullNameAttribute();
+
+        if ($name !== '') {
+            return $name;
+        }
+
+        return (string) $this->email;
+    }
+
+    public function getAvatarAttribute(): ?string
+    {
+        return $this->avatar_path;
     }
 
     public function isActive(): bool
@@ -117,7 +128,16 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
     {
         return LogOptions::defaults()
             ->useLogName('users')
-            ->logOnly(['tenant_id', 'first_name', 'last_name', 'email', 'status', 'last_login_at', 'last_login_ip'])
+            ->logOnly(['tenant_id', 'first_name', 'last_name', 'email', 'phone', 'avatar_path', 'status', 'last_login_at', 'last_login_ip'])
             ->logOnlyDirty();
+    }
+
+    public function tapActivity(Activity $activity, string $eventName): void
+    {
+        $activity->properties = collect($activity->properties?->toArray() ?? [])->merge([
+            'tenant_id' => $this->tenant_id,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
     }
 }

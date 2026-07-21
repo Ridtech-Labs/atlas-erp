@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Providers;
 
+use App\Administration\Policies\ActivityPolicy;
+use App\Administration\Policies\HealthPolicy;
+use App\Administration\Policies\RolePolicy;
+use App\Administration\Policies\SettingPolicy;
 use App\Administration\Policies\TenantPolicy;
 use App\Administration\Policies\UserPolicy;
 use App\Administration\Services\AdministrationAccessService;
@@ -14,6 +18,8 @@ use App\Core\Tenancy\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Activitylog\Models\Activity;
+use Spatie\Permission\Models\Role;
 
 class CoreServiceProvider extends ServiceProvider
 {
@@ -28,8 +34,15 @@ class CoreServiceProvider extends ServiceProvider
     {
         Gate::policy(Tenant::class, TenantPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
+        Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(Activity::class, ActivityPolicy::class);
 
+        Gate::define('manageSettings', fn (User $user): bool => $user->can('settings.manage') || $user->can('settings.update'));
         Gate::define('viewHealth', fn (User $user): bool => $user->can('health.view'));
-        Gate::define('manageSettings', fn (User $user): bool => $user->can('settings.manage'));
+        Gate::define('manageRoles', fn (User $user): bool => $user->can('roles.manage') || $user->can('roles.view'));
+
+        Gate::define('settings.view', [SettingPolicy::class, 'viewAny']);
+        Gate::define('settings.update', [SettingPolicy::class, 'update']);
+        Gate::define('health.view', [HealthPolicy::class, 'viewAny']);
     }
 }

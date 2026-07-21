@@ -10,6 +10,10 @@ return new class extends Migration
 {
     public function up(): void
     {
+        if (Schema::hasColumn('users', 'last_login_ip')) {
+            return;
+        }
+
         Schema::table('users', function (Blueprint $table): void {
             $table->string('last_login_ip', 45)->nullable()->after('last_login_at');
         });
@@ -17,6 +21,10 @@ return new class extends Migration
 
     public function down(): void
     {
+        if (! Schema::hasColumn('users', 'last_login_ip')) {
+            return;
+        }
+
         Schema::table('users', function (Blueprint $table): void {
             $table->dropColumn('last_login_ip');
         });

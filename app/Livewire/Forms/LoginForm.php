@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Forms;
 
+use App\Core\Shared\Enums\UserStatus;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -22,8 +23,6 @@ class LoginForm extends Form
     public bool $remember = false;
 
     /**
-     * Attempt to authenticate the request's credentials.
-     *
      * @throws ValidationException
      */
     public function authenticate(): void
@@ -56,7 +55,15 @@ class LoginForm extends Form
             ]);
         }
 
-        if ($user->isInactive() || $user->isSuspended()) {
+        if ($user->isSuspended()) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'form.email' => 'Your account is suspended.',
+            ]);
+        }
+
+        if ($user->isInactive() || $user->getRawOriginal('status') === UserStatus::Invited->value) {
             Auth::logout();
 
             throw ValidationException::withMessages([
@@ -68,12 +75,14 @@ class LoginForm extends Form
             'last_login_at' => now(),
             'last_login_ip' => request()->ip(),
         ])->save();
+
         activity('auth')
             ->causedBy($user)
             ->performedOn($user)
             ->withProperties([
                 'tenant_id' => $user->tenant_id,
                 'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
             ])
             ->event('login')
             ->log('User logged in');
@@ -81,9 +90,6 @@ class LoginForm extends Form
         RateLimiter::clear($this->throttleKey());
     }
 
-    /**
-     * Ensure the authentication request is not rate limited.
-     */
     protected function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
@@ -102,9 +108,6 @@ class LoginForm extends Form
         ]);
     }
 
-    /**
-     * Get the authentication rate limiting throttle key.
-     */
     protected function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());

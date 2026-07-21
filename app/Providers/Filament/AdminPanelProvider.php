@@ -3,6 +3,8 @@
 namespace App\Providers\Filament;
 
 use App\Core\Administration\Filament\Pages\Dashboard;
+use App\Core\Administration\Filament\Pages\ManageSettings;
+use App\Core\Administration\Filament\Pages\SystemHealth;
 use App\Core\Tenancy\Http\Middleware\ResolveTenant;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -37,6 +39,8 @@ class AdminPanelProvider extends PanelProvider
             ->discoverPages(in: app_path('Core/Administration/Filament/Pages'), for: 'App\Core\Administration\Filament\Pages')
             ->pages([
                 Dashboard::class,
+                ManageSettings::class,
+                SystemHealth::class,
             ])
             ->discoverWidgets(in: app_path('Core/Administration/Filament/Widgets'), for: 'App\Core\Administration\Filament\Widgets')
             ->middleware([

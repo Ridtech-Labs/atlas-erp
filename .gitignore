@@ -24,6 +24,10 @@
 /storage/*.key
 /storage/logs/*
 /storage/pail
+/storage/phpstan/
+/storage/phpstan/*
+/storage/phpstan/cache/
+/storage/phpstan/resultCache.php
 /vendor
 Homestead.json
 Homestead.yaml

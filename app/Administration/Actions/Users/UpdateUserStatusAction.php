@@ -24,6 +24,13 @@ class UpdateUserStatusAction
             throw new BusinessException('You are not allowed to update this user status.', 403);
         }
 
+        $roleNames = array_values($subject->getRoleNames()->all());
+
+        if ($this->access->wouldRemoveFinalAdministrativeAccess($actor, $subject, $roleNames)
+            && $status !== UserStatus::Active) {
+            throw new BusinessException('You cannot disable the final administrative account.', 422);
+        }
+
         $subject->forceFill(['status' => $status->value])->save();
 
         $this->logger->log('user.status_changed', 'User status changed', $actor, $subject, [

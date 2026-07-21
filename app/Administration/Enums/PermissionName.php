@@ -10,12 +10,23 @@ enum PermissionName: string
     case CompaniesView = 'companies.view';
     case CompaniesCreate = 'companies.create';
     case CompaniesUpdate = 'companies.update';
+    case CompaniesDelete = 'companies.delete';
     case UsersView = 'users.view';
     case UsersCreate = 'users.create';
     case UsersUpdate = 'users.update';
     case UsersDelete = 'users.delete';
     case UsersManageStatus = 'users.manage_status';
+    case RolesManage = 'roles.manage';
+    case RolesView = 'roles.view';
+    case RolesCreate = 'roles.create';
+    case RolesUpdate = 'roles.update';
+    case RolesDelete = 'roles.delete';
+    case RolesAssign = 'roles.assign';
+    case PermissionsView = 'permissions.view';
     case SettingsManage = 'settings.manage';
+    case SettingsView = 'settings.view';
+    case SettingsUpdate = 'settings.update';
+    case ActivityLogsView = 'activity_logs.view';
     case HealthView = 'health.view';
 
     /**

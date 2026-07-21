@@ -25,14 +25,22 @@ class UpdateUserAction
      */
     public function execute(User $subject, array $data, array $roleNames, User $actor): User
     {
-        if (! $actor->can('users.update') || ! $this->access->canManageTenant($actor, $subject->tenant_id)) {
+        $targetTenantId = (int) ($data['tenant_id'] ?? $subject->tenant_id);
+
+        if (! $actor->can('users.update')
+            || ! $this->access->canAccessTenant($actor, $subject->tenant_id)
+            || ! $this->access->canAccessTenant($actor, $targetTenantId)) {
             throw new BusinessException('You are not allowed to update this user.', 403);
         }
 
         foreach ($roleNames as $roleName) {
-            if (! $this->access->canAssignRole($actor, $roleName)) {
+            if (! $this->access->canManageRole($actor, $roleName)) {
                 throw new BusinessException('You are not allowed to assign the selected role.', 403);
             }
+        }
+
+        if ($this->access->wouldRemoveFinalAdministrativeAccess($actor, $subject, $roleNames)) {
+            throw new BusinessException('You cannot remove the final administrative access from this account.', 422);
         }
 
         return DB::transaction(function () use ($subject, $data, $roleNames, $actor): User {

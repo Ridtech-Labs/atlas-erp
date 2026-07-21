@@ -16,9 +16,6 @@ class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $this->call(RoleAndPermissionSeeder::class);
@@ -29,6 +26,11 @@ class DatabaseSeeder extends Seeder
                 [
                     'uuid' => (string) Str::uuid(),
                     'name' => 'Atlas Demo Company',
+                    'email' => 'hello@atlas-erp.test',
+                    'phone' => '+233000000000',
+                    'address' => 'Atlas ERP Demo Address',
+                    'city' => 'Accra',
+                    'country' => 'Ghana',
                     'timezone' => 'Africa/Accra',
                     'currency' => 'GHS',
                     'status' => 'active',
@@ -43,6 +45,7 @@ class DatabaseSeeder extends Seeder
                     'first_name' => 'Atlas',
                     'last_name' => 'Administrator',
                     'phone' => '+233000000000',
+                    'last_login_ip' => '127.0.0.1',
                     'status' => 'active',
                     'email_verified_at' => now(),
                     'password' => bcrypt('password'),
@@ -61,7 +64,29 @@ class DatabaseSeeder extends Seeder
                     'currency' => $tenant->currency,
                     'date_format' => 'Y-m-d',
                     'time_format' => 'H:i',
-                    'theme' => 'atlas',
+                    'country' => $tenant->country,
+                    'language' => 'en',
+                ],
+            ));
+
+            app(SettingService::class)->update(new SettingData(
+                tenantId: $tenant->id,
+                group: 'branding',
+                key: 'identity',
+                value: [
+                    'logo' => null,
+                    'small_logo' => null,
+                    'primary_brand_preference' => 'amber',
+                ],
+            ));
+
+            app(SettingService::class)->update(new SettingData(
+                tenantId: $tenant->id,
+                group: 'notifications',
+                key: 'channels',
+                value: [
+                    'email_notifications_enabled' => true,
+                    'database_notifications_enabled' => true,
                 ],
             ));
         });

@@ -28,14 +28,16 @@ class RoleAndPermissionSeeder extends Seeder
             RoleName::SuperAdministrator->value => PermissionName::values(),
             RoleName::CompanyAdministrator->value => [
                 PermissionName::DashboardView->value,
-                PermissionName::CompaniesView->value,
-                PermissionName::CompaniesUpdate->value,
                 PermissionName::UsersView->value,
                 PermissionName::UsersCreate->value,
                 PermissionName::UsersUpdate->value,
                 PermissionName::UsersDelete->value,
                 PermissionName::UsersManageStatus->value,
+                PermissionName::RolesAssign->value,
                 PermissionName::SettingsManage->value,
+                PermissionName::SettingsView->value,
+                PermissionName::SettingsUpdate->value,
+                PermissionName::ActivityLogsView->value,
                 PermissionName::HealthView->value,
             ],
             RoleName::OperationsManager->value => [
