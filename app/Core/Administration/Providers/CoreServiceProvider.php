@@ -36,6 +36,11 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Activity::class, ActivityPolicy::class);
+
+        Gate::define('manageSettings', fn (User $user): bool => $user->can('settings.manage') || $user->can('settings.update'));
+        Gate::define('viewHealth', fn (User $user): bool => $user->can('health.view'));
+        Gate::define('manageRoles', fn (User $user): bool => $user->can('roles.manage') || $user->can('roles.view'));
+
         Gate::define('settings.view', [SettingPolicy::class, 'viewAny']);
         Gate::define('settings.update', [SettingPolicy::class, 'update']);
         Gate::define('health.view', [HealthPolicy::class, 'viewAny']);

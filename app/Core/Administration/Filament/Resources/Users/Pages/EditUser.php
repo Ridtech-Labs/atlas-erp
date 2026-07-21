@@ -46,6 +46,17 @@ class EditUser extends EditRecord
         $roleNames = $data['roles'] ?? [];
         unset($data['roles'], $data['password_confirmation']);
 
-        return app(UpdateUserAction::class)->execute($record, $data, $roleNames, auth()->user());
+        return app(UpdateUserAction::class)->execute($record, $data, $roleNames, $this->authenticatedUser());
+    }
+
+    private function authenticatedUser(): User
+    {
+        $user = auth()->user();
+
+        if (! $user instanceof User) {
+            abort(403);
+        }
+
+        return $user;
     }
 }

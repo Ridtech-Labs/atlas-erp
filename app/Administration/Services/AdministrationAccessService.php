@@ -29,6 +29,11 @@ class AdministrationAccessService
         return $this->isSuperAdministrator($actor) || $this->belongsToTenant($actor, $tenantId);
     }
 
+    public function canManageTenant(?User $actor, ?int $tenantId): bool
+    {
+        return $this->canAccessTenant($actor, $tenantId);
+    }
+
     public function canManageRole(User $actor, string $roleName): bool
     {
         if ($this->isSuperAdministrator($actor)) {
@@ -42,8 +47,13 @@ class AdministrationAccessService
         return $roleName !== RoleName::SuperAdministrator->value;
     }
 
+    public function canAssignRole(User $actor, string $roleName): bool
+    {
+        return $this->canManageRole($actor, $roleName);
+    }
+
     /**
-     * @param  array<int, string>  $newRoleNames
+     * @param  list<string>  $newRoleNames
      */
     public function wouldRemoveFinalAdministrativeAccess(User $actor, User $subject, array $newRoleNames): bool
     {

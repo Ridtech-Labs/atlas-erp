@@ -16,9 +16,13 @@ class AdministrationActivityLogger
     {
         $tenantId = $properties['tenant_id'] ?? ($actor !== null ? $actor->tenant_id : $subject?->getAttribute('tenant_id'));
 
-        activity('administration')
-            ->causedBy($actor)
-            ->performedOn($subject)
+        $activity = activity('administration')->causedBy($actor);
+
+        if ($subject !== null) {
+            $activity->performedOn($subject);
+        }
+
+        $activity
             ->withProperties(array_filter([
                 ...$properties,
                 'tenant_id' => $tenantId,

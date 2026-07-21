@@ -21,13 +21,14 @@ class UpdateUserAction
 
     /**
      * @param  array<string, mixed>  $data
-     * @param  array<int, string>  $roleNames
+     * @param  list<string>  $roleNames
      */
     public function execute(User $subject, array $data, array $roleNames, User $actor): User
     {
         $targetTenantId = (int) ($data['tenant_id'] ?? $subject->tenant_id);
 
-        if (! $this->access->canAccessTenant($actor, $subject->tenant_id)
+        if (! $actor->can('users.update')
+            || ! $this->access->canAccessTenant($actor, $subject->tenant_id)
             || ! $this->access->canAccessTenant($actor, $targetTenantId)) {
             throw new BusinessException('You are not allowed to update this user.', 403);
         }

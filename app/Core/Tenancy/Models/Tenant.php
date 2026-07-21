@@ -44,10 +44,6 @@ class Tenant extends Model implements HasMedia
         'country',
     ];
 
-    protected $appends = [
-        'is_active',
-    ];
-
     protected function casts(): array
     {
         return [
@@ -58,6 +54,11 @@ class Tenant extends Model implements HasMedia
     protected static function newFactory(): TenantFactory
     {
         return TenantFactory::new();
+    }
+
+    public function isActive(): bool
+    {
+        return $this->getRawOriginal('status') === TenantStatus::Active->value;
     }
 
     /**
@@ -86,15 +87,10 @@ class Tenant extends Model implements HasMedia
 
     public function tapActivity(Activity $activity, string $eventName): void
     {
-        $activity->properties = $activity->properties->merge([
+        $activity->properties = collect($activity->properties?->toArray() ?? [])->merge([
             'tenant_id' => $this->getKey(),
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
-    }
-
-    public function getIsActiveAttribute(): bool
-    {
-        return $this->getRawOriginal('status') === TenantStatus::Active->value;
     }
 }

@@ -10,22 +10,21 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        DB::transaction(function (): void {
-            $this->call(RoleAndPermissionSeeder::class);
+        $this->call(RoleAndPermissionSeeder::class);
 
+        DB::transaction(function (): void {
             $tenant = Tenant::query()->firstOrCreate(
                 ['slug' => 'atlas-demo'],
                 [
+                    'uuid' => (string) Str::uuid(),
                     'name' => 'Atlas Demo Company',
                     'email' => 'hello@atlas-erp.test',
                     'phone' => '+233000000000',
@@ -41,6 +40,7 @@ class DatabaseSeeder extends Seeder
             $admin = User::query()->firstOrCreate(
                 ['email' => 'admin@atlas-erp.test'],
                 [
+                    'uuid' => (string) Str::uuid(),
                     'tenant_id' => $tenant->id,
                     'first_name' => 'Atlas',
                     'last_name' => 'Administrator',

@@ -2,10 +2,20 @@ includes:
     - vendor/larastan/larastan/extension.neon
 
 parameters:
+    level: 8
+    parallel:
+        maximumNumberOfProcesses: 1
     paths:
         - app
         - routes
         - database/factories
         - database/seeders
-    level: 7
+    excludePaths:
+        analyse:
+            - bootstrap/cache/*
+            - database/migrations/*
+            - storage/*
+            - public/build/*
+            - vendor/*
     tmpDir: storage/phpstan
+    treatPhpDocTypesAsCertain: true

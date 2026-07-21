@@ -14,13 +14,11 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::get('health', function (TenantContext $tenantContext) {
-    abort_unless(auth()->check(), 403);
-
     return response()->json([
         'application' => config('app.name'),
         'tenant' => $tenantContext->tenant()?->only(['id', 'uuid', 'name', 'slug']),
         'status' => 'ok',
     ]);
-})->middleware(['auth', 'verified'])->name('health');
+})->middleware(['auth', 'verified', 'can:viewHealth'])->name('health');
 
 require __DIR__.'/auth.php';

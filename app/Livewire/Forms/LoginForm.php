@@ -23,8 +23,6 @@ class LoginForm extends Form
     public bool $remember = false;
 
     /**
-     * Attempt to authenticate the request's credentials.
-     *
      * @throws ValidationException
      */
     public function authenticate(): void
@@ -49,7 +47,7 @@ class LoginForm extends Form
             ]);
         }
 
-        if ($user->tenant === null || ! $user->tenant->is_active) {
+        if ($user->tenant === null || ! $user->tenant->isActive()) {
             Auth::logout();
 
             throw ValidationException::withMessages([
@@ -92,9 +90,6 @@ class LoginForm extends Form
         RateLimiter::clear($this->throttleKey());
     }
 
-    /**
-     * Ensure the authentication request is not rate limited.
-     */
     protected function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
@@ -113,9 +108,6 @@ class LoginForm extends Form
         ]);
     }
 
-    /**
-     * Get the authentication rate limiting throttle key.
-     */
     protected function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->email).'|'.request()->ip());

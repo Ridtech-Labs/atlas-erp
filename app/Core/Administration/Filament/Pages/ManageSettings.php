@@ -8,6 +8,7 @@ use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Settings\Actions\UpdateSettingAction;
 use App\Core\Settings\DTOs\SettingData;
 use App\Core\Settings\Services\SettingService;
+use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use UnitEnum;
@@ -33,17 +34,17 @@ class ManageSettings extends Page
 
     public function mount(SettingService $settings): void
     {
-        $user = auth()->user();
-        $tenantId = $user?->tenant_id;
+        $user = $this->authenticatedUser();
+        $tenantId = $user->tenant_id;
         $records = $settings->allForTenant($tenantId)->keyBy(fn ($record) => "{$record->group}.{$record->key}");
 
         $this->general = $this->arrayValue($records['company.profile']->value ?? null, [
-            'name' => $user?->tenant?->name,
-            'timezone' => $user?->tenant?->timezone,
-            'currency' => $user?->tenant?->currency,
+            'name' => $user->tenant?->name,
+            'timezone' => $user->tenant?->timezone,
+            'currency' => $user->tenant?->currency,
             'date_format' => 'Y-m-d',
             'time_format' => 'H:i',
-            'country' => $user?->tenant?->country,
+            'country' => $user->tenant?->country,
             'language' => 'en',
         ]);
 
@@ -66,9 +67,9 @@ class ManageSettings extends Page
 
     public function save(UpdateSettingAction $action, AdministrationActivityLogger $logger): void
     {
-        $user = auth()->user();
+        $user = $this->authenticatedUser();
 
-        abort_unless($user?->can('settings.update'), 403);
+        abort_unless($user->can('settings.update'), 403);
 
         $this->validate([
             'general.name' => ['required', 'string', 'max:255'],
@@ -106,5 +107,16 @@ class ManageSettings extends Page
     private function arrayValue(mixed $value, array $default): array
     {
         return is_array($value) ? $value : $default;
+    }
+
+    private function authenticatedUser(): User
+    {
+        $user = auth()->user();
+
+        if (! $user instanceof User) {
+            abort(403);
+        }
+
+        return $user;
     }
 }

@@ -7,6 +7,7 @@ namespace App\Core\Administration\Filament\Resources\Tenants\Pages;
 use App\Administration\Actions\Companies\UpdateCompanyAction;
 use App\Core\Administration\Filament\Resources\Tenants\TenantResource;
 use App\Core\Tenancy\Models\Tenant;
+use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
@@ -34,6 +35,17 @@ class EditTenant extends EditRecord
             throw new \RuntimeException('Expected tenant record.');
         }
 
-        return app(UpdateCompanyAction::class)->execute($record, $data, auth()->user());
+        return app(UpdateCompanyAction::class)->execute($record, $data, $this->authenticatedUser());
+    }
+
+    private function authenticatedUser(): User
+    {
+        $user = auth()->user();
+
+        if (! $user instanceof User) {
+            abort(403);
+        }
+
+        return $user;
     }
 }

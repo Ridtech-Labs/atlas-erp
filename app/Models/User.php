@@ -9,6 +9,7 @@ use App\Core\Shared\Enums\UserStatus;
 use App\Core\Tenancy\Models\Tenant;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasName;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,7 +24,7 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements FilamentUser, HasMedia, MustVerifyEmail
+class User extends Authenticatable implements FilamentUser, HasMedia, HasName, MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory;
@@ -36,8 +37,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
     use SoftDeletes;
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var list<string>
      */
     protected $fillable = [
@@ -52,11 +51,10 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
         'status',
         'last_login_at',
         'last_login_ip',
+        'email_verified_at',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
      * @var list<string>
      */
     protected $hidden = [
@@ -64,11 +62,6 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -90,7 +83,7 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
     public function canAccessPanel(Panel $panel): bool
     {
         return $this->tenant !== null
-            && $this->tenant->is_active
+            && $this->tenant->isActive()
             && ! $this->isInactive()
             && ! $this->isSuspended();
     }
@@ -98,6 +91,17 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
     public function getFullNameAttribute(): string
     {
         return trim("{$this->first_name} {$this->last_name}");
+    }
+
+    public function getFilamentName(): string
+    {
+        $name = $this->getFullNameAttribute();
+
+        if ($name !== '') {
+            return $name;
+        }
+
+        return (string) $this->email;
     }
 
     public function getAvatarAttribute(): ?string
@@ -110,6 +114,16 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
         return $this->getRawOriginal('status') === UserStatus::Active->value;
     }
 
+    public function isInactive(): bool
+    {
+        return $this->getRawOriginal('status') === UserStatus::Inactive->value;
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->getRawOriginal('status') === UserStatus::Suspended->value;
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -120,20 +134,10 @@ class User extends Authenticatable implements FilamentUser, HasMedia, MustVerify
 
     public function tapActivity(Activity $activity, string $eventName): void
     {
-        $activity->properties = $activity->properties->merge([
+        $activity->properties = collect($activity->properties?->toArray() ?? [])->merge([
             'tenant_id' => $this->tenant_id,
             'ip_address' => request()->ip(),
             'user_agent' => request()->userAgent(),
         ]);
-    }
-
-    public function isInactive(): bool
-    {
-        return $this->getRawOriginal('status') === UserStatus::Inactive->value;
-    }
-
-    public function isSuspended(): bool
-    {
-        return $this->getRawOriginal('status') === UserStatus::Suspended->value;
     }
 }

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+set -eu
+
+echo "Running repository quality checks before push..."
+composer quality

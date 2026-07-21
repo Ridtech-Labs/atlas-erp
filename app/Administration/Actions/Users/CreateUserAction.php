@@ -7,6 +7,7 @@ namespace App\Administration\Actions\Users;
 use App\Administration\Enums\RoleName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
+use App\Core\Shared\Enums\UserStatus;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Core\Shared\Notifications\SystemNotification;
 use App\Models\User;
@@ -22,13 +23,13 @@ class CreateUserAction
 
     /**
      * @param  array<string, mixed>  $data
-     * @param  array<int, string>  $roleNames
+     * @param  list<string>  $roleNames
      */
     public function execute(array $data, array $roleNames, User $actor): User
     {
-        $tenantId = (int) ($data['tenant_id'] ?? 0);
+        $tenantId = (int) ($data['tenant_id'] ?? $actor->tenant_id);
 
-        if (! $this->access->canAccessTenant($actor, $tenantId)) {
+        if (! $actor->can('users.create') || ! $this->access->canAccessTenant($actor, $tenantId)) {
             throw new BusinessException('You are not allowed to create users for the selected company.', 403);
         }
 
@@ -38,9 +39,15 @@ class CreateUserAction
             }
         }
 
-        return DB::transaction(function () use ($data, $roleNames, $actor): User {
+        return DB::transaction(function () use ($data, $roleNames, $actor, $tenantId): User {
             $user = User::query()->create([
-                ...$data,
+                'tenant_id' => $tenantId,
+                'first_name' => (string) $data['first_name'],
+                'last_name' => (string) $data['last_name'],
+                'email' => (string) $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'avatar_path' => $data['avatar_path'] ?? null,
+                'status' => $data['status'] ?? UserStatus::Active->value,
                 'password' => Hash::make((string) $data['password']),
             ]);
 
