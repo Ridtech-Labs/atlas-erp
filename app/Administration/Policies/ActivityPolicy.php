@@ -8,6 +8,7 @@ use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Models\User;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 class ActivityPolicy
 {
@@ -17,7 +18,7 @@ class ActivityPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->can(PermissionName::ActivityLogsView->value);
+        return $this->hasPermission($user, PermissionName::ActivityLogsView->value);
     }
 
     public function view(User $user, Activity $activity): bool
@@ -27,5 +28,14 @@ class ActivityPolicy
         return $this->viewAny($user) && (
             $tenantId === null || $this->access->canAccessTenant($user, (int) $tenantId)
         );
+    }
+
+    private function hasPermission(User $user, string $permission): bool
+    {
+        try {
+            return $user->hasPermissionTo($permission);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 }

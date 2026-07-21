@@ -6,16 +6,25 @@ namespace App\Administration\Policies;
 
 use App\Administration\Enums\PermissionName;
 use App\Models\User;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 class SettingPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can(PermissionName::SettingsView->value);
+        try {
+            return $user->hasPermissionTo(PermissionName::SettingsView->value);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 
     public function update(User $user): bool
     {
-        return $user->can(PermissionName::SettingsUpdate->value);
+        try {
+            return $user->hasPermissionTo(PermissionName::SettingsUpdate->value);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 }

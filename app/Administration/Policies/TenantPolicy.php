@@ -8,6 +8,7 @@ use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Core\Tenancy\Models\Tenant;
 use App\Models\User;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 class TenantPolicy
 {
@@ -17,30 +18,36 @@ class TenantPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->can(PermissionName::CompaniesView->value);
+        return $this->hasPermission($user, PermissionName::CompaniesView->value);
     }
 
     public function view(User $user, Tenant $tenant): bool
     {
-        return $user->can(PermissionName::CompaniesView->value)
-            && $this->access->canAccessTenant($user, $tenant->id);
+        return $this->access->canAccessTenant($user, $tenant->id)
+            && (
+                $this->hasPermission($user, PermissionName::CompaniesView->value)
+                || $this->access->isCompanyAdministrator($user)
+            );
     }
 
     public function create(User $user): bool
     {
-        return $user->can(PermissionName::CompaniesCreate->value)
+        return $this->hasPermission($user, PermissionName::CompaniesCreate->value)
             && $this->access->isSuperAdministrator($user);
     }
 
     public function update(User $user, Tenant $tenant): bool
     {
-        return $user->can(PermissionName::CompaniesUpdate->value)
-            && $this->access->canAccessTenant($user, $tenant->id);
+        return $this->access->canAccessTenant($user, $tenant->id)
+            && (
+                $this->hasPermission($user, PermissionName::CompaniesUpdate->value)
+                || $this->access->isCompanyAdministrator($user)
+            );
     }
 
     public function delete(User $user, Tenant $tenant): bool
     {
-        return $user->can(PermissionName::CompaniesDelete->value)
+        return $this->hasPermission($user, PermissionName::CompaniesDelete->value)
             && $this->access->isSuperAdministrator($user);
     }
 
@@ -52,5 +59,14 @@ class TenantPolicy
     public function forceDelete(User $user, Tenant $tenant): bool
     {
         return $this->delete($user, $tenant);
+    }
+
+    private function hasPermission(User $user, string $permission): bool
+    {
+        try {
+            return $user->hasPermissionTo($permission);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 }

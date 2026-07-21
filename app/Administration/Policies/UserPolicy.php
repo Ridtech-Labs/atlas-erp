@@ -7,6 +7,7 @@ namespace App\Administration\Policies;
 use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Models\User;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 
 class UserPolicy
 {
@@ -16,29 +17,29 @@ class UserPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->can(PermissionName::UsersView->value);
+        return $this->hasPermission($user, PermissionName::UsersView->value);
     }
 
     public function view(User $user, User $subject): bool
     {
-        return $user->can(PermissionName::UsersView->value)
+        return $this->hasPermission($user, PermissionName::UsersView->value)
             && $this->access->canAccessTenant($user, $subject->tenant_id);
     }
 
     public function create(User $user): bool
     {
-        return $user->can(PermissionName::UsersCreate->value);
+        return $this->hasPermission($user, PermissionName::UsersCreate->value);
     }
 
     public function update(User $user, User $subject): bool
     {
-        return $user->can(PermissionName::UsersUpdate->value)
+        return $this->hasPermission($user, PermissionName::UsersUpdate->value)
             && $this->access->canAccessTenant($user, $subject->tenant_id);
     }
 
     public function delete(User $user, User $subject): bool
     {
-        return $user->can(PermissionName::UsersDelete->value)
+        return $this->hasPermission($user, PermissionName::UsersDelete->value)
             && $this->access->canAccessTenant($user, $subject->tenant_id);
     }
 
@@ -50,5 +51,14 @@ class UserPolicy
     public function forceDelete(User $user, User $subject): bool
     {
         return $this->delete($user, $subject);
+    }
+
+    private function hasPermission(User $user, string $permission): bool
+    {
+        try {
+            return $user->hasPermissionTo($permission);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 }

@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Administration\Providers;
 
 use App\Administration\Policies\ActivityPolicy;
-use App\Administration\Policies\HealthPolicy;
 use App\Administration\Policies\RolePolicy;
-use App\Administration\Policies\SettingPolicy;
 use App\Administration\Policies\TenantPolicy;
 use App\Administration\Policies\UserPolicy;
 use App\Administration\Services\AdministrationAccessService;
@@ -19,6 +17,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\Models\Activity;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\Models\Role;
 
 class CoreServiceProvider extends ServiceProvider
@@ -37,12 +36,17 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Activity::class, ActivityPolicy::class);
 
-        Gate::define('manageSettings', fn (User $user): bool => $user->can('settings.manage') || $user->can('settings.update'));
-        Gate::define('viewHealth', fn (User $user): bool => $user->can('health.view'));
-        Gate::define('manageRoles', fn (User $user): bool => $user->can('roles.manage') || $user->can('roles.view'));
+        Gate::define('manageSettings', fn (User $user): bool => $this->hasPermission($user, 'settings.manage') || $this->hasPermission($user, 'settings.update'));
+        Gate::define('viewHealth', fn (User $user): bool => $this->hasPermission($user, 'health.view'));
+        Gate::define('manageRoles', fn (User $user): bool => $this->hasPermission($user, 'roles.manage') || $this->hasPermission($user, 'roles.view'));
+    }
 
-        Gate::define('settings.view', [SettingPolicy::class, 'viewAny']);
-        Gate::define('settings.update', [SettingPolicy::class, 'update']);
-        Gate::define('health.view', [HealthPolicy::class, 'viewAny']);
+    private function hasPermission(User $user, string $permission): bool
+    {
+        try {
+            return $user->hasPermissionTo($permission);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 }
