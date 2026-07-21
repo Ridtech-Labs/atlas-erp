@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/SystemStatusWidget.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Administration\Filament\Widgets\SystemStatusWidget
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-c243fdcbcb2757b3d27436c5e34e824fdef2859e183876390f7c33c46e066f1a',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-f51d9bcafa082d6ffa74750eb185a8c03de115f4797397d3a77fee9390018d07',
    'data' => 
   array (
     'locatedSource' => 
@@ -27,7 +27,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 12,
-    'endLine' => 48,
+    'endLine' => 49,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Filament\\Widgets\\StatsOverviewWidget',
@@ -66,7 +66,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
         'docComment' => NULL,
         'startLine' => 14,
-        'endLine' => 21,
+        'endLine' => 22,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -100,8 +100,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 23,
-        'endLine' => 32,
+        'startLine' => 24,
+        'endLine' => 33,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,
@@ -135,8 +135,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 34,
-        'endLine' => 47,
+        'startLine' => 35,
+        'endLine' => 48,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Administration\Providers\CoreServiceProvider
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-caf4fe61c2905bd1c5154a60f841a725c44f12e2bd552dc9b2f29aebc3081db5',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-cc2be6682296566c63f1216f1710f523665f5a7188d1f2288805bf16f6c04ac1',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 11,
-    'endLine' => 17,
+    'startLine' => 24,
+    'endLine' => 43,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Support\\ServiceProvider',
@@ -65,8 +65,43 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 13,
-        'endLine' => 16,
+        'startLine' => 26,
+        'endLine' => 31,
+        'startColumn' => 5,
+        'endColumn' => 5,
+        'couldThrow' => false,
+        'isClosure' => false,
+        'isGenerator' => false,
+        'isVariadic' => false,
+        'modifiers' => 1,
+        'namespace' => 'App\\Core\\Administration\\Providers',
+        'declaringClassName' => 'App\\Core\\Administration\\Providers\\CoreServiceProvider',
+        'implementingClassName' => 'App\\Core\\Administration\\Providers\\CoreServiceProvider',
+        'currentClassName' => 'App\\Core\\Administration\\Providers\\CoreServiceProvider',
+        'aliasName' => NULL,
+      ),
+      'boot' => 
+      array (
+        'name' => 'boot',
+        'parameters' => 
+        array (
+        ),
+        'returnsReference' => false,
+        'returnType' => 
+        array (
+          'class' => 'PHPStan\\BetterReflection\\Reflection\\ReflectionNamedType',
+          'data' => 
+          array (
+            'name' => 'void',
+            'isIdentifier' => true,
+          ),
+        ),
+        'attributes' => 
+        array (
+        ),
+        'docComment' => NULL,
+        'startLine' => 33,
+        'endLine' => 42,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

@@ -17,6 +17,7 @@ class SystemStatusWidget extends StatsOverviewWidget
             Stat::make('Database Status', $this->databaseStatus()),
             Stat::make('Redis Status', $this->redisStatus()),
             Stat::make('Queue Driver', (string) config('queue.default')),
+            Stat::make('Application', strtoupper((string) app()->environment())),
         ];
     }
 

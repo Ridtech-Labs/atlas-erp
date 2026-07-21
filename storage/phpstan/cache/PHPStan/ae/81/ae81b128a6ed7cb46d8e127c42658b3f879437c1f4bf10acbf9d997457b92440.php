@@ -12,6 +12,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'Database\\Seeders',
          'uses' => 
         array (
+          'rolename' => 'App\\Administration\\Enums\\RoleName',
           'settingdata' => 'App\\Core\\Settings\\DTOs\\SettingData',
           'settingservice' => 'App\\Core\\Settings\\Services\\SettingService',
           'tenant' => 'App\\Core\\Tenancy\\Models\\Tenant',
@@ -19,8 +20,6 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'withoutmodelevents' => 'Illuminate\\Database\\Console\\Seeds\\WithoutModelEvents',
           'seeder' => 'Illuminate\\Database\\Seeder',
           'db' => 'Illuminate\\Support\\Facades\\DB',
-          'permission' => 'Spatie\\Permission\\Models\\Permission',
-          'role' => 'Spatie\\Permission\\Models\\Role',
         ),
          'className' => 'Database\\Seeders\\DatabaseSeeder',
          'functionName' => NULL,
@@ -103,6 +102,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'Database\\Seeders',
          'uses' => 
         array (
+          'rolename' => 'App\\Administration\\Enums\\RoleName',
           'settingdata' => 'App\\Core\\Settings\\DTOs\\SettingData',
           'settingservice' => 'App\\Core\\Settings\\Services\\SettingService',
           'tenant' => 'App\\Core\\Tenancy\\Models\\Tenant',
@@ -110,8 +110,6 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'withoutmodelevents' => 'Illuminate\\Database\\Console\\Seeds\\WithoutModelEvents',
           'seeder' => 'Illuminate\\Database\\Seeder',
           'db' => 'Illuminate\\Support\\Facades\\DB',
-          'permission' => 'Spatie\\Permission\\Models\\Permission',
-          'role' => 'Spatie\\Permission\\Models\\Role',
         ),
          'className' => 'Database\\Seeders\\DatabaseSeeder',
          'functionName' => 'run',
@@ -132,7 +130,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php' => 'a138abeb3fdf2cc1ffc689df4df9fb12de96174232dc58760f5ed4c0dd513245',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/database/seeders/DatabaseSeeder.php' => '81fcced5e3add79d36bbbb367a45ab19f69bb2df2200ad2df6a495b5ddd596c4',
       '/Users/ridwankadri/Desktop/code/atlas-erp/vendor/composer/../laravel/framework/src/Illuminate/Database/Console/Seeds/WithoutModelEvents.php' => 'b546128633d71f88c7834595917a65683bf5415a5add0eeba398571c2f63ccc0',
     ),
   ),

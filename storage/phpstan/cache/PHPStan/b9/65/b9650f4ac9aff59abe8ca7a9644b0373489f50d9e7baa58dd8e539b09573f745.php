@@ -22,7 +22,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/CurrentContextWidget.php' => 
     array (
-      0 => '7e73d359f3509b080d85433d3a29a0fd856c20226918dc612c66e9ac4b4bf494',
+      0 => '728e54f0ba5a83984fe46022e3e56b6cc701cc11c086df731073b7715479c2c5',
       1 => 
       array (
         0 => 'app\\core\\administration\\filament\\widgets\\currentcontextwidget',
@@ -51,7 +51,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/RecentActivityWidget.php' => 
     array (
-      0 => '51232d2916bdc5ef383d7e21ada02c79bfa07b0732cf4da34c9e3f725c9da20a',
+      0 => '162792891b9948a1783bfcbc50735c370b9249670baa417c00ea5d6de598938d',
       1 => 
       array (
         0 => 'app\\core\\administration\\filament\\widgets\\recentactivitywidget',
@@ -66,7 +66,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/SystemStatusWidget.php' => 
     array (
-      0 => 'c243fdcbcb2757b3d27436c5e34e824fdef2859e183876390f7c33c46e066f1a',
+      0 => 'f51d9bcafa082d6ffa74750eb185a8c03de115f4797397d3a77fee9390018d07',
       1 => 
       array (
         0 => 'app\\core\\administration\\filament\\widgets\\systemstatuswidget',
@@ -83,7 +83,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Providers/CoreServiceProvider.php' => 
     array (
-      0 => 'caf4fe61c2905bd1c5154a60f841a725c44f12e2bd552dc9b2f29aebc3081db5',
+      0 => 'cc2be6682296566c63f1216f1710f523665f5a7188d1f2288805bf16f6c04ac1',
       1 => 
       array (
         0 => 'app\\core\\administration\\providers\\coreserviceprovider',
@@ -91,6 +91,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
       2 => 
       array (
         0 => 'app\\core\\administration\\providers\\register',
+        1 => 'app\\core\\administration\\providers\\boot',
       ),
       3 => 
       array (
@@ -238,7 +239,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Shared/Enums/UserStatus.php' => 
     array (
-      0 => '03c9a99a515c97baec5f596354056ee003b0821f655cf9ca154ddb6a92994feb',
+      0 => '0a0106b7879f706d7a15347ecf4fdae1caaad95166273acde5b220984f026ad6',
       1 => 
       array (
         0 => 'app\\core\\shared\\enums\\userstatus',
@@ -301,7 +302,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Tenancy/Models/Tenant.php' => 
     array (
-      0 => '69f0a78c298337b8ae9086cd67e33dba0a5e8364a60254abe709cbc08f248ebf',
+      0 => '17d523b2b445d5cd361c1dec5010f18384cb003b1a90a491241fb1a93153108d',
       1 => 
       array (
         0 => 'app\\core\\tenancy\\models\\tenant',
@@ -313,6 +314,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         2 => 'app\\core\\tenancy\\models\\users',
         3 => 'app\\core\\tenancy\\models\\settings',
         4 => 'app\\core\\tenancy\\models\\getactivitylogoptions',
+        5 => 'app\\core\\tenancy\\models\\tapactivity',
+        6 => 'app\\core\\tenancy\\models\\getisactiveattribute',
       ),
       3 => 
       array (
@@ -381,7 +384,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php' => 
     array (
-      0 => 'e80034f59cfc5825e5741798cb2a014d9b876fcfeeabed74aaf875c89d9445cc',
+      0 => '042b9831fe9d9822ae7413ee9c9f6095d5dbdc1265affc3b529862b201247805',
       1 => 
       array (
         0 => 'app\\livewire\\forms\\loginform',
@@ -398,7 +401,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Models/User.php' => 
     array (
-      0 => 'dfcfdb8ddabbc1d6a9bfc60b7a2f25df4ddf42392d1a887a6c3762d87940fa53',
+      0 => 'f14fde4db3833e679fb0554c8600fe43b78aa3507e68a60eca8187811d2a116d',
       1 => 
       array (
         0 => 'app\\models\\user',
@@ -409,8 +412,12 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         1 => 'app\\models\\tenant',
         2 => 'app\\models\\canaccesspanel',
         3 => 'app\\models\\getfullnameattribute',
-        4 => 'app\\models\\isactive',
-        5 => 'app\\models\\getactivitylogoptions',
+        4 => 'app\\models\\getavatarattribute',
+        5 => 'app\\models\\isactive',
+        6 => 'app\\models\\getactivitylogoptions',
+        7 => 'app\\models\\tapactivity',
+        8 => 'app\\models\\isinactive',
+        9 => 'app\\models\\issuspended',
       ),
       3 => 
       array (
@@ -434,7 +441,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     '/Users/ridwankadri/Desktop/code/atlas-erp/app/Providers/Filament/AdminPanelProvider.php' => 
     array (
-      0 => '9a739a6d5922c75494f35bde2eaa281ce8128719efcacaf01ef18201ca6be952',
+      0 => 'ce03124f4234a13268c7aacc967b38a41f9e182a40ffac6d09969f156e842ab7',
       1 => 
       array (
         0 => 'app\\providers\\filament\\adminpanelprovider',
@@ -522,6 +529,766 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         2 => 'spatie\\health\\components\\getbackgroundcolor',
         3 => 'spatie\\health\\components\\geticoncolor',
         4 => 'spatie\\health\\components\\geticon',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/CreateCompanyAction.php' => 
+    array (
+      0 => 'aab0f0e370b454e5ebfdbe74da8404d19c5511a79281188c6e3d7ee65d25dfcc',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\createcompanyaction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\__construct',
+        1 => 'app\\administration\\actions\\companies\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Companies/UpdateCompanyAction.php' => 
+    array (
+      0 => '2fcc8c23388377e369d326e3bf213bbb48d17e297d42e44d37a0811e976c2474',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\updatecompanyaction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\companies\\__construct',
+        1 => 'app\\administration\\actions\\companies\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/CreateUserAction.php' => 
+    array (
+      0 => '23390a30c920c9d5c1e546802f90f0f0312ef1b31755b0204e7ad74e2c59f10a',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\createuseraction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\__construct',
+        1 => 'app\\administration\\actions\\users\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserAction.php' => 
+    array (
+      0 => '09ae0f4252ec37ef0811624004eb34f3b03abe8154088f1414990780c9772a1c',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\updateuseraction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\__construct',
+        1 => 'app\\administration\\actions\\users\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Actions/Users/UpdateUserStatusAction.php' => 
+    array (
+      0 => 'fe153ff89cd807ddd23d025b2550d82f4f0fac00e51f2822682998814c4cfc4e',
+      1 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\updateuserstatusaction',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\actions\\users\\__construct',
+        1 => 'app\\administration\\actions\\users\\execute',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/PermissionName.php' => 
+    array (
+      0 => 'bd21abf2aaa54985cd21f7c6ecd796feb0bd60c795c02a735aa4fb76e383a0ca',
+      1 => 
+      array (
+        0 => 'app\\administration\\enums\\permissionname',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\enums\\values',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Enums/RoleName.php' => 
+    array (
+      0 => 'e9dce05dfb21a09589d4302588a0d36df7c9099fdceca2e119075802b55338b4',
+      1 => 
+      array (
+        0 => 'app\\administration\\enums\\rolename',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\enums\\values',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/ActivityPolicy.php' => 
+    array (
+      0 => '8ab7f83d40f0cd62a021685f7dd421a2685e664d835b550eea638d58d050a5bc',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\activitypolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\__construct',
+        1 => 'app\\administration\\policies\\viewany',
+        2 => 'app\\administration\\policies\\view',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/HealthPolicy.php' => 
+    array (
+      0 => '0f2c1ee675f18fdedf5977a299c072b5e18d63c59cd6158c1898d9156c3ad627',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\healthpolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\viewany',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/RolePolicy.php' => 
+    array (
+      0 => '08e4909418d48c84d9619e58cee22aac2f49930ce3ae29cd54f7dec8f1cf7abc',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\rolepolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\__construct',
+        1 => 'app\\administration\\policies\\viewany',
+        2 => 'app\\administration\\policies\\view',
+        3 => 'app\\administration\\policies\\create',
+        4 => 'app\\administration\\policies\\update',
+        5 => 'app\\administration\\policies\\delete',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/SettingPolicy.php' => 
+    array (
+      0 => '31dc471d7cac7feb05326fdbdd14e22125aa2f309a5bc96f6851819f60b8f923',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\settingpolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\viewany',
+        1 => 'app\\administration\\policies\\update',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/TenantPolicy.php' => 
+    array (
+      0 => 'e01ed8e433a794a79f81a28fa73fd08d5bf31a41153694f285264cde680efc5f',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\tenantpolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\__construct',
+        1 => 'app\\administration\\policies\\viewany',
+        2 => 'app\\administration\\policies\\view',
+        3 => 'app\\administration\\policies\\create',
+        4 => 'app\\administration\\policies\\update',
+        5 => 'app\\administration\\policies\\delete',
+        6 => 'app\\administration\\policies\\restore',
+        7 => 'app\\administration\\policies\\forcedelete',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Policies/UserPolicy.php' => 
+    array (
+      0 => 'a63e4fdab6b096897746429e31197a8fb49078ea08efda2b96b665b3c2629657',
+      1 => 
+      array (
+        0 => 'app\\administration\\policies\\userpolicy',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\policies\\__construct',
+        1 => 'app\\administration\\policies\\viewany',
+        2 => 'app\\administration\\policies\\view',
+        3 => 'app\\administration\\policies\\create',
+        4 => 'app\\administration\\policies\\update',
+        5 => 'app\\administration\\policies\\delete',
+        6 => 'app\\administration\\policies\\restore',
+        7 => 'app\\administration\\policies\\forcedelete',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationAccessService.php' => 
+    array (
+      0 => 'cbc9607b0a364ae2f77d7a39e0316c77f5db20284a3c6b296c5cd91612e8e0d9',
+      1 => 
+      array (
+        0 => 'app\\administration\\services\\administrationaccessservice',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\services\\issuperadministrator',
+        1 => 'app\\administration\\services\\iscompanyadministrator',
+        2 => 'app\\administration\\services\\belongstotenant',
+        3 => 'app\\administration\\services\\canaccesstenant',
+        4 => 'app\\administration\\services\\canmanagerole',
+        5 => 'app\\administration\\services\\wouldremovefinaladministrativeaccess',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Administration/Services/AdministrationActivityLogger.php' => 
+    array (
+      0 => 'b9fe5dce49b9d832a0b192dbbbf35340ae6d890c0ed43f8efacb2e8d91eac4b4',
+      1 => 
+      array (
+        0 => 'app\\administration\\services\\administrationactivitylogger',
+      ),
+      2 => 
+      array (
+        0 => 'app\\administration\\services\\log',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Pages/ManageSettings.php' => 
+    array (
+      0 => 'd0ade5e2cec7f0cc08b8360633aa7a230abd99c4910ae01d5a55d41ce5abc593',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\pages\\managesettings',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\pages\\mount',
+        1 => 'app\\core\\administration\\filament\\pages\\canaccess',
+        2 => 'app\\core\\administration\\filament\\pages\\save',
+        3 => 'app\\core\\administration\\filament\\pages\\arrayvalue',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Pages/SystemHealth.php' => 
+    array (
+      0 => 'd7d8b25b7acc5e9cab2feb2ed474bc8b284cb29b72f96a705d5f87f9c2b2a7ec',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\pages\\systemhealth',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\pages\\canaccess',
+        1 => 'app\\core\\administration\\filament\\pages\\checks',
+        2 => 'app\\core\\administration\\filament\\pages\\check',
+        3 => 'app\\core\\administration\\filament\\pages\\databasecheck',
+        4 => 'app\\core\\administration\\filament\\pages\\cachecheck',
+        5 => 'app\\core\\administration\\filament\\pages\\queuecheck',
+        6 => 'app\\core\\administration\\filament\\pages\\storagecheck',
+        7 => 'app\\core\\administration\\filament\\pages\\diskcheck',
+        8 => 'app\\core\\administration\\filament\\pages\\environmentcheck',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Activities/ActivityResource.php' => 
+    array (
+      0 => '32346ff94f68b7c2b9fbf172b9a5709a1afbb32df10fe7a035f5a52e0f202747',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\activityresource',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\form',
+        1 => 'app\\core\\administration\\filament\\resources\\activities\\infolist',
+        2 => 'app\\core\\administration\\filament\\resources\\activities\\table',
+        3 => 'app\\core\\administration\\filament\\resources\\activities\\getpages',
+        4 => 'app\\core\\administration\\filament\\resources\\activities\\geteloquentquery',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Activities/Pages/ListActivities.php' => 
+    array (
+      0 => '21fdb22fe41e90343227e3743b2c71b427a015cfbd023e9d2a56bf034be747df',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\pages\\listactivities',
+      ),
+      2 => 
+      array (
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Activities/Pages/ViewActivity.php' => 
+    array (
+      0 => 'ce43242a54cc57323db98edc13b5e11e1aac5fc44a1578fde05a992059797ff4',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\pages\\viewactivity',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\pages\\getheaderactions',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Activities/Schemas/ActivityInfolist.php' => 
+    array (
+      0 => '78aeabd0dbde3c3b0a4318544e6945d9f88b018c6f76d42ab5db5287cd1c5772',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\schemas\\activityinfolist',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\schemas\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Activities/Tables/ActivitiesTable.php' => 
+    array (
+      0 => 'b9250e2b1d09546b08f85973cf67026b9191d99028202f90d126f81595c472d5',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\tables\\activitiestable',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\activities\\tables\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/Pages/CreateRole.php' => 
+    array (
+      0 => '6588dc80687755ad0271bee5e3125421bcc59b134a46b58910709cfff8ee6f6a',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\createrole',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\handlerecordcreation',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/Pages/EditRole.php' => 
+    array (
+      0 => 'd535493ace893e3cb74a425d64c504491b984e7f44cc5aecd3f0a41c37689cb3',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\editrole',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\getheaderactions',
+        1 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\mutateformdatabeforefill',
+        2 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\handlerecordupdate',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/Pages/ListRoles.php' => 
+    array (
+      0 => '65cf7e92830fd311823eb2c1a2741be759b05b727e73111d0e1ce4902e3d3ebd',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\listroles',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\getheaderactions',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/Pages/ViewRole.php' => 
+    array (
+      0 => '999410b8d7e8213fd1b4c7d3a02fe2e19f0186f65f742469b5bfa723c2a0c181',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\viewrole',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\pages\\getheaderactions',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/RoleResource.php' => 
+    array (
+      0 => '739cfab5f9d66646bb546baf785bc03b296b9f764785d039f3cbf88a76b2ee53',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\roleresource',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\form',
+        1 => 'app\\core\\administration\\filament\\resources\\roles\\infolist',
+        2 => 'app\\core\\administration\\filament\\resources\\roles\\table',
+        3 => 'app\\core\\administration\\filament\\resources\\roles\\getrelations',
+        4 => 'app\\core\\administration\\filament\\resources\\roles\\getpages',
+        5 => 'app\\core\\administration\\filament\\resources\\roles\\geteloquentquery',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/Schemas/RoleForm.php' => 
+    array (
+      0 => '40cd0af422992e205f85d3f416645d66a71319d67911744edf19d66323df8369',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\schemas\\roleform',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\schemas\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/Schemas/RoleInfolist.php' => 
+    array (
+      0 => '7c5b1ad97aff489a5bc3ef3c6245bce127613bc505cea62a94775ce2a8bfcc65',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\schemas\\roleinfolist',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\schemas\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Roles/Tables/RolesTable.php' => 
+    array (
+      0 => '7f798de2f24e87e20e30d091dbcaa65050700aa34cfaceb02810148f66c7a92e',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\tables\\rolestable',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\roles\\tables\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/Pages/CreateTenant.php' => 
+    array (
+      0 => 'c8053f11bd5ef3c69c9e083f0281bee36ce26a65417f628bd10bf1d2cb6d056f',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\createtenant',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\handlerecordcreation',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/Pages/EditTenant.php' => 
+    array (
+      0 => '4aaf695791ea4060a21ba0da752799edc7e538ba211dfd474ec0f347a9e05cdb',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\edittenant',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\getheaderactions',
+        1 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\handlerecordupdate',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/Pages/ListTenants.php' => 
+    array (
+      0 => 'a77175c6020eeb2a39ef6e42e1050fece5bf2deb1f722c08f39a679b59532817',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\listtenants',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\getheaderactions',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/Pages/ViewTenant.php' => 
+    array (
+      0 => '283d4ae3a0f98d9114cbe19eba80e3a6b45c4f95aeacbffb49e1b8b8efd0ef8d',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\viewtenant',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\pages\\getheaderactions',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/Schemas/TenantForm.php' => 
+    array (
+      0 => '8d3a700b9165f2f67ab7796c6d046a7bc80c842f3e8d57d8a35648812aabc114',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\schemas\\tenantform',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\schemas\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/Schemas/TenantInfolist.php' => 
+    array (
+      0 => '08584ec5be56ade2e5d16cfe66a55039b986135a4a1660efa8427b936a92d0b4',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\schemas\\tenantinfolist',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\schemas\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/Tables/TenantsTable.php' => 
+    array (
+      0 => '67d77ca6eda9760e5b5390a332936508e45ea64e5944b9ad87c025b7c77c7730',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\tables\\tenantstable',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\tables\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Tenants/TenantResource.php' => 
+    array (
+      0 => '616bcd1fccc0fe9ade8c12b8fa666150460ae6419082dd746eea98248a8219ff',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\tenantresource',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\tenants\\form',
+        1 => 'app\\core\\administration\\filament\\resources\\tenants\\infolist',
+        2 => 'app\\core\\administration\\filament\\resources\\tenants\\table',
+        3 => 'app\\core\\administration\\filament\\resources\\tenants\\getrelations',
+        4 => 'app\\core\\administration\\filament\\resources\\tenants\\getpages',
+        5 => 'app\\core\\administration\\filament\\resources\\tenants\\getrecordroutebindingeloquentquery',
+        6 => 'app\\core\\administration\\filament\\resources\\tenants\\geteloquentquery',
+        7 => 'app\\core\\administration\\filament\\resources\\tenants\\getmodellabel',
+        8 => 'app\\core\\administration\\filament\\resources\\tenants\\getpluralmodellabel',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/Pages/CreateUser.php' => 
+    array (
+      0 => 'e0ad12a213c13b39a264d3250a30297127982056be98f1eb47055b318ae7408f',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\createuser',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\handlerecordcreation',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/Pages/EditUser.php' => 
+    array (
+      0 => 'c83bc1429e88b39190ec9b77e121e25b654a0e073501c9b6e228ad1b5ed43589',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\edituser',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\getheaderactions',
+        1 => 'app\\core\\administration\\filament\\resources\\users\\pages\\mutateformdatabeforefill',
+        2 => 'app\\core\\administration\\filament\\resources\\users\\pages\\handlerecordupdate',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/Pages/ListUsers.php' => 
+    array (
+      0 => '4a794b198cffb4a7b5463474a858c6115f864d38a1fe81869ed2064fd3c91659',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\listusers',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\getheaderactions',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/Pages/ViewUser.php' => 
+    array (
+      0 => 'cdf93ce9c70df0976f89dfdd9b5830ccb53bba98eb007808c530538f4027f42f',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\viewuser',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\pages\\getheaderactions',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/Schemas/UserForm.php' => 
+    array (
+      0 => 'a59ddb80d4decfc225eb2db50d447bcd14809cf9922a385fc215fa6fe53dfe5d',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\schemas\\userform',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\schemas\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/Schemas/UserInfolist.php' => 
+    array (
+      0 => '35498c25e21476dc91dbbfdfd57d4de29a2df0f89e55e3e07c779d3f0ac89cc4',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\schemas\\userinfolist',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\schemas\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/Tables/UsersTable.php' => 
+    array (
+      0 => 'c29841425ed606e2a692e73a3f1ceaf9298f0e075e148290202fe3c97c5c9056',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\tables\\userstable',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\tables\\configure',
+      ),
+      3 => 
+      array (
+      ),
+    ),
+    '/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Resources/Users/UserResource.php' => 
+    array (
+      0 => '87132a72adb86e0cb732db73bde8b28e8c64fb27e82f032ad0adc1df5a1df4c5',
+      1 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\userresource',
+      ),
+      2 => 
+      array (
+        0 => 'app\\core\\administration\\filament\\resources\\users\\form',
+        1 => 'app\\core\\administration\\filament\\resources\\users\\infolist',
+        2 => 'app\\core\\administration\\filament\\resources\\users\\table',
+        3 => 'app\\core\\administration\\filament\\resources\\users\\getrelations',
+        4 => 'app\\core\\administration\\filament\\resources\\users\\getpages',
+        5 => 'app\\core\\administration\\filament\\resources\\users\\getrecordroutebindingeloquentquery',
+        6 => 'app\\core\\administration\\filament\\resources\\users\\geteloquentquery',
       ),
       3 => 
       array (

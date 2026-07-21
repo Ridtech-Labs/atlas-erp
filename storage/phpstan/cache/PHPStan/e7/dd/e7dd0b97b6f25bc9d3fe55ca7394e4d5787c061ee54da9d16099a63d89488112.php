@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/TenantFactory.php-PHPStan\BetterReflection\Reflection\ReflectionClass-Database\Factories\TenantFactory
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-4db92306a9d846f29381da77da96e15557fc60799725c9550dab6168ad731456',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-15d53df01273a8a1f38d8dfa4a03a4d110114bbd32568979e3011e21eaf11ec9',
    'data' => 
   array (
     'locatedSource' => 
@@ -29,7 +29,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     array (
     ),
     'startLine' => 15,
-    'endLine' => 32,
+    'endLine' => 37,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Illuminate\\Database\\Eloquent\\Factories\\Factory',
@@ -103,7 +103,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         ),
         'docComment' => NULL,
         'startLine' => 19,
-        'endLine' => 31,
+        'endLine' => 36,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

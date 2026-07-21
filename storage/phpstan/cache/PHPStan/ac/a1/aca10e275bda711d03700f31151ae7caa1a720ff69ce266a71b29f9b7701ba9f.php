@@ -87,7 +87,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/TenantFactory.php' => '4db92306a9d846f29381da77da96e15557fc60799725c9550dab6168ad731456',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/database/factories/TenantFactory.php' => '15d53df01273a8a1f38d8dfa4a03a4d110114bbd32568979e3011e21eaf11ec9',
     ),
   ),
 ));

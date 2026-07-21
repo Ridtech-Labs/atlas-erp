@@ -12,7 +12,9 @@ use Database\Factories\TenantFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -25,15 +27,25 @@ class Tenant extends Model implements HasMedia
     use HasPublicUuid;
     use InteractsWithMedia;
     use LogsActivity;
+    use SoftDeletes;
 
     protected $fillable = [
         'uuid',
         'name',
         'slug',
+        'email',
+        'phone',
         'timezone',
         'currency',
         'status',
         'logo_path',
+        'address',
+        'city',
+        'country',
+    ];
+
+    protected $appends = [
+        'is_active',
     ];
 
     protected function casts(): array
@@ -68,7 +80,21 @@ class Tenant extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->useLogName('tenants')
-            ->logOnly(['name', 'slug', 'timezone', 'currency', 'status'])
+            ->logOnly(['name', 'slug', 'email', 'phone', 'address', 'city', 'country', 'timezone', 'currency', 'status'])
             ->logOnlyDirty();
+    }
+
+    public function tapActivity(Activity $activity, string $eventName): void
+    {
+        $activity->properties = $activity->properties->merge([
+            'tenant_id' => $this->getKey(),
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
+    }
+
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->getRawOriginal('status') === TenantStatus::Active->value;
     }
 }

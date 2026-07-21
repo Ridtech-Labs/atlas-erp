@@ -12,6 +12,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Livewire\\Forms',
          'uses' => 
         array (
+          'userstatus' => 'App\\Core\\Shared\\Enums\\UserStatus',
           'lockout' => 'Illuminate\\Auth\\Events\\Lockout',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'ratelimiter' => 'Illuminate\\Support\\Facades\\RateLimiter',
@@ -41,6 +42,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Livewire\\Forms',
          'uses' => 
         array (
+          'userstatus' => 'App\\Core\\Shared\\Enums\\UserStatus',
           'lockout' => 'Illuminate\\Auth\\Events\\Lockout',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'ratelimiter' => 'Illuminate\\Support\\Facades\\RateLimiter',
@@ -70,6 +72,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Livewire\\Forms',
          'uses' => 
         array (
+          'userstatus' => 'App\\Core\\Shared\\Enums\\UserStatus',
           'lockout' => 'Illuminate\\Auth\\Events\\Lockout',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'ratelimiter' => 'Illuminate\\Support\\Facades\\RateLimiter',
@@ -99,6 +102,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
          'namespace' => 'App\\Livewire\\Forms',
          'uses' => 
         array (
+          'userstatus' => 'App\\Core\\Shared\\Enums\\UserStatus',
           'lockout' => 'Illuminate\\Auth\\Events\\Lockout',
           'auth' => 'Illuminate\\Support\\Facades\\Auth',
           'ratelimiter' => 'Illuminate\\Support\\Facades\\RateLimiter',
@@ -126,7 +130,7 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     ),
     1 => 
     array (
-      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php' => 'e80034f59cfc5825e5741798cb2a014d9b876fcfeeabed74aaf875c89d9445cc',
+      '/Users/ridwankadri/Desktop/code/atlas-erp/app/Livewire/Forms/LoginForm.php' => '042b9831fe9d9822ae7413ee9c9f6095d5dbdc1265affc3b529862b201247805',
     ),
   ),
 ));

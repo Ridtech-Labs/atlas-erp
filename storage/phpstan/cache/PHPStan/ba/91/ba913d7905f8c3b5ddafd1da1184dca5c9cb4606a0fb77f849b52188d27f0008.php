@@ -2,7 +2,7 @@
 
 // odsl-/Users/ridwankadri/Desktop/code/atlas-erp/app/Core/Administration/Filament/Widgets/RecentActivityWidget.php-PHPStan\BetterReflection\Reflection\ReflectionClass-App\Core\Administration\Filament\Widgets\RecentActivityWidget
 return \PHPStan\Cache\CacheItem::__set_state(array(
-   'variableKey' => 'v2-6.70.0.3-8.3.29-51232d2916bdc5ef383d7e21ada02c79bfa07b0732cf4da34c9e3f725c9da20a',
+   'variableKey' => 'v2-6.70.0.3-8.3.29-162792891b9948a1783bfcbc50735c370b9249670baa417c00ea5d6de598938d',
    'data' => 
   array (
     'locatedSource' => 
@@ -26,8 +26,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
     'attributes' => 
     array (
     ),
-    'startLine' => 10,
-    'endLine' => 22,
+    'startLine' => 11,
+    'endLine' => 33,
     'startColumn' => 1,
     'endColumn' => 1,
     'parentClassName' => 'Filament\\Widgets\\Widget',
@@ -62,20 +62,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'filament.widgets.recent-activity-widget\'',
           'attributes' => 
           array (
-            'startLine' => 12,
-            'endLine' => 12,
-            'startTokenPos' => 43,
-            'startFilePos' => 229,
-            'endTokenPos' => 43,
-            'endFilePos' => 269,
+            'startLine' => 13,
+            'endLine' => 13,
+            'startTokenPos' => 48,
+            'startFilePos' => 268,
+            'endTokenPos' => 48,
+            'endFilePos' => 308,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 12,
-        'endLine' => 12,
+        'startLine' => 13,
+        'endLine' => 13,
         'startColumn' => 5,
         'endColumn' => 71,
         'isPromoted' => false,
@@ -133,20 +133,20 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
           'code' => '\'full\'',
           'attributes' => 
           array (
-            'startLine' => 14,
-            'endLine' => 14,
-            'startTokenPos' => 58,
-            'startFilePos' => 318,
-            'endTokenPos' => 58,
-            'endFilePos' => 323,
+            'startLine' => 15,
+            'endLine' => 15,
+            'startTokenPos' => 63,
+            'startFilePos' => 357,
+            'endTokenPos' => 63,
+            'endFilePos' => 362,
           ),
         ),
         'docComment' => NULL,
         'attributes' => 
         array (
         ),
-        'startLine' => 14,
-        'endLine' => 14,
+        'startLine' => 15,
+        'endLine' => 15,
         'startColumn' => 5,
         'endColumn' => 52,
         'isPromoted' => false,
@@ -179,8 +179,8 @@ return \PHPStan\Cache\CacheItem::__set_state(array(
         array (
         ),
         'docComment' => NULL,
-        'startLine' => 16,
-        'endLine' => 21,
+        'startLine' => 17,
+        'endLine' => 32,
         'startColumn' => 5,
         'endColumn' => 5,
         'couldThrow' => false,

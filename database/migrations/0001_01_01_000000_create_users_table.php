@@ -18,11 +18,17 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->string('name');
             $table->string('slug')->unique();
+            $table->string('email')->nullable()->unique();
+            $table->string('phone', 30)->nullable();
             $table->string('logo_path')->nullable();
+            $table->text('address')->nullable();
+            $table->string('city', 120)->nullable();
+            $table->string('country', 120)->nullable();
             $table->string('timezone', 100)->default('UTC');
             $table->string('currency', 10)->default('USD');
             $table->string('status', 20)->default(TenantStatus::Active->value);
             $table->timestamps();
+            $table->softDeletes();
             $table->index(['status', 'slug']);
         });
 
@@ -34,15 +40,17 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('email')->unique();
             $table->string('phone', 30)->nullable();
-            $table->string('profile_photo_path')->nullable();
+            $table->string('avatar_path')->nullable();
             $table->string('status', 20)->default(UserStatus::Active->value);
             $table->timestamp('last_login_at')->nullable();
+            $table->string('last_login_ip', 45)->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
             $table->index(['tenant_id', 'status']);
+            $table->index(['tenant_id', 'email']);
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
