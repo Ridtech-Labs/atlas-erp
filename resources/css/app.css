@@ -1,3 +1,51 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800&family=geist-mono:400,500,700&display=swap');
+@import 'tailwindcss';
+@import './atlas/tokens.css';
+
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
+@source '../app/**/*.php';
+
+@layer base {
+    html {
+        font-family: var(--atlas-font-sans);
+    }
+
+    body {
+        background:
+            radial-gradient(circle at top left, rgba(232, 237, 255, 0.95), transparent 28rem),
+            radial-gradient(circle at bottom right, rgba(224, 242, 254, 0.85), transparent 24rem),
+            var(--atlas-color-background-page);
+        color: var(--atlas-color-text-primary);
+        font-family: var(--atlas-font-sans);
+    }
+
+    *:focus-visible {
+        outline: none;
+        box-shadow: var(--atlas-focus-ring);
+    }
+}
+
+@layer components {
+    .atlas-auth-shell {
+        min-height: 100vh;
+        background:
+            radial-gradient(circle at top left, rgba(232, 237, 255, 0.95), transparent 28rem),
+            radial-gradient(circle at bottom right, rgba(224, 242, 254, 0.85), transparent 24rem),
+            var(--atlas-color-background-page);
+    }
+
+    .atlas-auth-card {
+        border: 1px solid var(--atlas-color-border-default);
+        border-radius: var(--atlas-radius-2xl);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: var(--atlas-shadow-lg);
+        backdrop-filter: blur(12px);
+    }
+
+    .atlas-shell-container {
+        margin-inline: auto;
+        width: min(100%, var(--atlas-layout-content-max));
+        padding-inline: var(--atlas-layout-page-padding);
+    }
+}
