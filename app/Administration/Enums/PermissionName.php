@@ -28,6 +28,36 @@ enum PermissionName: string
     case SettingsUpdate = 'settings.update';
     case ActivityLogsView = 'activity_logs.view';
     case HealthView = 'health.view';
+    case ClientsViewAny = 'clients.view_any';
+    case ClientsView = 'clients.view';
+    case ClientsCreate = 'clients.create';
+    case ClientsUpdate = 'clients.update';
+    case ClientsDelete = 'clients.delete';
+    case ClientsRestore = 'clients.restore';
+    case ClientsForceDelete = 'clients.force_delete';
+    case ClientContactsViewAny = 'client_contacts.view_any';
+    case ClientContactsView = 'client_contacts.view';
+    case ClientContactsCreate = 'client_contacts.create';
+    case ClientContactsUpdate = 'client_contacts.update';
+    case ClientContactsDelete = 'client_contacts.delete';
+    case ClientSitesViewAny = 'client_sites.view_any';
+    case ClientSitesView = 'client_sites.view';
+    case ClientSitesCreate = 'client_sites.create';
+    case ClientSitesUpdate = 'client_sites.update';
+    case ClientSitesDelete = 'client_sites.delete';
+    case JobsViewAny = 'jobs.view_any';
+    case JobsView = 'jobs.view';
+    case JobsCreate = 'jobs.create';
+    case JobsUpdate = 'jobs.update';
+    case JobsDelete = 'jobs.delete';
+    case JobsSubmit = 'jobs.submit';
+    case JobsApprove = 'jobs.approve';
+    case JobsSchedule = 'jobs.schedule';
+    case JobsStart = 'jobs.start';
+    case JobsHold = 'jobs.hold';
+    case JobsResume = 'jobs.resume';
+    case JobsComplete = 'jobs.complete';
+    case JobsCancel = 'jobs.cancel';
 
     /**
      * @return list<string>

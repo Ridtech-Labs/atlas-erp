@@ -19,10 +19,15 @@ class EditTenant extends EditRecord
 {
     protected static string $resource = TenantResource::class;
 
+    public function getSubheading(): ?string
+    {
+        return 'Maintain company identity, regional defaults, and workspace settings for this tenant.';
+    }
+
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
+            ViewAction::make()->label('View company'),
             DeleteAction::make()->requiresConfirmation(),
             ForceDeleteAction::make()->requiresConfirmation(),
             RestoreAction::make(),

@@ -15,12 +15,13 @@ class ActivityInfolist
     {
         return $schema
             ->components([
-                Section::make('Activity')
+                Section::make('Activity overview')
+                    ->description('Read-only context for a recorded system or workspace event.')
                     ->schema([
                         TextEntry::make('log_name')->badge(),
                         TextEntry::make('event')->badge(),
                         TextEntry::make('description'),
-                        TextEntry::make('causer.full_name')->label('Actor'),
+                        TextEntry::make('causer.full_name')->label('Actor')->placeholder('System'),
                         TextEntry::make('subject_type')->label('Subject type'),
                         TextEntry::make('created_at')->since(),
                         KeyValueEntry::make('properties'),

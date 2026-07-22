@@ -7,7 +7,9 @@ namespace App\Core\Tenancy\Models;
 use App\Core\Settings\Models\Setting;
 use App\Core\Shared\Concerns\HasPublicUuid;
 use App\Core\Shared\Enums\TenantStatus;
+use App\CRM\Models\Client;
 use App\Models\User;
+use App\Operations\Models\Job;
 use Database\Factories\TenantFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -75,6 +77,22 @@ class Tenant extends Model implements HasMedia
     public function settings(): HasMany
     {
         return $this->hasMany(Setting::class);
+    }
+
+    /**
+     * @return HasMany<Client, $this>
+     */
+    public function clients(): HasMany
+    {
+        return $this->hasMany(Client::class);
+    }
+
+    /**
+     * @return HasMany<Job, $this>
+     */
+    public function jobs(): HasMany
+    {
+        return $this->hasMany(Job::class, 'tenant_id');
     }
 
     public function getActivitylogOptions(): LogOptions

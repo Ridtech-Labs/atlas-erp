@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Resources\Tenants\Tables;
 
+use App\Core\Shared\Enums\TenantStatus;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -22,22 +23,28 @@ class TenantsTable
         return $table
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
-                TextColumn::make('slug')->searchable(),
-                TextColumn::make('email')->searchable(),
-                TextColumn::make('country')->searchable(),
-                TextColumn::make('status')->badge()->sortable(),
+                TextColumn::make('slug')->searchable()->toggleable(),
+                TextColumn::make('email')->searchable()->placeholder('No email')->toggleable(),
+                TextColumn::make('country')->searchable()->placeholder('No country'),
+                TextColumn::make('status')
+                    ->badge()
+                    ->sortable()
+                    ->formatStateUsing(fn (TenantStatus $state): string => $state->label())
+                    ->color(fn (TenantStatus $state): string => $state->color()),
                 TextColumn::make('users_count')->counts('users')->label('Users'),
+                TextColumn::make('clients_count')->label('Clients')->sortable(),
+                TextColumn::make('jobs_count')->label('Jobs')->sortable()->toggleable(),
                 TextColumn::make('updated_at')->since()->sortable(),
             ])
             ->filters([
                 SelectFilter::make('status')
-                    ->options([
-                        'active' => 'Active',
-                        'inactive' => 'Inactive',
-                        'suspended' => 'Suspended',
-                    ]),
+                    ->options(collect(TenantStatus::cases())->mapWithKeys(fn (TenantStatus $status) => [$status->value => $status->label()])->all()),
                 TrashedFilter::make(),
             ])
+            ->defaultSort('name')
+            ->searchPlaceholder('Search companies by name, slug, country, or email')
+            ->emptyStateHeading('No companies yet')
+            ->emptyStateDescription('Add a company workspace to onboard teams, clients, and jobs.')
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
@@ -48,6 +55,7 @@ class TenantsTable
                     ForceDeleteBulkAction::make()->requiresConfirmation(),
                     RestoreBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->paginated([10, 25, 50]);
     }
 }

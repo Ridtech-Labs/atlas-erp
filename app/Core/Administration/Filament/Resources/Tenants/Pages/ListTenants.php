@@ -10,10 +10,14 @@ class ListTenants extends ListRecords
 {
     protected static string $resource = TenantResource::class;
 
+    protected static ?string $title = 'Companies';
+
+    protected ?string $subheading = 'Manage tenant workspaces, company identity, and operating regions.';
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('New company'),
         ];
     }
 }

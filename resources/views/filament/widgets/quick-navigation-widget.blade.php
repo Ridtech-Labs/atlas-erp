@@ -1,22 +1,15 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        <x-slot name="heading">
-            Quick Navigation
-        </x-slot>
+        <x-slot name="heading">Quick actions</x-slot>
 
-        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <a href="{{ route('dashboard') }}" class="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-5 text-sm font-medium text-stone-700 transition hover:border-amber-400 hover:bg-amber-50">
-                Dashboard Shell
-            </a>
-            <a href="{{ route('profile') }}" class="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-5 text-sm font-medium text-stone-700 transition hover:border-amber-400 hover:bg-amber-50">
-                My Profile
-            </a>
-            <a href="{{ route('health') }}" class="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-5 text-sm font-medium text-stone-700 transition hover:border-amber-400 hover:bg-amber-50">
-                Health Endpoint
-            </a>
-            <div class="rounded-2xl border border-dashed border-stone-300 px-4 py-5 text-sm text-stone-500">
-                CRM, Finance, Fleet, Inventory, and Operations modules arrive in future sprints.
-            </div>
+        <div class="grid gap-4">
+            @foreach ($actionCards as $card)
+                <a href="{{ $card['url'] }}" class="rounded-3xl border border-stone-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-50/50">
+                    <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-amber-700">Action</div>
+                    <div class="mt-3 text-lg font-semibold text-stone-900">{{ $card['title'] }}</div>
+                    <div class="mt-2 text-sm text-stone-600">{{ $card['description'] }}</div>
+                </a>
+            @endforeach
         </div>
     </x-filament::section>
 </x-filament-widgets::widget>

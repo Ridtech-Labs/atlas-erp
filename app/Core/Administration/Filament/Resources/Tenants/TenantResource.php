@@ -26,11 +26,13 @@ class TenantResource extends Resource
 {
     protected static ?string $model = Tenant::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice;
 
     protected static string|UnitEnum|null $navigationGroup = 'Administration';
 
     protected static ?string $navigationLabel = 'Companies';
+
+    protected static ?int $navigationSort = 10;
 
     protected static ?string $recordTitleAttribute = 'name';
 
@@ -76,9 +78,11 @@ class TenantResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->withoutGlobalScopes([
-            SoftDeletingScope::class,
-        ]);
+        $query = parent::getEloquentQuery()
+            ->withCount(['users', 'clients', 'jobs'])
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
 
         $user = auth()->user();
         $access = app(AdministrationAccessService::class);

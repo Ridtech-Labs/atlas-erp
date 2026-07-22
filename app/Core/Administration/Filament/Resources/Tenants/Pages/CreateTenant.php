@@ -14,6 +14,10 @@ class CreateTenant extends CreateRecord
 {
     protected static string $resource = TenantResource::class;
 
+    protected static ?string $title = 'Create Company';
+
+    protected ?string $subheading = 'Set up a new Atlas ERP workspace with the right identity, locale, and contact details.';
+
     protected function handleRecordCreation(array $data): Model
     {
         return app(CreateCompanyAction::class)->execute($data, $this->authenticatedUser());

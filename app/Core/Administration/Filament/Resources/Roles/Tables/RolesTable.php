@@ -17,13 +17,14 @@ class RolesTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->searchable(),
-                TextColumn::make('permissions_count')->counts('permissions')->label('Permissions'),
-                TextColumn::make('updated_at')->since(),
+                TextColumn::make('name')->searchable()->sortable(),
+                TextColumn::make('permissions_count')->counts('permissions')->label('Permissions')->sortable(),
+                TextColumn::make('updated_at')->since()->label('Updated')->sortable(),
             ])
-            ->filters([
-                //
-            ])
+            ->defaultSort('name')
+            ->searchPlaceholder('Search roles by name')
+            ->emptyStateHeading('No roles yet')
+            ->emptyStateDescription('Roles help you package permissions into safe, repeatable access levels.')
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
@@ -32,6 +33,7 @@ class RolesTable
                 BulkActionGroup::make([
                     DeleteBulkAction::make()->requiresConfirmation(),
                 ]),
-            ]);
+            ])
+            ->paginated([10, 25, 50]);
     }
 }

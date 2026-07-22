@@ -13,7 +13,15 @@ use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Settings\Repositories\EloquentSettingRepository;
 use App\Core\Settings\Repositories\SettingRepositoryInterface;
 use App\Core\Tenancy\Models\Tenant;
+use App\CRM\Models\Client;
+use App\CRM\Models\ClientContact;
+use App\CRM\Models\ClientSite;
+use App\CRM\Policies\ClientContactPolicy;
+use App\CRM\Policies\ClientPolicy;
+use App\CRM\Policies\ClientSitePolicy;
 use App\Models\User;
+use App\Operations\Models\Job;
+use App\Operations\Policies\JobPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\Models\Activity;
@@ -35,6 +43,10 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Activity::class, ActivityPolicy::class);
+        Gate::policy(Client::class, ClientPolicy::class);
+        Gate::policy(ClientContact::class, ClientContactPolicy::class);
+        Gate::policy(ClientSite::class, ClientSitePolicy::class);
+        Gate::policy(Job::class, JobPolicy::class);
 
         Gate::define('manageSettings', fn (User $user): bool => $this->hasPermission($user, 'settings.manage') || $this->hasPermission($user, 'settings.update'));
         Gate::define('viewHealth', fn (User $user): bool => $this->hasPermission($user, 'health.view'));

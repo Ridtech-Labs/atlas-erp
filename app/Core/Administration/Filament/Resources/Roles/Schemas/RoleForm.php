@@ -17,10 +17,13 @@ class RoleForm
         return $schema
             ->components([
                 Section::make('Role')
+                    ->description('Control the permission bundle granted to operational and platform users.')
                     ->schema([
-                        TextInput::make('name')->required()->unique(ignoreRecord: true)->maxLength(255),
+                        TextInput::make('name')->required()->unique(ignoreRecord: true)->maxLength(255)->placeholder('Operations Supervisor'),
                         CheckboxList::make('permissions')
+                            ->label('Permissions')
                             ->options(collect(PermissionName::values())->mapWithKeys(fn (string $permission) => [$permission => $permission])->all())
+                            ->searchable()
                             ->columns(2)
                             ->columnSpanFull(),
                     ])

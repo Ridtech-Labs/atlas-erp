@@ -16,6 +16,10 @@ class SystemHealth extends Page
 
     protected static ?string $navigationLabel = 'System Health';
 
+    protected static ?int $navigationSort = 20;
+
+    protected static ?string $title = 'System Health';
+
     protected static ?string $slug = 'system-health';
 
     protected string $view = 'filament.pages.system-health';

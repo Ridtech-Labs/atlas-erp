@@ -26,9 +26,13 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUserGroup;
 
     protected static string|UnitEnum|null $navigationGroup = 'Administration';
+
+    protected static ?string $navigationLabel = 'Users';
+
+    protected static ?int $navigationSort = 20;
 
     protected static ?string $recordTitleAttribute = 'first_name';
 
@@ -74,9 +78,11 @@ class UserResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->withoutGlobalScopes([
-            SoftDeletingScope::class,
-        ]);
+        $query = parent::getEloquentQuery()
+            ->with(['tenant', 'roles'])
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
 
         $user = auth()->user();
         $access = app(AdministrationAccessService::class);

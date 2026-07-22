@@ -10,10 +10,14 @@ class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
 
+    protected static ?string $title = 'Users';
+
+    protected ?string $subheading = 'Manage internal access, roles, and workspace membership across Atlas ERP.';
+
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            CreateAction::make()->label('New user'),
         ];
     }
 }

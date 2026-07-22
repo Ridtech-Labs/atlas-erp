@@ -7,6 +7,8 @@ namespace App\Models;
 use App\Core\Shared\Concerns\HasPublicUuid;
 use App\Core\Shared\Enums\UserStatus;
 use App\Core\Tenancy\Models\Tenant;
+use App\CRM\Models\Client;
+use App\Operations\Models\Job;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
@@ -14,6 +16,7 @@ use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -78,6 +81,22 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    /**
+     * @return HasMany<Client, $this>
+     */
+    public function createdClients(): HasMany
+    {
+        return $this->hasMany(Client::class, 'created_by');
+    }
+
+    /**
+     * @return HasMany<Job, $this>
+     */
+    public function createdJobs(): HasMany
+    {
+        return $this->hasMany(Job::class, 'created_by');
     }
 
     public function canAccessPanel(Panel $panel): bool

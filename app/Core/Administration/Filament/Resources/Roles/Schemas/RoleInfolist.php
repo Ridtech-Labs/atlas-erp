@@ -14,7 +14,8 @@ class RoleInfolist
     {
         return $schema
             ->components([
-                Section::make('Role')
+                Section::make('Role overview')
+                    ->description('A concise view of the access bundle granted to users with this role.')
                     ->schema([
                         TextEntry::make('name'),
                         TextEntry::make('permissions.name')->badge(),
