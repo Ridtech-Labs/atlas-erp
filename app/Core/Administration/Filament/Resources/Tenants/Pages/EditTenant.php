@@ -21,16 +21,43 @@ class EditTenant extends EditRecord
 
     public function getSubheading(): ?string
     {
-        return 'Maintain company identity, regional defaults, and workspace settings for this tenant.';
+        return 'Maintain tenant account metadata and the default operational company profile for this customer.';
     }
 
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make()->label('View company'),
+            ViewAction::make()->label('View tenant'),
             DeleteAction::make()->requiresConfirmation(),
             ForceDeleteAction::make()->requiresConfirmation(),
             RestoreAction::make(),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    protected function mutateFormDataBeforeFill(array $data): array
+    {
+        $tenant = $this->getRecord();
+
+        if (! $tenant instanceof Tenant) {
+            return $data;
+        }
+
+        $company = $tenant->defaultCompany;
+
+        return [
+            ...$data,
+            'email' => $company?->email,
+            'phone' => $company?->phone,
+            'logo_path' => $company?->logo_path,
+            'address' => $company?->address,
+            'city' => $company?->city,
+            'country' => $company?->country,
+            'timezone' => $company?->timezone,
+            'currency' => $company?->currency,
         ];
     }
 

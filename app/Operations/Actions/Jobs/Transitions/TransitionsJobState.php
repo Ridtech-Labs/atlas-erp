@@ -10,10 +10,13 @@ use App\Models\User;
 use App\Operations\Enums\JobStatus;
 use App\Operations\Models\Job;
 use App\Operations\Services\JobWorkflowService;
+use App\Operations\Traits\AppliesJobAudit;
 use Illuminate\Support\Facades\DB;
 
 abstract class TransitionsJobState
 {
+    use AppliesJobAudit;
+
     public function __construct(
         protected readonly JobWorkflowService $workflow,
         protected readonly AdministrationActivityLogger $logger,
@@ -31,14 +34,12 @@ abstract class TransitionsJobState
         $this->workflow->assertCanTransition($job, $this->targetStatus());
 
         return DB::transaction(function () use ($job, $actor, $context): Job {
-            $job->refresh();
+            $job = Job::query()->whereKey($job->getKey())->lockForUpdate()->firstOrFail();
             $this->workflow->assertCanTransition($job, $this->targetStatus());
 
             $this->mutate($job, $actor, $context);
-            $job->forceFill([
-                'status' => $this->targetStatus()->value,
-                'updated_by' => $actor->getKey(),
-            ]);
+            $job->status = $this->targetStatus()->value;
+            $this->stampUpdateAudit($job, $actor);
             $job->save();
 
             $this->logger->log($this->event(), $this->description(), $actor, $job, [

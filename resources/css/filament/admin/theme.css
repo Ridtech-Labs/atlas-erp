@@ -26,6 +26,7 @@
 
     html {
         font-family: var(--atlas-font-sans);
+        font-size: 13px;
     }
 
     body {
@@ -194,29 +195,42 @@
     }
 
     .fi-sidebar-header {
-        min-height: 5rem;
+        display: flex;
+        overflow: visible;
+        min-height: 4.6rem;
         align-items: flex-start;
         border-bottom: 1px solid var(--atlas-color-border-sidebar);
-        padding: 1.25rem 1rem;
+        padding: 1.125rem 1rem;
     }
 
     .fi-sidebar-header-logo-ctn {
+        display: block !important;
         width: 100%;
     }
 
     .fi-logo {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 100%;
+        align-items: center;
+        gap: 0.75rem;
         color: var(--atlas-color-text-on-dark);
         font-size: var(--atlas-text-lg);
         font-weight: var(--atlas-weight-bold);
         letter-spacing: -0.02em;
     }
 
+    .fi-logo svg {
+        flex-shrink: 0;
+    }
+
     .fi-sidebar-nav {
-        padding: 1rem 0.75rem 0.75rem;
+        padding: 0 0.625rem 0.75rem;
     }
 
     .fi-sidebar-nav-groups {
-        gap: 1rem;
+        display: none;
     }
 
     .fi-sidebar-group-label {
@@ -227,29 +241,6 @@
         text-transform: uppercase;
     }
 
-    .fi-sidebar-item-btn,
-    .fi-sidebar-group-btn {
-        min-height: 2.75rem;
-        border-radius: var(--atlas-radius-md);
-        color: var(--atlas-color-text-sidebar);
-        transition: background-color var(--atlas-transition), color var(--atlas-transition), box-shadow var(--atlas-transition);
-    }
-
-    .fi-sidebar-item-btn:hover,
-    .fi-sidebar-group-btn:hover,
-    .fi-topbar-item-btn:hover {
-        background: var(--atlas-color-background-sidebar-hover);
-        color: var(--atlas-color-text-on-dark);
-    }
-
-    .fi-active .fi-sidebar-item-btn,
-    .fi-sidebar-item-active .fi-sidebar-item-btn,
-    .fi-sidebar-item-btn[aria-current="page"] {
-        background: var(--atlas-color-background-sidebar-active);
-        color: var(--atlas-color-text-on-dark);
-        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-    }
-
     .fi-sidebar-item-label,
     .fi-topbar-item-label,
     .fi-user-menu-trigger-text,
@@ -258,25 +249,33 @@
     }
 
     .fi-sidebar-footer {
-        margin: 0.75rem;
+        margin: 0;
         border-top: 1px solid var(--atlas-color-border-sidebar);
-        padding-top: 0.75rem;
+        padding: 0.75rem 0.875rem 0.875rem;
     }
 
     .fi-topbar-ctn {
+        overflow: visible;
         border-bottom: 1px solid var(--atlas-color-border-default);
         background: rgba(255, 255, 255, 0.94);
         backdrop-filter: blur(10px);
     }
 
     .fi-topbar {
+        overflow: visible;
         min-height: var(--atlas-layout-topbar-height);
         padding-inline: var(--atlas-layout-page-padding);
+        gap: 0.75rem;
     }
 
     .fi-topbar-start,
     .fi-topbar-end {
         gap: 0.75rem;
+        align-items: center;
+    }
+
+    .fi-topbar-start {
+        flex: 1 1 auto;
     }
 
     .fi-icon-btn,
@@ -294,11 +293,11 @@
     .fi-header {
         align-items: flex-end;
         gap: 1rem;
-        border-radius: var(--atlas-radius-2xl);
-        background: var(--atlas-color-background-surface);
-        border: 1px solid var(--atlas-color-border-default);
-        box-shadow: var(--atlas-shadow-sm);
-        padding: 1.5rem;
+        border-radius: 0;
+        background: transparent;
+        border: 0;
+        box-shadow: none;
+        padding: 0;
     }
 
     .fi-header-heading {
@@ -328,6 +327,8 @@
     .fi-resource-edit-record-page,
     .fi-resource-view-record-page {
         gap: 1.5rem;
+        padding-inline: var(--atlas-layout-page-padding);
+        padding-top: 1.25rem;
     }
 
     .fi-section,
@@ -500,7 +501,8 @@
     }
 
     .fi-dropdown-panel {
-        overflow: hidden;
+        overflow: visible;
+        z-index: 200;
     }
 
     .fi-modal-slide-over-window {
@@ -522,15 +524,260 @@
         backdrop-filter: blur(12px);
     }
 
-    .fi-topbar-global-search,
-    .fi-global-search-field {
-        width: min(100%, 32rem);
+    .fi-topbar .fi-logo,
+    .fi-topbar-open-sidebar-btn,
+    .fi-topbar-close-sidebar-btn,
+    .fi-topbar-open-collapse-sidebar-btn,
+    .fi-topbar-close-collapse-sidebar-btn,
+    .fi-topbar .fi-topbar-collapse-sidebar-btn-ctn {
+        display: none !important;
     }
 
-    .fi-input.fi-input-has-inline-prefix {
-        min-height: 2.75rem;
-        border-radius: var(--atlas-radius-md);
+    .fi-topbar-end {
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        gap: 1rem;
+        overflow: visible;
+    }
+
+    .fi-global-search-ctn {
+        width: min(42rem, 100%);
+    }
+
+    .fi-global-search,
+    .fi-global-search-field {
+        width: 100%;
+    }
+
+    .fi-global-search .fi-input-wrp {
+        min-height: 3.25rem;
+        border-radius: 1rem;
+        border-color: var(--atlas-color-border-default);
+        background: #fbfbfe;
+        padding-inline: 0.35rem;
+    }
+
+    .fi-global-search .fi-input {
+        min-height: 3rem;
+        font-size: 1rem;
+        color: var(--atlas-color-text-secondary);
+    }
+
+    .fi-global-search .fi-input::placeholder {
+        color: #9ba2b9;
+    }
+
+    .fi-global-search-results-ctn {
+        margin-top: 0.75rem;
+        border-radius: 1rem;
+        border: 1px solid var(--atlas-color-border-default);
+        background: #fff;
+        box-shadow: var(--atlas-shadow-md);
+    }
+
+    .fi-user-menu-trigger {
+        position: relative;
+        z-index: 210;
+        min-height: auto;
+        border: 1px solid transparent;
+        background: transparent;
+        padding: 0.25rem 0.375rem;
+        box-shadow: none;
+    }
+
+    .fi-user-menu-trigger:hover {
+        background: var(--atlas-color-background-muted);
+        box-shadow: none;
+    }
+
+    .fi-user-menu-trigger .fi-avatar,
+    .fi-user-menu-trigger img {
+        height: 2.75rem;
+        width: 2.75rem;
+        border-radius: 999px;
+    }
+
+    .fi-user-menu-trigger-text {
+        display: inline-flex !important;
+        margin-inline-start: 0.625rem;
+        color: var(--atlas-color-text-primary);
+        font-size: var(--atlas-text-sm);
+    }
+
+    .fi-user-menu-trigger-icon {
+        display: inline-flex !important;
+        margin-inline-start: 0.375rem;
+        color: var(--atlas-color-text-secondary);
+    }
+
+    .atlas-sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 1.15rem;
+        padding: 0.875rem 0.125rem 0;
+    }
+
+    .atlas-sidebar-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+    }
+
+    .atlas-sidebar-group-label {
+        padding-inline: 0.8rem;
+        color: var(--atlas-color-text-sidebar-muted);
+        font-size: 0.62rem;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+
+    .atlas-sidebar-items {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+    }
+
+    .atlas-sidebar-item {
+        display: flex;
+        align-items: center;
+        gap: 0.95rem;
+        min-height: 2.85rem;
+        border-radius: 0.8rem;
+        padding-inline: 0.85rem;
+        color: var(--atlas-color-text-sidebar);
+        transition: background-color var(--atlas-transition), color var(--atlas-transition), opacity var(--atlas-transition);
+    }
+
+    .atlas-sidebar-item:hover {
+        background: var(--atlas-color-background-sidebar-hover);
+        color: #fff;
+    }
+
+    .atlas-sidebar-item.is-active {
+        background: var(--atlas-color-background-sidebar-active);
+        color: #fff;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    }
+
+    .atlas-sidebar-item.is-disabled {
+        cursor: not-allowed;
+        opacity: 0.42;
+    }
+
+    .atlas-sidebar-item-icon {
+        display: inline-flex;
+        height: 1.25rem;
+        width: 1.25rem;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .atlas-sidebar-item-icon svg {
+        height: 1.25rem;
+        width: 1.25rem;
+    }
+
+    .atlas-sidebar-item-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .atlas-topbar-toggle {
+        display: inline-flex;
+        height: 2.25rem;
+        width: 2.25rem;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.75rem;
+        color: var(--atlas-color-text-muted);
+        transition: background-color var(--atlas-transition), color var(--atlas-transition);
+    }
+
+    .atlas-topbar-toggle:hover {
+        background: var(--atlas-color-background-muted);
+        color: var(--atlas-color-text-primary);
+    }
+
+    .atlas-topbar-quick-create {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.25rem;
+        border-radius: 0.75rem;
+        background: var(--atlas-color-action-primary);
+        padding-inline: 1rem;
+        color: #fff;
+        font-size: 0.86rem;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        transition: background-color var(--atlas-transition), transform var(--atlas-transition);
+    }
+
+    .atlas-topbar-quick-create:hover {
+        background: var(--atlas-color-action-primary-hover);
+        transform: translateY(-1px);
+    }
+
+    .atlas-company-switcher-wrap {
+        display: inline-flex;
+        align-items: center;
+        min-width: 0;
+    }
+
+    .atlas-company-switcher-form {
+        margin: 0;
+    }
+
+    .atlas-company-switcher {
+        border: 1px solid var(--atlas-color-border-default);
+        border-radius: 0.75rem;
+        background: rgba(255, 255, 255, 0.96);
+        color: var(--atlas-color-text-primary);
+        font-size: 0.86rem;
+        font-weight: 700;
+        min-height: 2.25rem;
+        box-shadow: var(--atlas-shadow-xs);
+    }
+
+    .atlas-company-switcher--select {
+        min-width: 13rem;
+        padding: 0.45rem 2.1rem 0.45rem 0.9rem;
+    }
+
+    .atlas-company-switcher--static {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 0.9rem;
+    }
+
+    .atlas-company-switcher-label {
+        color: var(--atlas-color-text-muted);
+        font-size: 0.66rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .atlas-company-switcher-value {
+        max-width: 14rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .atlas-kpi-card {
+        min-height: 12.5rem;
+    }
+
+    .fi-main-ctn {
         background: var(--atlas-color-background-page);
+    }
+
+    .fi-main {
+        padding-bottom: 2rem;
     }
 }
 
@@ -552,5 +799,17 @@
     .fi-modal-content,
     .fi-modal-footer-actions {
         padding-inline: 1rem;
+    }
+
+    .fi-page,
+    .fi-resource-list-records-page,
+    .fi-resource-create-record-page,
+    .fi-resource-edit-record-page,
+    .fi-resource-view-record-page {
+        padding-inline: 1rem;
+    }
+
+    .fi-global-search-ctn {
+        width: 100%;
     }
 }

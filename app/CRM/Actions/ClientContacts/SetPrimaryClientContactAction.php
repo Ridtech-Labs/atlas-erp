@@ -21,7 +21,8 @@ class SetPrimaryClientContactAction
 
     public function execute(ClientContact $contact, User $actor): ClientContact
     {
-        if (! $actor->hasPermissionTo(PermissionName::ClientContactsUpdate->value) || ! $this->access->canAccessTenant($actor, $contact->tenant_id)) {
+        if (! $actor->hasPermissionTo(PermissionName::ClientContactsUpdate->value)
+            || ! $this->access->canAccessOperationalCompany($actor, $contact->company_id, $contact->tenant_id)) {
             throw new BusinessException('You are not allowed to update this client contact.', 403);
         }
 
@@ -35,6 +36,7 @@ class SetPrimaryClientContactAction
 
             $this->logger->log('client.primary_contact_changed', 'Primary client contact changed', $actor, $contact, [
                 'tenant_id' => $contact->tenant_id,
+                'company_id' => $contact->company_id,
                 'client_id' => $contact->client_id,
             ]);
 

@@ -6,6 +6,7 @@ use App\CRM\Actions\Clients\CreateClientAction;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientContact;
 use App\CRM\Models\ClientSite;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 test('client creation is tenant scoped and auto-generates a code', function () {
@@ -22,6 +23,7 @@ test('client creation is tenant scoped and auto-generates a code', function () {
     ], $actor);
 
     expect($client->tenant_id)->toBe($tenant->getKey())
+        ->and($client->company_id)->toBe($actor->companies()->firstOrFail()->getKey())
         ->and($client->client_code)->toStartWith('CLI-');
 });
 
@@ -87,4 +89,42 @@ test('only one primary contact per client is maintained transactionally', functi
 
     expect($second->refresh()->is_primary)->toBeTrue()
         ->and($first->refresh()->is_primary)->toBeFalse();
+});
+
+test('legacy alternative phone values remain readable through the canonical alternate phone field', function () {
+    $client = Client::factory()->make([
+        'alternate_phone' => null,
+    ]);
+
+    $client->forceFill([
+        'alternative_phone' => '+233244440000',
+    ]);
+
+    expect($client->alternate_phone)->toBe('+233244440000');
+});
+
+test('client code generation advances beyond existing tenant data when the sequence row is missing', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+
+    Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'client_code' => 'CLI-00001',
+    ]);
+
+    DB::table('tenant_sequences')
+        ->where('tenant_id', $tenant->getKey())
+        ->where('key', 'client_code')
+        ->delete();
+
+    $client = app(CreateClientAction::class)->execute([
+        'legal_name' => 'Next Tenant Client',
+        'client_type' => 'corporate',
+        'status' => 'active',
+        'country' => 'Ghana',
+    ], $actor);
+
+    expect($client->client_code)->toBe('CLI-00002');
 });

@@ -18,12 +18,10 @@ class ClientContactFactory extends Factory
 
     public function definition(): array
     {
-        $client = Client::factory()->create();
-
         return [
             'uuid' => (string) Str::uuid(),
-            'tenant_id' => $client->tenant_id,
-            'client_id' => $client->getKey(),
+            'tenant_id' => null,
+            'client_id' => Client::factory(),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
             'job_title' => fake()->optional()->jobTitle(),
@@ -36,5 +34,27 @@ class ClientContactFactory extends Factory
             'receives_operational_updates' => fake()->boolean(),
             'notes' => fake()->optional()->sentence(),
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this
+            ->afterMaking(function (ClientContact $contact): void {
+                $client = Client::query()->find($contact->client_id);
+
+                if ($client instanceof Client) {
+                    $contact->tenant_id = $client->tenant_id;
+                    $contact->company_id = $client->company_id;
+                }
+            })
+            ->afterCreating(function (ClientContact $contact): void {
+                $client = Client::query()->find($contact->client_id);
+
+                if ($client instanceof Client && ($contact->tenant_id !== $client->tenant_id || $contact->company_id !== $client->company_id)) {
+                    $contact->tenant_id = $client->tenant_id;
+                    $contact->company_id = $client->company_id;
+                    $contact->saveQuietly();
+                }
+            });
     }
 }

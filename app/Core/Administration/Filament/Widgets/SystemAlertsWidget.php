@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Widgets;
 
-use App\Operations\Enums\JobStatus;
-use App\Operations\Models\Job;
+use App\Core\Administration\Services\ExecutiveDashboardService;
+use App\Models\User;
 use Filament\Widgets\Widget;
 
 class SystemAlertsWidget extends Widget
@@ -17,33 +17,22 @@ class SystemAlertsWidget extends Widget
         'xl' => 4,
     ];
 
+    protected static bool $isLazy = false;
+
+    protected ?string $placeholderHeight = '24rem';
+
     protected function getViewData(): array
     {
-        $today = today();
+        $user = auth()->user();
+
+        if (! $user instanceof User) {
+            return [
+                'alerts' => [],
+            ];
+        }
 
         return [
-            'alerts' => [
-                [
-                    'label' => 'Overdue jobs',
-                    'value' => Job::query()
-                        ->whereIn('status', [
-                            JobStatus::Approved->value,
-                            JobStatus::Scheduled->value,
-                            JobStatus::InProgress->value,
-                            JobStatus::OnHold->value,
-                        ])
-                        ->whereDate('planned_end_date', '<', $today)
-                        ->count(),
-                ],
-                [
-                    'label' => 'Pending approvals',
-                    'value' => Job::query()->where('status', JobStatus::PendingApproval->value)->count(),
-                ],
-                [
-                    'label' => 'Starts today',
-                    'value' => Job::query()->whereDate('planned_start_date', $today)->count(),
-                ],
-            ],
+            'alerts' => app(ExecutiveDashboardService::class)->forUser($user)['system_alerts'],
         ];
     }
 }

@@ -6,7 +6,7 @@
     <a
         href="{{ ActivityResource::getUrl('index') }}"
         aria-label="Open activity log"
-        class="fi-icon-btn relative inline-flex h-10 w-10 items-center justify-center rounded-[var(--atlas-radius-sm)] border border-[var(--atlas-color-border-default)] bg-white text-[var(--atlas-color-text-secondary)] transition hover:bg-[var(--atlas-color-background-muted)] hover:text-[var(--atlas-color-text-primary)]"
+        class="fi-icon-btn relative inline-flex h-10 w-10 items-center justify-center rounded-full bg-transparent text-[var(--atlas-color-text-secondary)] transition hover:bg-[var(--atlas-color-background-muted)] hover:text-[var(--atlas-color-text-primary)]"
     >
         <svg class="h-4 w-4" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
             <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>

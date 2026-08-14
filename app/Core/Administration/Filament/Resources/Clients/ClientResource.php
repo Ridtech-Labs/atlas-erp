@@ -88,10 +88,18 @@ class ClientResource extends Resource
         }
 
         if ($access->isSuperAdministrator($user)) {
-            return $query;
+            $companyId = $access->activeCompanyId($user);
+
+            return $companyId === null
+                ? $query->whereRaw('1 = 0')
+                : $query->where('company_id', $companyId);
         }
 
-        return $query->where('tenant_id', $user->tenant_id);
+        $companyId = $access->activeCompanyId($user);
+
+        return $companyId === null
+            ? $query->whereRaw('1 = 0')
+            : $query->where('company_id', $companyId);
     }
 
     public static function getRecordRouteBindingEloquentQuery(): Builder

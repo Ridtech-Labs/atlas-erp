@@ -15,18 +15,18 @@ class ViewTenant extends ViewRecord
     {
         $record = $this->getRecord();
 
-        return $record instanceof Tenant ? $record->name : 'Company';
+        return $record instanceof Tenant ? $record->name : 'Tenant';
     }
 
     public function getSubheading(): ?string
     {
-        return 'Workspace identity, contact details, and operating defaults for this company.';
+        return 'Tenant account metadata and default company profile for this Atlas customer.';
     }
 
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make()->label('Edit company'),
+            EditAction::make()->label('Edit tenant'),
         ];
     }
 }

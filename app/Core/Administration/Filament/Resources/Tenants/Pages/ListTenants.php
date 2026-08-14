@@ -10,14 +10,14 @@ class ListTenants extends ListRecords
 {
     protected static string $resource = TenantResource::class;
 
-    protected static ?string $title = 'Companies';
+    protected static ?string $title = 'Tenants';
 
-    protected ?string $subheading = 'Manage tenant workspaces, company identity, and operating regions.';
+    protected ?string $subheading = 'Manage Atlas customer accounts and their default operational company profiles.';
 
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('New company'),
+            CreateAction::make()->label('New tenant'),
         ];
     }
 }

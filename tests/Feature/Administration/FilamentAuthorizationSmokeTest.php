@@ -7,16 +7,24 @@ use App\Operations\Models\Job;
 
 test('filament administration pages render without authorization recursion', function () {
     $this->seedAccessControl();
-    $this->actingAsRole(RoleName::SuperAdministrator->value);
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $tenantAdmin = $this->actingAsCompanyAdministrator($tenant);
+    $tenantAdmin->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
 
     $tenantId = auth()->user()?->tenant_id;
-    $client = Client::factory()->create(['tenant_id' => $tenantId]);
+    $client = Client::factory()->create([
+        'tenant_id' => $tenantId,
+        'company_id' => $company->getKey(),
+    ]);
     $site = ClientSite::factory()->create([
         'tenant_id' => $tenantId,
         'client_id' => $client->getKey(),
     ]);
     $job = Job::factory()->create([
         'tenant_id' => $tenantId,
+        'company_id' => $company->getKey(),
         'client_id' => $client->getKey(),
         'client_site_id' => $site->getKey(),
     ]);
@@ -27,6 +35,11 @@ test('filament administration pages render without authorization recursion', fun
     $this->get('/admin/jobs/create')->assertOk();
     $this->get("/admin/jobs/{$job->getKey()}/edit")->assertOk();
     $this->get('/admin/settings')->assertOk();
+
+    $platformUser = $this->tenantUser($tenant, [], [RoleName::SuperAdministrator->value]);
+    $this->actingAs($platformUser);
+    session()->forget('active_company_id');
+
     $this->get('/admin/roles')->assertOk();
     $this->get('/admin/system-health')->assertOk();
 });

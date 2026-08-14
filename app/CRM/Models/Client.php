@@ -6,6 +6,7 @@ namespace App\CRM\Models;
 
 use App\Core\Shared\Concerns\BelongsToTenant;
 use App\Core\Shared\Concerns\HasPublicUuid;
+use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Enums\ClientStatus;
 use App\CRM\Enums\ClientType;
@@ -35,6 +36,7 @@ class Client extends Model
     protected $fillable = [
         'uuid',
         'tenant_id',
+        'company_id',
         'client_code',
         'legal_name',
         'trading_name',
@@ -68,6 +70,11 @@ class Client extends Model
         ];
     }
 
+    public function getAlternatePhoneAttribute(?string $value): ?string
+    {
+        return $value ?? $this->attributes['alternative_phone'] ?? null;
+    }
+
     protected static function newFactory(): ClientFactory
     {
         return ClientFactory::new();
@@ -79,6 +86,14 @@ class Client extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    /**
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**
@@ -132,6 +147,7 @@ class Client extends Model
             ->useLogName('clients')
             ->logOnly([
                 'tenant_id',
+                'company_id',
                 'client_code',
                 'legal_name',
                 'trading_name',
@@ -150,6 +166,7 @@ class Client extends Model
     {
         $activity->properties = collect($activity->properties?->toArray() ?? [])->merge([
             'tenant_id' => $this->tenant_id,
+            'company_id' => $this->company_id,
         ]);
     }
 }

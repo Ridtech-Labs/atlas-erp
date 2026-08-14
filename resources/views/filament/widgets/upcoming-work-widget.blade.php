@@ -1,30 +1,82 @@
 <x-filament-widgets::widget>
-    <x-filament::section>
-        <x-slot name="heading">Upcoming Work</x-slot>
+    <x-atlas-card class="overflow-hidden">
+        <div class="flex items-center justify-between gap-4 border-b border-[var(--atlas-color-border-muted)] px-6 py-4">
+            <div>
+                <h3 class="text-[1.8rem] font-bold tracking-[-0.03em] text-[var(--atlas-color-text-primary)]">{{ $heading }}</h3>
+                <p class="mt-1 text-base text-[var(--atlas-color-text-muted)]">{{ $mode === 'upcoming' ? 'Next 48 hours' : $description }}</p>
+            </div>
 
-        <div class="space-y-3">
-            @forelse ($jobs as $job)
-                <div class="rounded-3xl border border-stone-200 bg-white px-5 py-4 shadow-sm">
-                    <div class="flex items-start justify-between gap-4">
-                        <div class="min-w-0">
-                            <div class="text-sm font-semibold text-stone-950">{{ $job->title }}</div>
-                            <div class="mt-1 text-xs uppercase tracking-[0.18em] text-stone-400">{{ $job->job_number }}</div>
-                            <div class="mt-3 flex flex-wrap gap-3 text-sm text-stone-600">
-                                <span>{{ $job->client?->display_name ?? 'No client' }}</span>
-                                <span>{{ $job->site?->name ?? 'No site' }}</span>
-                                <span>{{ $job->planned_start_date?->format('D, j M') ?? 'Unscheduled' }}</span>
-                            </div>
-                        </div>
-                        <span class="rounded-full bg-stone-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-stone-700">
-                            {{ $job->status->label() }}
-                        </span>
-                    </div>
-                </div>
-            @empty
-                <div class="rounded-3xl border border-dashed border-stone-300 bg-white px-5 py-8 text-sm text-stone-500">
-                    No upcoming work is scheduled yet.
-                </div>
-            @endforelse
+            @if ($canViewJobs)
+                <a
+                    href="{{ \App\Core\Administration\Filament\Resources\Jobs\JobResource::getUrl('index') }}"
+                    class="text-base font-semibold text-[var(--atlas-color-text-muted)] transition hover:text-[var(--atlas-color-text-primary)]"
+                >
+                    View all jobs →
+                </a>
+            @endif
         </div>
-    </x-filament::section>
+
+        <div>
+            @if (! $canViewJobs)
+                <div class="p-6">
+                    <x-atlas.empty-state
+                        title="Job visibility is restricted"
+                        description="This role does not currently include access to the operations queue."
+                    />
+                </div>
+            @elseif ($jobs->isEmpty())
+                <div class="p-6">
+                    <x-atlas.empty-state
+                        title="No work is scheduled yet"
+                        description="When jobs are planned or updated, the next operational queue will appear here."
+                    >
+                        @if (\App\Core\Administration\Filament\Resources\Jobs\JobResource::canCreate())
+                            <x-atlas.button tag="a" :href="\App\Core\Administration\Filament\Resources\Jobs\JobResource::getUrl('create')">
+                                Create first job
+                            </x-atlas.button>
+                        @endif
+                    </x-atlas.empty-state>
+                </div>
+            @else
+                <div class="divide-y divide-[var(--atlas-color-border-muted)]">
+                    @foreach ($jobs as $job)
+                        <a
+                            href="{{ \App\Core\Administration\Filament\Resources\Jobs\JobResource::getUrl('view', ['record' => $job]) }}"
+                            class="flex items-center gap-5 px-6 py-5 transition hover:bg-[var(--atlas-color-background-muted)]/45"
+                        >
+                            <div class="w-24 shrink-0 text-base font-medium tracking-[-0.02em] text-[var(--atlas-color-text-disabled)]">
+                                {{ $job->job_number }}
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <div class="truncate text-[1.45rem] font-semibold tracking-[-0.03em] text-[var(--atlas-color-text-primary)]">
+                                    {{ $job->title }}
+                                </div>
+                                <div class="mt-1 truncate text-base text-[var(--atlas-color-text-muted)]">
+                                    {{ $job->client?->display_name ?? 'No client linked' }}
+                                </div>
+                            </div>
+
+                            <div class="hidden shrink-0 text-base text-[var(--atlas-color-text-muted)] lg:block">
+                                {{ $job->planned_start_date?->format('D, g:i A') ?? 'Unscheduled' }}
+                            </div>
+
+                            <div class="hidden shrink-0 text-base text-[var(--atlas-color-text-disabled)] lg:block">
+                                {{ $job->site?->name ? 'Site ready' : 'No site linked' }}
+                            </div>
+
+                            <div class="shrink-0">
+                                <x-atlas.badge
+                                    :status="$job->status->color()"
+                                    class="px-3 py-1.5 text-sm font-bold"
+                                >
+                                    {{ $job->status->label() }}
+                                </x-atlas.badge>
+                            </div>
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </x-atlas-card>
 </x-filament-widgets::widget>

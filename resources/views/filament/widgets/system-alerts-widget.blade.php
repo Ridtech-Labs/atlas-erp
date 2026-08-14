@@ -1,14 +1,31 @@
 <x-filament-widgets::widget>
-    <x-filament::section>
-        <x-slot name="heading">System Alerts</x-slot>
+    <x-atlas-card class="p-6">
+        <h3 class="text-[1.8rem] font-bold tracking-[-0.03em] text-[var(--atlas-color-text-primary)]">System Alerts</h3>
 
-        <div class="space-y-3">
-            @foreach ($alerts as $alert)
-                <div class="rounded-3xl border border-stone-200 bg-white px-4 py-4 shadow-sm">
-                    <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">{{ $alert['label'] }}</div>
-                    <div class="mt-2 text-2xl font-semibold text-stone-950">{{ $alert['value'] }}</div>
-                </div>
-            @endforeach
+        <div class="mt-5 space-y-4">
+            @forelse ($alerts as $alert)
+                <a
+                    href="{{ $alert['url'] }}"
+                    @class([
+                        'block rounded-[16px] border px-4 py-4 transition hover:opacity-95',
+                        'border-[#fca5a5] bg-[#feecec]' => $alert['tone'] === 'danger',
+                        'border-[#fcd34d] bg-[#fff7d8]' => $alert['tone'] === 'warning',
+                        'border-[#7dd3fc] bg-[#e8f5ff]' => $alert['tone'] === 'info',
+                    ])
+                >
+                    <div class="text-[1.15rem] font-semibold tracking-[-0.02em] text-[var(--atlas-color-text-primary)]">
+                        {{ $alert['title'] }}
+                    </div>
+                    <div class="mt-1 text-sm text-[var(--atlas-color-text-muted)]">
+                        {{ $alert['detail'] }}
+                    </div>
+                </a>
+            @empty
+                <x-atlas.empty-state
+                    title="No system alerts"
+                    description="Operational exceptions will appear here when the workspace needs attention."
+                />
+            @endforelse
         </div>
-    </x-filament::section>
+    </x-atlas-card>
 </x-filament-widgets::widget>

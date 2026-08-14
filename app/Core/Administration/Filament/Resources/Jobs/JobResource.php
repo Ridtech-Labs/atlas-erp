@@ -9,6 +9,7 @@ use App\Core\Administration\Filament\Resources\Jobs\Pages\CreateJob;
 use App\Core\Administration\Filament\Resources\Jobs\Pages\EditJob;
 use App\Core\Administration\Filament\Resources\Jobs\Pages\ListJobs;
 use App\Core\Administration\Filament\Resources\Jobs\Pages\ViewJob;
+use App\Core\Administration\Filament\Resources\Jobs\RelationManagers\JobCardsRelationManager;
 use App\Core\Administration\Filament\Resources\Jobs\Schemas\JobForm;
 use App\Core\Administration\Filament\Resources\Jobs\Schemas\JobInfolist;
 use App\Core\Administration\Filament\Resources\Jobs\Tables\JobsTable;
@@ -51,6 +52,13 @@ class JobResource extends Resource
         return JobsTable::configure($table);
     }
 
+    public static function getRelations(): array
+    {
+        return [
+            JobCardsRelationManager::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
@@ -75,16 +83,35 @@ class JobResource extends Resource
         }
 
         if ($access->isSuperAdministrator($user)) {
-            return $query;
+            $companyId = $access->activeCompanyId($user);
+
+            return $companyId === null
+                ? $query->whereRaw('1 = 0')
+                : $query->where('company_id', $companyId);
         }
 
-        return $query->where('tenant_id', $user->tenant_id);
+        $companyId = $access->activeCompanyId($user);
+
+        return $companyId === null
+            ? $query->whereRaw('1 = 0')
+            : $query->where('company_id', $companyId);
     }
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
+        $query = parent::getRecordRouteBindingEloquentQuery()
             ->with(['client', 'site'])
             ->withoutGlobalScopes([SoftDeletingScope::class]);
+
+        $user = auth()->user();
+        $access = app(AdministrationAccessService::class);
+
+        if ($user === null) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        $tenantId = $access->activeTenantId($user) ?? $user->tenant_id;
+
+        return $query->where('tenant_id', $tenantId);
     }
 }

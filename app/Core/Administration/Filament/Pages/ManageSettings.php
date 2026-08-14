@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Pages;
 
+use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Settings\Actions\UpdateSettingAction;
 use App\Core\Settings\DTOs\SettingData;
 use App\Core\Settings\Services\SettingService;
+use App\Core\Tenancy\Models\Company;
 use App\Models\User;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
@@ -39,16 +41,20 @@ class ManageSettings extends Page
     public function mount(SettingService $settings): void
     {
         $user = $this->authenticatedUser();
+        $company = app(AdministrationAccessService::class)->activeCompany($user);
         $tenantId = $user->tenant_id;
         $records = $settings->allForTenant($tenantId)->keyBy(fn ($record) => "{$record->group}.{$record->key}");
+        $defaultCompanyName = $company instanceof Company
+            ? $company->name
+            : $user->tenant?->name;
 
         $this->general = $this->arrayValue($records['company.profile']->value ?? null, [
-            'name' => $user->tenant?->name,
-            'timezone' => $user->tenant?->timezone,
-            'currency' => $user->tenant?->currency,
+            'name' => $defaultCompanyName,
+            'timezone' => $company?->timezone,
+            'currency' => $company?->currency,
             'date_format' => 'Y-m-d',
             'time_format' => 'H:i',
-            'country' => $user->tenant?->country,
+            'country' => $company?->country,
             'language' => 'en',
         ]);
 
@@ -66,7 +72,10 @@ class ManageSettings extends Page
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->can('settings.view') ?? false;
+        $user = auth()->user();
+
+        return ($user?->can('settings.view') ?? false)
+            && ! app(AdministrationAccessService::class)->isPlatformSession($user);
     }
 
     public function save(UpdateSettingAction $action, AdministrationActivityLogger $logger): void
@@ -117,7 +126,7 @@ class ManageSettings extends Page
     {
         $user = auth()->user();
 
-        if (! $user instanceof User) {
+        if (! ($user instanceof User)) {
             abort(403);
         }
 

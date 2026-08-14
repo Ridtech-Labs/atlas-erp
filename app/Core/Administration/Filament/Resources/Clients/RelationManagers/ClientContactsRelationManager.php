@@ -68,6 +68,7 @@ class ClientContactsRelationManager extends RelationManager
                     ->label('Add contact')
                     ->mutateDataUsing(function (array $data): array {
                         $data['tenant_id'] = $this->ownerClient()->tenant_id;
+                        $data['company_id'] = $this->ownerClient()->company_id;
 
                         return $data;
                     })

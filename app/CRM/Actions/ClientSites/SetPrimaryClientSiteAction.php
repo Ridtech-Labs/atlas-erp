@@ -21,7 +21,8 @@ class SetPrimaryClientSiteAction
 
     public function execute(ClientSite $site, User $actor): ClientSite
     {
-        if (! $actor->hasPermissionTo(PermissionName::ClientSitesUpdate->value) || ! $this->access->canAccessTenant($actor, $site->tenant_id)) {
+        if (! $actor->hasPermissionTo(PermissionName::ClientSitesUpdate->value)
+            || ! $this->access->canAccessOperationalCompany($actor, $site->company_id, $site->tenant_id)) {
             throw new BusinessException('You are not allowed to update this client site.', 403);
         }
 
@@ -35,6 +36,7 @@ class SetPrimaryClientSiteAction
 
             $this->logger->log('client.primary_site_changed', 'Primary client site changed', $actor, $site, [
                 'tenant_id' => $site->tenant_id,
+                'company_id' => $site->company_id,
                 'client_id' => $site->client_id,
             ]);
 

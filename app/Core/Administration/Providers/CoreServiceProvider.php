@@ -21,6 +21,8 @@ use App\CRM\Policies\ClientPolicy;
 use App\CRM\Policies\ClientSitePolicy;
 use App\Models\User;
 use App\Operations\Models\Job;
+use App\Operations\Models\JobCard;
+use App\Operations\Policies\JobCardPolicy;
 use App\Operations\Policies\JobPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -47,6 +49,7 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(ClientContact::class, ClientContactPolicy::class);
         Gate::policy(ClientSite::class, ClientSitePolicy::class);
         Gate::policy(Job::class, JobPolicy::class);
+        Gate::policy(JobCard::class, JobCardPolicy::class);
 
         Gate::define('manageSettings', fn (User $user): bool => $this->hasPermission($user, 'settings.manage') || $this->hasPermission($user, 'settings.update'));
         Gate::define('viewHealth', fn (User $user): bool => $this->hasPermission($user, 'health.view'));

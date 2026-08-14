@@ -1,5 +1,8 @@
 @php
-    $tenant = $currentTenant ?? auth()->user()?->tenant;
+    $access = app(\App\Administration\Services\AdministrationAccessService::class);
+    $isPlatformSession = $access->isPlatformSession(auth()->user());
+    $tenant = $isPlatformSession ? null : ($currentTenant ?? auth()->user()?->tenant);
+    $company = $isPlatformSession ? null : ($currentCompany ?? $access->activeCompany(auth()->user()));
 @endphp
 
 <div class="flex items-center gap-3">
@@ -13,6 +16,12 @@
 
     <div class="min-w-0">
         <div class="truncate text-sm font-bold tracking-tight text-white">Atlas ERP</div>
-        <div class="truncate text-xs text-[var(--atlas-color-text-sidebar)]">{{ $tenant?->name ?? 'Platform workspace' }}</div>
+
+        @if ($isPlatformSession)
+            <div class="truncate text-xs text-[var(--atlas-color-text-sidebar)]">Platform Administration</div>
+        @else
+            <div class="truncate text-xs text-[var(--atlas-color-text-sidebar)]">{{ $tenant?->name ?? 'Tenant workspace' }}</div>
+            <div class="truncate text-[11px] text-[color:rgba(148,163,184,0.82)]">{{ $company?->name ?? 'Select a company' }}</div>
+        @endif
     </div>
 </div>

@@ -7,6 +7,7 @@ namespace App\Operations\Actions\Jobs;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Models\User;
 use App\Operations\Actions\Jobs\Transitions\TransitionsJobState;
+use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobStatus;
 use App\Operations\Models\Job;
 
@@ -35,9 +36,18 @@ class CompleteJobAction extends TransitionsJobState
     protected function mutate(Job $job, User $actor, array $context): void
     {
         $actualEnd = $context['actual_end_date'] ?? now();
+        $job->loadMissing('jobCards');
 
         if ($job->actual_start_date === null) {
             throw new BusinessException('A job must have an actual start date before it can be completed.', 422);
+        }
+
+        if (! $job->jobCards()->exists()) {
+            throw new BusinessException('At least one job card is required before a job can be completed.', 422);
+        }
+
+        if ($job->jobCards()->where('approval_status', '!=', JobCardApprovalStatus::Approved->value)->exists()) {
+            throw new BusinessException('All job cards must be approved before the job can be completed.', 422);
         }
 
         if ($actualEnd < $job->actual_start_date) {

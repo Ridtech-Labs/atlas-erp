@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Pages;
 
-use App\Core\Administration\Filament\Widgets\BusinessOverviewWidget;
-use App\Core\Administration\Filament\Widgets\DashboardSummaryWidget;
-use App\Core\Administration\Filament\Widgets\PipelineWidget;
+use App\Administration\Enums\PermissionName;
+use App\Administration\Services\AdministrationAccessService;
+use App\Core\Administration\Filament\Widgets\ApprovalQueueWidget;
+use App\Core\Administration\Filament\Widgets\ExecutiveKpiOverviewWidget;
 use App\Core\Administration\Filament\Widgets\QuickNavigationWidget;
 use App\Core\Administration\Filament\Widgets\RecentActivityWidget;
 use App\Core\Administration\Filament\Widgets\SystemAlertsWidget;
 use App\Core\Administration\Filament\Widgets\UpcomingWorkWidget;
-use App\Core\Administration\Filament\Widgets\WorkspaceShortcutsWidget;
-use App\Core\Tenancy\Models\Tenant;
+use App\Core\Administration\Filament\Widgets\WelcomeHeroWidget;
+use App\Models\User;
 use Filament\Pages\Dashboard as BaseDashboard;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use UnitEnum;
 
 class Dashboard extends BaseDashboard
@@ -24,32 +26,38 @@ class Dashboard extends BaseDashboard
 
     public function getWidgets(): array
     {
+        $access = app(AdministrationAccessService::class);
+        $isPlatformSession = $access->isPlatformSession(auth()->user());
+
+        if ($isPlatformSession) {
+            return [
+                WelcomeHeroWidget::class,
+                ExecutiveKpiOverviewWidget::class,
+                RecentActivityWidget::class,
+                QuickNavigationWidget::class,
+                SystemAlertsWidget::class,
+            ];
+        }
+
         return [
-            DashboardSummaryWidget::class,
-            BusinessOverviewWidget::class,
+            WelcomeHeroWidget::class,
+            ExecutiveKpiOverviewWidget::class,
+            UpcomingWorkWidget::class,
+            ApprovalQueueWidget::class,
             RecentActivityWidget::class,
             QuickNavigationWidget::class,
-            UpcomingWorkWidget::class,
             SystemAlertsWidget::class,
-            PipelineWidget::class,
-            WorkspaceShortcutsWidget::class,
         ];
     }
 
     public function getHeading(): string
     {
-        $user = auth()->user();
-        $name = $user?->first_name ?: 'there';
-
-        return sprintf('%s %s', $this->greeting(), $name);
+        return '';
     }
 
     public function getSubheading(): ?string
     {
-        $tenant = auth()->user()?->tenant;
-        $tenantName = $tenant instanceof Tenant ? $tenant->name : 'Atlas ERP workspace';
-
-        return $tenantName;
+        return null;
     }
 
     public function getColumns(): int|array
@@ -60,14 +68,18 @@ class Dashboard extends BaseDashboard
         ];
     }
 
-    private function greeting(): string
+    public static function canAccess(): bool
     {
-        $hour = now()->hour;
+        $user = auth()->user();
 
-        return match (true) {
-            $hour < 12 => 'Good morning',
-            $hour < 18 => 'Good afternoon',
-            default => 'Good evening',
-        };
+        if (! $user instanceof User) {
+            return false;
+        }
+
+        try {
+            return $user->hasPermissionTo(PermissionName::DashboardView->value);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
     }
 }

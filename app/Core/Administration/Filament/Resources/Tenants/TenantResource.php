@@ -30,7 +30,7 @@ class TenantResource extends Resource
 
     protected static string|UnitEnum|null $navigationGroup = 'Administration';
 
-    protected static ?string $navigationLabel = 'Companies';
+    protected static ?string $navigationLabel = 'Tenants';
 
     protected static ?int $navigationSort = 10;
 
@@ -79,6 +79,7 @@ class TenantResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
+            ->with(['defaultCompany'])
             ->withCount(['users', 'clients', 'jobs'])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
@@ -100,11 +101,11 @@ class TenantResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Company';
+        return 'Tenant';
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Companies';
+        return 'Tenants';
     }
 }

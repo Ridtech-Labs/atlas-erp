@@ -4,21 +4,21 @@
     --atlas-font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
     --atlas-font-mono: "Geist Mono", ui-monospace, monospace;
 
-    --atlas-color-background-page: #f7f8fc;
+    --atlas-color-background-page: #f6f7fb;
     --atlas-color-background-surface: #ffffff;
     --atlas-color-background-muted: #f1f3fa;
     --atlas-color-background-subtle: #eef0f8;
-    --atlas-color-background-sidebar: #0c0e1a;
-    --atlas-color-background-sidebar-hover: #1a1d2e;
-    --atlas-color-background-sidebar-active: #2b4eff;
+    --atlas-color-background-sidebar: #0c1020;
+    --atlas-color-background-sidebar-hover: #171c31;
+    --atlas-color-background-sidebar-active: #3b4ef6;
 
     --atlas-color-text-primary: #0c0e1a;
     --atlas-color-text-secondary: #3b4163;
     --atlas-color-text-muted: #6b7389;
     --atlas-color-text-disabled: #9ca3af;
     --atlas-color-text-on-dark: #ffffff;
-    --atlas-color-text-sidebar: #a8adcc;
-    --atlas-color-text-sidebar-muted: #59607a;
+    --atlas-color-text-sidebar: #b1b7d2;
+    --atlas-color-text-sidebar-muted: #525a79;
 
     --atlas-color-border-default: #e2e5f0;
     --atlas-color-border-muted: #f1f3fa;
@@ -40,8 +40,8 @@
     --atlas-color-status-accent: #9333ea;
     --atlas-color-status-accent-soft: #f3e8ff;
 
-    --atlas-shadow-sm: 0 1px 4px rgba(12, 14, 26, 0.05);
-    --atlas-shadow-md: 0 4px 16px rgba(12, 14, 26, 0.08);
+    --atlas-shadow-sm: 0 1px 3px rgba(12, 14, 26, 0.05);
+    --atlas-shadow-md: 0 6px 18px rgba(12, 14, 26, 0.08);
     --atlas-shadow-lg: 0 24px 64px rgba(12, 14, 26, 0.18);
 
     --atlas-radius-xs: 0.375rem;
@@ -82,10 +82,10 @@
     --atlas-weight-extrabold: 800;
 
     --atlas-layout-content-max: 90rem;
-    --atlas-layout-page-padding: clamp(1rem, 1.25vw + 0.75rem, 2rem);
-    --atlas-layout-sidebar-width: 15rem;
+    --atlas-layout-page-padding: 1.25rem;
+    --atlas-layout-sidebar-width: 15.9375rem;
     --atlas-layout-sidebar-collapsed-width: 4rem;
-    --atlas-layout-topbar-height: 4.25rem;
+    --atlas-layout-topbar-height: 3.25rem;
 
     --atlas-focus-ring: 0 0 0 4px rgba(43, 78, 255, 0.12);
     --atlas-transition: 180ms cubic-bezier(0.4, 0, 0.2, 1);

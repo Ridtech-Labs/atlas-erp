@@ -18,42 +18,44 @@ class ClientPolicy
 
     public function viewAny(User $user): bool
     {
-        return $this->hasPermission($user, PermissionName::ClientsViewAny->value);
+        return $this->hasPermission($user, PermissionName::ClientsViewAny->value)
+            && $this->access->hasActiveCompanyContext($user);
     }
 
     public function view(User $user, Client $client): bool
     {
         return $this->hasPermission($user, PermissionName::ClientsView->value)
-            && $this->access->canAccessTenant($user, $client->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $client->company_id, $client->tenant_id);
     }
 
     public function create(User $user): bool
     {
-        return $this->hasPermission($user, PermissionName::ClientsCreate->value);
+        return $this->hasPermission($user, PermissionName::ClientsCreate->value)
+            && $this->access->hasActiveCompanyContext($user);
     }
 
     public function update(User $user, Client $client): bool
     {
         return $this->hasPermission($user, PermissionName::ClientsUpdate->value)
-            && $this->access->canAccessTenant($user, $client->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $client->company_id, $client->tenant_id);
     }
 
     public function delete(User $user, Client $client): bool
     {
         return $this->hasPermission($user, PermissionName::ClientsDelete->value)
-            && $this->access->canAccessTenant($user, $client->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $client->company_id, $client->tenant_id);
     }
 
     public function restore(User $user, Client $client): bool
     {
         return $this->hasPermission($user, PermissionName::ClientsRestore->value)
-            && $this->access->canAccessTenant($user, $client->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $client->company_id, $client->tenant_id);
     }
 
     public function forceDelete(User $user, Client $client): bool
     {
         return $this->hasPermission($user, PermissionName::ClientsForceDelete->value)
-            && $this->access->canAccessTenant($user, $client->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $client->company_id, $client->tenant_id);
     }
 
     private function hasPermission(User $user, string $permission): bool

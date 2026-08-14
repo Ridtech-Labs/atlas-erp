@@ -18,30 +18,32 @@ class ClientSitePolicy
 
     public function viewAny(User $user): bool
     {
-        return $this->hasPermission($user, PermissionName::ClientSitesViewAny->value);
+        return $this->hasPermission($user, PermissionName::ClientSitesViewAny->value)
+            && $this->access->hasActiveCompanyContext($user);
     }
 
     public function view(User $user, ClientSite $site): bool
     {
         return $this->hasPermission($user, PermissionName::ClientSitesView->value)
-            && $this->access->canAccessTenant($user, $site->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $site->company_id, $site->tenant_id);
     }
 
     public function create(User $user): bool
     {
-        return $this->hasPermission($user, PermissionName::ClientSitesCreate->value);
+        return $this->hasPermission($user, PermissionName::ClientSitesCreate->value)
+            && $this->access->hasActiveCompanyContext($user);
     }
 
     public function update(User $user, ClientSite $site): bool
     {
         return $this->hasPermission($user, PermissionName::ClientSitesUpdate->value)
-            && $this->access->canAccessTenant($user, $site->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $site->company_id, $site->tenant_id);
     }
 
     public function delete(User $user, ClientSite $site): bool
     {
         return $this->hasPermission($user, PermissionName::ClientSitesDelete->value)
-            && $this->access->canAccessTenant($user, $site->tenant_id);
+            && $this->access->canAccessOperationalCompany($user, $site->company_id, $site->tenant_id);
     }
 
     private function hasPermission(User $user, string $permission): bool

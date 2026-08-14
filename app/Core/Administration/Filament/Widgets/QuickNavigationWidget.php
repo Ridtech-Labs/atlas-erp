@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Widgets;
 
-use App\Core\Administration\Filament\Resources\Clients\ClientResource;
-use App\Core\Administration\Filament\Resources\Jobs\JobResource;
-use App\CRM\Models\Client;
-use App\Operations\Models\Job;
+use App\Core\Administration\Services\ExecutiveDashboardService;
+use App\Models\User;
 use Filament\Widgets\Widget;
 
 class QuickNavigationWidget extends Widget
@@ -19,38 +17,24 @@ class QuickNavigationWidget extends Widget
         'xl' => 4,
     ];
 
+    protected static bool $isLazy = false;
+
+    protected ?string $placeholderHeight = '18rem';
+
     protected function getViewData(): array
     {
+        $user = auth()->user();
+
+        if (! $user instanceof User) {
+            return [
+                'actionCards' => [],
+            ];
+        }
+
+        $data = app(ExecutiveDashboardService::class)->forUser($user);
+
         return [
-            'actionCards' => [
-                [
-                    'title' => 'Create client',
-                    'description' => 'Open a new customer workspace.',
-                    'url' => ClientResource::getUrl('create'),
-                ],
-                [
-                    'title' => 'Create job',
-                    'description' => 'Capture new operational work.',
-                    'url' => JobResource::getUrl('create'),
-                ],
-                [
-                    'title' => 'Add contact',
-                    'description' => 'Jump into a client workspace to add key people.',
-                    'url' => ClientResource::getUrl('index'),
-                ],
-                [
-                    'title' => 'Add site',
-                    'description' => 'Open a client account to register a location.',
-                    'url' => ClientResource::getUrl('index'),
-                ],
-                [
-                    'title' => 'Review pipeline',
-                    'description' => 'See work by status, site, and timing.',
-                    'url' => JobResource::getUrl('index'),
-                ],
-            ],
-            'upcomingJobs' => Job::query()->limit(0)->get(),
-            'recentClients' => Client::query()->limit(0)->get(),
+            'actionCards' => $data['quick_actions'],
         ];
     }
 }

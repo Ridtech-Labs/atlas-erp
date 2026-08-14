@@ -8,6 +8,7 @@ use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
+use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Arr;
@@ -32,19 +33,66 @@ class UpdateCompanyAction
 
         return DB::transaction(function () use ($tenant, $data, $actor): Tenant {
             $tenant->fill([
-                ...Arr::except($data, ['logo']),
+                ...$this->tenantAttributes($data),
                 'slug' => (string) ($data['slug'] ?? Str::slug((string) ($data['name'] ?? $tenant->name))),
-                'timezone' => (string) ($data['timezone'] ?? $tenant->timezone),
-                'currency' => (string) ($data['currency'] ?? $tenant->currency),
                 'status' => (string) ($data['status'] ?? $tenant->getRawOriginal('status')),
             ]);
             $tenant->save();
 
+            $company = $tenant->defaultCompany()->first() ?? Company::query()->create([
+                'uuid' => (string) Str::uuid(),
+                'tenant_id' => $tenant->getKey(),
+                'name' => (string) ($data['name'] ?? $tenant->name),
+                'legal_name' => (string) ($data['name'] ?? $tenant->name),
+                'code' => strtoupper(substr((string) Str::slug((string) ($data['name'] ?? $tenant->name), ''), 0, 12)).'-001',
+                'status' => (string) ($data['status'] ?? $tenant->getRawOriginal('status')),
+                'is_default' => true,
+            ]);
+
+            $company->fill([
+                'name' => (string) ($data['name'] ?? $tenant->name),
+                'legal_name' => (string) ($data['name'] ?? $tenant->name),
+                ...$this->companyProfileAttributes($data),
+                'currency' => (string) ($data['currency'] ?? $company->currency ?? 'GHS'),
+                'country' => $data['country'] ?? $company->country,
+                'timezone' => (string) ($data['timezone'] ?? $company->timezone ?? 'Africa/Accra'),
+                'status' => (string) ($data['status'] ?? $company->getRawOriginal('status')),
+            ]);
+            $company->save();
+
             $this->logger->log('company.updated', 'Company updated', $actor, $tenant, [
                 'tenant_id' => $tenant->getKey(),
+                'default_company_id' => $company->getKey(),
             ]);
 
             return $tenant->refresh();
         });
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function tenantAttributes(array $data): array
+    {
+        return Arr::only($data, [
+            'uuid',
+            'name',
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private function companyProfileAttributes(array $data): array
+    {
+        return Arr::only($data, [
+            'email',
+            'phone',
+            'logo_path',
+            'address',
+            'city',
+        ]);
     }
 }

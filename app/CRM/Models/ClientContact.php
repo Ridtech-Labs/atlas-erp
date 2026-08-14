@@ -6,6 +6,7 @@ namespace App\CRM\Models;
 
 use App\Core\Shared\Concerns\BelongsToTenant;
 use App\Core\Shared\Concerns\HasPublicUuid;
+use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use Database\Factories\ClientContactFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -24,6 +25,7 @@ class ClientContact extends Model
     protected $fillable = [
         'uuid',
         'tenant_id',
+        'company_id',
         'client_id',
         'first_name',
         'last_name',
@@ -58,6 +60,14 @@ class ClientContact extends Model
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
+    }
+
+    /**
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**

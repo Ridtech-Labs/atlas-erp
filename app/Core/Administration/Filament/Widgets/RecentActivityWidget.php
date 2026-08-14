@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Widgets;
 
-use App\Administration\Enums\RoleName;
+use App\Core\Administration\Services\ExecutiveDashboardService;
+use App\Models\User;
 use Filament\Widgets\Widget;
-use Spatie\Activitylog\Models\Activity;
 
 class RecentActivityWidget extends Widget
 {
@@ -17,20 +17,26 @@ class RecentActivityWidget extends Widget
         'xl' => 8,
     ];
 
+    protected static bool $isLazy = false;
+
+    protected ?string $placeholderHeight = '24rem';
+
     protected function getViewData(): array
     {
         $user = auth()->user();
-        $query = Activity::query()->latest();
 
-        if ($user !== null && ! $user->hasRole(RoleName::SuperAdministrator->value)) {
-            $query->where(function ($builder) use ($user): void {
-                $builder->where('properties->tenant_id', $user->tenant_id)
-                    ->orWhereNull('properties->tenant_id');
-            });
+        if (! $user instanceof User) {
+            return [
+                'activities' => collect(),
+                'restricted' => true,
+            ];
         }
 
+        $data = app(ExecutiveDashboardService::class)->forUser($user);
+
         return [
-            'activities' => $query->limit(8)->get(),
+            'activities' => $data['recent_activity']['items'],
+            'restricted' => $data['recent_activity']['restricted'],
         ];
     }
 }

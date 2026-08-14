@@ -16,23 +16,28 @@ class TenantInfolist
     {
         return $schema
             ->components([
-                Section::make('Company profile')
-                    ->description('Workspace identity, regional defaults, and company-facing contact details.')
+                Section::make('Tenant account')
+                    ->description('Atlas account identity and platform status for this subscribed tenant.')
                     ->schema([
-                        TextEntry::make('name')->label('Company'),
+                        TextEntry::make('name')->label('Tenant'),
                         TextEntry::make('slug')->placeholder('No slug generated'),
-                        TextEntry::make('email')->placeholder('No email recorded'),
-                        TextEntry::make('phone')->placeholder('No phone recorded'),
-                        ImageEntry::make('logo_path')->disk('public'),
-                        TextEntry::make('address')->columnSpanFull()->placeholder('No registered address'),
-                        TextEntry::make('city')->placeholder('No city set'),
-                        TextEntry::make('country')->placeholder('No country set'),
-                        TextEntry::make('timezone'),
-                        TextEntry::make('currency'),
                         TextEntry::make('status')
                             ->badge()
                             ->formatStateUsing(fn (TenantStatus $state): string => $state->label())
                             ->color(fn (TenantStatus $state): string => $state->color()),
+                    ])
+                    ->columns(2),
+                Section::make('Default company profile')
+                    ->description('Operational business information stored on the tenant’s default company record.')
+                    ->schema([
+                        TextEntry::make('defaultCompany.email')->placeholder('No email recorded'),
+                        TextEntry::make('defaultCompany.phone')->placeholder('No phone recorded'),
+                        ImageEntry::make('defaultCompany.logo_path')->disk('public'),
+                        TextEntry::make('defaultCompany.address')->columnSpanFull()->placeholder('No registered address'),
+                        TextEntry::make('defaultCompany.city')->placeholder('No city set'),
+                        TextEntry::make('defaultCompany.country')->placeholder('No country set'),
+                        TextEntry::make('defaultCompany.timezone')->placeholder('No timezone set'),
+                        TextEntry::make('defaultCompany.currency')->placeholder('No currency set'),
                     ])
                     ->columns(2),
             ]);

@@ -24,8 +24,8 @@ class TenantsTable
             ->columns([
                 TextColumn::make('name')->searchable()->sortable(),
                 TextColumn::make('slug')->searchable()->toggleable(),
-                TextColumn::make('email')->searchable()->placeholder('No email')->toggleable(),
-                TextColumn::make('country')->searchable()->placeholder('No country'),
+                TextColumn::make('defaultCompany.email')->label('Company Email')->placeholder('No email')->toggleable(),
+                TextColumn::make('defaultCompany.country')->label('Country')->placeholder('No country'),
                 TextColumn::make('status')
                     ->badge()
                     ->sortable()
@@ -42,9 +42,9 @@ class TenantsTable
                 TrashedFilter::make(),
             ])
             ->defaultSort('name')
-            ->searchPlaceholder('Search companies by name, slug, country, or email')
-            ->emptyStateHeading('No companies yet')
-            ->emptyStateDescription('Add a company workspace to onboard teams, clients, and jobs.')
+            ->searchPlaceholder('Search tenants by name or slug')
+            ->emptyStateHeading('No tenants yet')
+            ->emptyStateDescription('Add a tenant account to onboard a customer workspace into Atlas ERP.')
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

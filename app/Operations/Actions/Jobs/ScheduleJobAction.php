@@ -37,5 +37,9 @@ class ScheduleJobAction extends TransitionsJobState
         if ($job->planned_start_date === null) {
             throw new BusinessException('A planned start date is required before scheduling a job.', 422);
         }
+
+        if ($job->plannedOperatorName() === null) {
+            throw new BusinessException('Assign an operator before scheduling this Job.', 422);
+        }
     }
 }

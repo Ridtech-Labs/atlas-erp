@@ -11,6 +11,7 @@ use App\Core\Shared\Exceptions\BusinessException;
 use App\CRM\Models\Client;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class UpdateClientAction
 {
@@ -24,21 +25,34 @@ class UpdateClientAction
      */
     public function execute(Client $client, array $data, User $actor): Client
     {
-        if (! $actor->hasPermissionTo(PermissionName::ClientsUpdate->value) || ! $this->access->canAccessTenant($actor, $client->tenant_id)) {
+        if (! $actor->hasPermissionTo(PermissionName::ClientsUpdate->value)
+            || ! $this->access->canAccessOperationalCompany($actor, $client->company_id, $client->tenant_id)) {
             throw new BusinessException('You are not allowed to update this client.', 403);
         }
 
         return DB::transaction(function () use ($client, $data, $actor): Client {
-            $client->fill($data);
+            $client->fill(collect($data)->except(['tenant_id', 'company_id'])->all());
+            $this->syncLegacyCompatibilityAttributes($client, $data);
             $client->updated_by = $actor->getKey();
             $client->save();
 
             $this->logger->log('client.updated', 'Client updated', $actor, $client, [
                 'tenant_id' => $client->tenant_id,
+                'company_id' => $client->company_id,
                 'client_code' => $client->client_code,
             ]);
 
             return $client->refresh();
         });
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function syncLegacyCompatibilityAttributes(Client $client, array $data): void
+    {
+        if (Schema::hasColumn('clients', 'name') && filled($data['legal_name'] ?? null)) {
+            $client->setAttribute('name', $data['legal_name']);
+        }
     }
 }
