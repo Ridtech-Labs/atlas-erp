@@ -24,7 +24,7 @@ class ReturnJobCardAction
     {
         if (! $actor->hasPermissionTo(PermissionName::JobsApprove->value)
             || ! $this->access->canAccessActiveOperationalCompany($actor, $jobCard->company_id, $jobCard->tenant_id)) {
-            throw new BusinessException('You are not allowed to return this job card.', 403);
+            throw new BusinessException('You are not allowed to return this client Job Card for correction.', 403);
         }
 
         $reason = trim($reason);
@@ -33,8 +33,8 @@ class ReturnJobCardAction
             throw new BusinessException('A return reason is required.', 422);
         }
 
-        if ((string) $jobCard->getRawOriginal('approval_status') !== JobCardApprovalStatus::Submitted->value) {
-            throw new BusinessException('Only submitted job cards can be returned.', 422);
+        if ((string) $jobCard->getRawOriginal('approval_status') !== JobCardApprovalStatus::PendingVerification->value) {
+            throw new BusinessException('Only client Job Cards pending verification can be returned.', 422);
         }
 
         $logger = $this->logger;
@@ -45,12 +45,12 @@ class ReturnJobCardAction
                 'returned_by' => $actor->getKey(),
                 'returned_at' => now(),
                 'return_reason' => $reason,
-                'approved_by' => null,
-                'approved_at' => null,
+                'verified_by' => null,
+                'verified_at' => null,
                 'updated_by' => $actor->getKey(),
             ])->save();
 
-            $logger->log('job_card.returned', 'Job card returned for correction', $actor, $jobCard, [
+            $logger->log('job_card.returned', 'Client Job Card returned for correction', $actor, $jobCard, [
                 'tenant_id' => $jobCard->tenant_id,
                 'company_id' => $jobCard->company_id,
                 'job_id' => $jobCard->job_id,

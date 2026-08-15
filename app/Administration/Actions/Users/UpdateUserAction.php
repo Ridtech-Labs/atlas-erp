@@ -25,11 +25,8 @@ class UpdateUserAction
      */
     public function execute(User $subject, array $data, array $roleNames, User $actor): User
     {
-        $targetTenantId = (int) ($data['tenant_id'] ?? $subject->tenant_id);
-
         if (! $actor->can('users.update')
-            || ! $this->access->canAccessTenant($actor, $subject->tenant_id)
-            || ! $this->access->canAccessTenant($actor, $targetTenantId)) {
+            || ! $this->access->canAccessManagedUser($actor, $subject)) {
             throw new BusinessException('You are not allowed to update this user.', 403);
         }
 
@@ -44,7 +41,7 @@ class UpdateUserAction
         }
 
         return DB::transaction(function () use ($subject, $data, $roleNames, $actor): User {
-            $subject->fill(Arr::except($data, ['password']));
+            $subject->fill(Arr::except($data, ['password', 'tenant_id', 'company_id']));
 
             if (filled($data['password'] ?? null)) {
                 $subject->password = Hash::make((string) $data['password']);

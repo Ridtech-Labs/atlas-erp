@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Resources\Jobs\Pages;
 
-use App\Core\Administration\Filament\Resources\JobCards\JobCardResource;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
 use App\Core\Administration\Filament\Widgets\JobWorkspaceWidget;
 use App\Models\User;
 use App\Operations\Actions\Jobs\ApproveJobAction;
 use App\Operations\Actions\Jobs\CancelJobAction;
 use App\Operations\Actions\Jobs\CompleteJobAction;
+use App\Operations\Actions\Jobs\DeleteJobAction;
 use App\Operations\Actions\Jobs\HoldJobAction;
 use App\Operations\Actions\Jobs\ResumeJobAction;
 use App\Operations\Actions\Jobs\ScheduleJobAction;
@@ -18,6 +18,8 @@ use App\Operations\Actions\Jobs\StartJobAction;
 use App\Operations\Actions\Jobs\SubmitJobForApprovalAction;
 use App\Operations\Enums\JobStatus;
 use App\Operations\Models\Job;
+use App\Operations\Services\JobWorkflowService;
+use App\Operations\Support\JobPlanningReadinessService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Textarea;
@@ -64,24 +66,30 @@ class ViewJob extends ViewRecord
                 ->label('Submit for Approval')
                 ->hidden()
                 ->action(fn () => $this->submitJob())
-                ->visible(fn (): bool => $this->record instanceof Job && $this->statusIs(JobStatus::Draft) && $this->authenticatedUser()->can('submit', $this->record)),
+                ->visible(fn (): bool => $this->record instanceof Job
+                    && $this->statusIs(JobStatus::Draft)
+                    && app(JobWorkflowService::class)->approvalRequired($this->currentJob())
+                    && $this->authenticatedUser()->can('submit', $this->record)),
             Action::make('approve')
                 ->label('Approve Job')
                 ->hidden()
                 ->action(fn () => $this->approveJob())
                 ->visible(fn (): bool => $this->record instanceof Job && $this->statusIs(JobStatus::PendingApproval) && $this->authenticatedUser()->can('approve', $this->record)),
             Action::make('schedule')
-                ->label('Schedule Job')
+                ->label('Mark Ready for Deployment')
                 ->hidden()
                 ->action(fn () => $this->scheduleJob())
-                ->visible(fn (): bool => $this->record instanceof Job && $this->statusIs(JobStatus::Approved) && $this->authenticatedUser()->can('schedule', $this->record)),
+                ->visible(fn (): bool => $this->record instanceof Job
+                    && $this->statusIsOneOf([JobStatus::Draft, JobStatus::Approved])
+                    && app(JobPlanningReadinessService::class)->isReadyToSchedule($this->currentJob())
+                    && $this->authenticatedUser()->can('schedule', $this->record)),
             Action::make('start')
                 ->label('Start Job')
                 ->hidden()
                 ->color('primary')
                 ->requiresConfirmation()
                 ->modalHeading('Start this Job?')
-                ->modalDescription('Atlas will move the Job to In Progress and create the first Job Card using the current planning details.')
+                ->modalDescription('Atlas will move the Job to In Progress. The client-issued operational document can then be recorded from live work.')
                 ->modalSubmitActionLabel('Start Job')
                 ->action(fn () => $this->startJob())
                 ->visible(fn (): bool => $this->record instanceof Job && $this->statusIs(JobStatus::Scheduled) && $this->authenticatedUser()->can('start', $this->record)),
@@ -110,7 +118,18 @@ class ViewJob extends ViewRecord
                     Textarea::make('cancellation_reason')->required(),
                 ])
                 ->action(fn (array $data) => $this->cancelJob($data))
-                ->visible(fn (): bool => $this->record instanceof Job && ! $this->statusIsOneOf([JobStatus::Completed, JobStatus::Cancelled]) && $this->authenticatedUser()->can('cancel', $this->record)),
+                ->visible(fn (): bool => $this->record instanceof Job
+                    && app(JobWorkflowService::class)->canCancel($this->currentJob())
+                    && $this->authenticatedUser()->can('cancel', $this->record)),
+            Action::make('deleteDraft')
+                ->label('Delete Job')
+                ->hidden()
+                ->color('danger')
+                ->requiresConfirmation()
+                ->modalHeading('Delete this draft Job?')
+                ->modalDescription('Use delete only when this Job was created accidentally and should not remain in operational history.')
+                ->action(fn () => $this->deleteJob())
+                ->visible(fn (): bool => $this->record instanceof Job && $this->statusIs(JobStatus::Draft) && $this->authenticatedUser()->can('delete', $this->record)),
         ];
     }
 
@@ -149,7 +168,7 @@ class ViewJob extends ViewRecord
         Notification::make()
             ->success()
             ->title('Job approved')
-            ->body("{$job->job_number} can now be scheduled.")
+            ->body("{$job->job_number} can now be marked ready for deployment.")
             ->send();
 
         $this->redirect(JobResource::getUrl('view', ['record' => $job]));
@@ -161,8 +180,8 @@ class ViewJob extends ViewRecord
 
         Notification::make()
             ->success()
-            ->title('Job scheduled')
-            ->body("{$job->job_number} is ready for operational work.")
+            ->title('Job marked ready for deployment')
+            ->body("{$job->job_number} is ready to be sent to the client-allocated work location.")
             ->send();
 
         $this->redirect(JobResource::getUrl('view', ['record' => $job]));
@@ -171,21 +190,12 @@ class ViewJob extends ViewRecord
     private function startJob(): void
     {
         $job = app(StartJobAction::class)->execute($this->currentJob(), $this->authenticatedUser());
-        $firstCard = $job->jobCards()->orderBy('card_date')->orderBy('id')->first();
 
         Notification::make()
             ->success()
             ->title('Job started')
-            ->body($firstCard === null
-                ? "{$job->job_number} is now in progress."
-                : "{$job->job_number} is now in progress. {$firstCard->card_number} was created automatically.")
+            ->body("{$job->job_number} is now in progress. Record the client-issued operational document from live work when it is available.")
             ->send();
-
-        if ($firstCard !== null) {
-            $this->redirect(JobCardResource::getUrl('view', ['record' => $firstCard]));
-
-            return;
-        }
 
         $this->redirect(JobResource::getUrl('view', ['record' => $job]));
     }
@@ -246,6 +256,21 @@ class ViewJob extends ViewRecord
             ->send();
 
         $this->redirect(JobResource::getUrl('view', ['record' => $job]));
+    }
+
+    private function deleteJob(): void
+    {
+        $jobNumber = $this->currentJob()->job_number;
+
+        app(DeleteJobAction::class)->execute($this->currentJob(), $this->authenticatedUser());
+
+        Notification::make()
+            ->success()
+            ->title('Draft job deleted')
+            ->body("{$jobNumber} has been removed safely.")
+            ->send();
+
+        $this->redirect(JobResource::getUrl('index'));
     }
 
     private function currentJob(): Job

@@ -7,7 +7,6 @@ namespace App\Operations\Actions\Jobs;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Models\User;
 use App\Operations\Actions\Jobs\Transitions\TransitionsJobState;
-use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobStatus;
 use App\Operations\Models\Job;
 
@@ -42,12 +41,13 @@ class CompleteJobAction extends TransitionsJobState
             throw new BusinessException('A job must have an actual start date before it can be completed.', 422);
         }
 
-        if (! $job->jobCards()->exists()) {
-            throw new BusinessException('At least one job card is required before a job can be completed.', 422);
-        }
-
-        if ($job->jobCards()->where('approval_status', '!=', JobCardApprovalStatus::Approved->value)->exists()) {
-            throw new BusinessException('All job cards must be approved before the job can be completed.', 422);
+        if (! $job->readyForCompletion()) {
+            throw new BusinessException(
+                $job->isTrucking()
+                    ? 'All recorded Waybills must be verified or billing ready before the job can be completed.'
+                    : 'All recorded client Job Cards must be billing ready before the job can be completed.',
+                422,
+            );
         }
 
         if ($actualEnd < $job->actual_start_date) {

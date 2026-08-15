@@ -7,6 +7,7 @@ use App\CRM\Models\ClientSite;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\CreateJobCardAction;
+use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
 use App\Operations\Actions\JobCards\UpdateJobCardAction;
 use App\Operations\Actions\JobCardWorkEntries\CreateJobCardWorkEntryAction;
@@ -15,6 +16,7 @@ use App\Operations\Actions\Jobs\StartJobAction;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobShift;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
 use Illuminate\Support\Facades\Gate;
@@ -94,6 +96,8 @@ test('job card belongs to the same company and tenant as the job and attachments
         'shift' => JobShift::Night->value,
         'equipment_reference' => 'Forklift FL-18',
         'operated_by' => 'Ridwan Kadri',
+        'machine_number' => 'FLT-18-01',
+        'total_hours' => 8,
     ], $actor, ['job-card-uploads/job-card-signed.txt']);
 
     expect($jobCard->tenant_id)->toBe($job->tenant_id)
@@ -186,10 +190,10 @@ test('new job cards cannot be created while a job is on hold', function () {
     expect(fn () => app(CreateJobCardAction::class)->execute($job, [
         'card_date' => '2026-07-23',
         'shift' => JobShift::Night->value,
-    ], $actor))->toThrow(BusinessException::class, 'Additional job cards can only be created while the job is in progress.');
+    ], $actor))->toThrow(BusinessException::class, 'Client Job Cards can only be recorded while the job is in progress.');
 });
 
-test('first job card inherits a planned external operator and not the authenticated actor', function () {
+test('starting a heavy machinery job does not auto-create a client job card', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
@@ -204,18 +208,16 @@ test('first job card inherits a planned external operator and not the authentica
         'status' => JobStatus::Scheduled,
         'assigned_operator_id' => null,
         'assigned_operator_name' => 'Kofi Asante',
+        'job_type' => JobType::HeavyMachinery,
     ]);
 
     $started = app(StartJobAction::class)->execute($job, $actor);
-    $card = $started->jobCards()->firstOrFail();
 
-    expect($card->operator_id)->toBeNull()
-        ->and($card->operated_by)->toBe('Kofi Asante')
-        ->and($card->created_by)->toBe($actor->getKey())
-        ->and($card->operatorDisplayName())->toBe('Kofi Asante');
+    expect($started->status)->toBe(JobStatus::InProgress)
+        ->and($started->jobCards()->count())->toBe(0);
 });
 
-test('start job fails clearly when no operator is assigned', function () {
+test('start job no longer requires an operator assignment', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
@@ -232,8 +234,10 @@ test('start job fails clearly when no operator is assigned', function () {
         'assigned_operator_name' => null,
     ]);
 
-    expect(fn () => app(StartJobAction::class)->execute($job, $actor))
-        ->toThrow(BusinessException::class, 'Assign an operator before starting this Job.');
+    $started = app(StartJobAction::class)->execute($job, $actor);
+
+    expect($started->status)->toBe(JobStatus::InProgress)
+        ->and($started->actual_start_date)->not->toBeNull();
 });
 
 test('draft job card operator can differ from the planned operator and the change is logged', function () {
@@ -263,7 +267,7 @@ test('draft job card operator can differ from the planned operator and the chang
         'company_id' => $company->getKey(),
         'operator_id' => $plannedOperator->getKey(),
         'operated_by' => null,
-        'approval_status' => JobCardApprovalStatus::Draft,
+        'approval_status' => JobCardApprovalStatus::Recorded,
     ]);
 
     $updated = app(UpdateJobCardAction::class)->execute($jobCard, [
@@ -307,7 +311,7 @@ test('job card operator fields cannot conflict', function () {
     ], $actor))->toThrow(BusinessException::class, 'Select a company operator or enter an external operator name, not both.');
 });
 
-test('officer approval is recorded and cross company access to the card is denied', function () {
+test('job card verification and billing readiness are recorded and cross company access to the card is denied', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
@@ -328,15 +332,27 @@ test('officer approval is recorded and cross company access to the card is denie
         'job_id' => $job->getKey(),
         'tenant_id' => $tenant->getKey(),
         'company_id' => $companyA->getKey(),
+        'machine_number' => 'FLT-18-02',
+        'total_hours' => 8,
+        'client_endorsed' => true,
+        'client_stamped' => true,
+        'hourly_rate' => 150,
+        'rate_currency' => 'GHS',
     ]);
+    Storage::disk('local')->put('job-card-uploads/job-card-verification.txt', 'signed');
+    $jobCard->addMedia(Storage::disk('local')->path('job-card-uploads/job-card-verification.txt'))
+        ->preservingOriginal()
+        ->toMediaCollection('job-card-documents');
 
     $submitted = app(SubmitJobCardAction::class)->execute($jobCard, $approver);
     $approved = app(ApproveJobCardAction::class)->execute($submitted, $approver, 'Card reviewed and approved.');
+    $billingReady = app(MarkJobCardBillingReadyAction::class)->execute($approved, $approver);
 
-    expect($approved->approval_status)->toBe(JobCardApprovalStatus::Approved)
-        ->and($approved->approved_by)->toBe($approver->getKey())
-        ->and($approved->approved_at)->not->toBeNull()
-        ->and(Gate::forUser($outsider)->allows('view', $approved))->toBeFalse();
+    expect($billingReady->approval_status)->toBe(JobCardApprovalStatus::BillingReady)
+        ->and($billingReady->verified_by)->toBe($approver->getKey())
+        ->and($billingReady->verified_at)->not->toBeNull()
+        ->and($billingReady->billable_amount)->toBe('1200.00')
+        ->and(Gate::forUser($outsider)->allows('view', $billingReady))->toBeFalse();
 });
 
 test('existing jobs remain valid without job cards', function () {

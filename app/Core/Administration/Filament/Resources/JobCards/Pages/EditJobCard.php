@@ -7,6 +7,7 @@ namespace App\Core\Administration\Filament\Resources\JobCards\Pages;
 use App\Core\Administration\Filament\Resources\JobCards\JobCardResource;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
+use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\ReturnJobCardAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
 use App\Operations\Actions\JobCards\UpdateJobCardAction;
@@ -25,13 +26,17 @@ class EditJobCard extends EditRecord
     {
         return [
             Action::make('submit')
-                ->label('Submit for approval')
+                ->label('Send for verification')
                 ->action(fn () => app(SubmitJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->approvalStatusIsOneOf([JobCardApprovalStatus::Draft, JobCardApprovalStatus::Returned])),
+                ->visible(fn (): bool => $this->approvalStatusIsOneOf([JobCardApprovalStatus::Draft, JobCardApprovalStatus::Recorded, JobCardApprovalStatus::Returned])),
             Action::make('approve')
-                ->label('Approve card')
+                ->label('Verify Job Card')
                 ->action(fn () => app(ApproveJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::Submitted)),
+                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::PendingVerification)),
+            Action::make('billingReady')
+                ->label('Mark Billing Ready')
+                ->action(fn () => app(MarkJobCardBillingReadyAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
+                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::Verified)),
             Action::make('return')
                 ->label('Return for correction')
                 ->color('danger')
@@ -39,7 +44,7 @@ class EditJobCard extends EditRecord
                     Textarea::make('return_reason')->required(),
                 ])
                 ->action(fn (array $data) => app(ReturnJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser(), (string) $data['return_reason']))
-                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::Submitted)),
+                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::PendingVerification)),
         ];
     }
 

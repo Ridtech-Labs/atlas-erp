@@ -12,6 +12,7 @@ use App\CRM\Models\ClientSite;
 use App\Operations\Enums\JobPriority;
 use App\Operations\Enums\JobShift;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use App\Operations\Support\OperatorAssignmentService;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Placeholder;
@@ -44,6 +45,12 @@ class JobForm
                         ->label('Job reference')
                         ->maxLength(100)
                         ->placeholder('KAD-2026-001'),
+                    Select::make('job_type')
+                        ->label('Operational type')
+                        ->options(collect(JobType::cases())->mapWithKeys(fn (JobType $type) => [$type->value => $type->label()])->all())
+                        ->default(JobType::HeavyMachinery->value)
+                        ->required()
+                        ->live(),
                     TextInput::make('job_number')
                         ->label('Job number')
                         ->placeholder('Generated automatically after save')
@@ -116,7 +123,10 @@ class JobForm
                     TextInput::make('title')->label('Operational description')->required()->maxLength(255)->placeholder('Night-shift plant support for GPHA operations'),
                     TextInput::make('vessel')->maxLength(255)->placeholder('MV Atlantic Trader'),
                     TextInput::make('work_area')->maxLength(255)->placeholder('Jubilee Terminal - Berth 2'),
-                    TextInput::make('equipment_requirement')->label('Required equipment or asset')->maxLength(255)->placeholder('Forklift FL-12'),
+                    TextInput::make('equipment_requirement')
+                        ->label(fn (Get $get): string => $get('job_type') === JobType::Trucking->value ? 'Truck / asset requirement' : 'Required equipment or asset')
+                        ->maxLength(255)
+                        ->placeholder(fn (Get $get): string => $get('job_type') === JobType::Trucking->value ? 'Truck 38 / Flatbed' : 'Forklift FL-12'),
                     Select::make('operator_source')
                         ->label('Operator type')
                         ->options([
@@ -156,6 +166,7 @@ class JobForm
                     Select::make('assigned_operator_id')
                         ->label('Operator')
                         ->searchable()
+                        ->helperText('Planning-only assignment. The actual operator(s) will be recorded from the client Job Card or Waybill.')
                         ->visible(fn (Get $get): bool => $get('operator_source') === 'company_personnel')
                         ->options(function (): array {
                             $user = auth()->user();

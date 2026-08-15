@@ -7,17 +7,23 @@ namespace App\Operations\Enums;
 enum JobCardApprovalStatus: string
 {
     case Draft = 'draft';
+    case Recorded = 'recorded';
+    case PendingVerification = 'pending_verification';
+    case Verified = 'verified';
+    case BillingReady = 'billing_ready';
+    case Returned = 'returned';
     case Submitted = 'submitted';
     case Approved = 'approved';
-    case Returned = 'returned';
 
     public function label(): string
     {
         return match ($this) {
-            self::Draft => 'Draft',
+            self::PendingVerification => 'Pending Verification',
+            self::BillingReady => 'Billing Ready',
+            self::Returned => 'Returned',
             self::Submitted => 'Submitted',
             self::Approved => 'Approved',
-            self::Returned => 'Returned',
+            default => ucfirst(str_replace('_', ' ', $this->value)),
         };
     }
 
@@ -25,6 +31,10 @@ enum JobCardApprovalStatus: string
     {
         return match ($this) {
             self::Draft => 'gray',
+            self::Recorded => 'gray',
+            self::PendingVerification => 'warning',
+            self::Verified => 'success',
+            self::BillingReady => 'primary',
             self::Submitted => 'warning',
             self::Approved => 'success',
             self::Returned => 'danger',

@@ -22,8 +22,8 @@ class ViewJobCard extends ViewRecord
         $cardDate = $record instanceof JobCard ? $record->getAttribute('card_date') : null;
 
         return $record instanceof JobCard
-            ? sprintf('Job Card %s', filled($cardDate) ? CarbonImmutable::parse((string) $cardDate)->format('j M Y') : $record->getKey())
-            : 'Job Card';
+            ? sprintf('Client Job Card %s', filled($cardDate) ? CarbonImmutable::parse((string) $cardDate)->format('j M Y') : $record->getKey())
+            : 'Client Job Card';
     }
 
     protected function getHeaderActions(): array
@@ -33,7 +33,7 @@ class ViewJobCard extends ViewRecord
                 ->label('View Job')
                 ->url(fn (): string => JobResource::getUrl('view', ['record' => $this->currentRecord()->job_id])),
             EditAction::make()
-                ->visible(fn (): bool => (string) $this->currentRecord()->getRawOriginal('approval_status') !== 'approved'),
+                ->visible(fn (): bool => (string) $this->currentRecord()->getRawOriginal('approval_status') !== 'billing_ready'),
         ];
     }
 

@@ -7,18 +7,26 @@ use App\CRM\Models\Client;
 use App\CRM\Models\ClientSite;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
+use App\Operations\Actions\JobCards\CreateJobCardAction;
+use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
-use App\Operations\Actions\Jobs\ApproveJobAction;
 use App\Operations\Actions\Jobs\CancelJobAction;
 use App\Operations\Actions\Jobs\CompleteJobAction;
 use App\Operations\Actions\Jobs\CreateJobAction;
+use App\Operations\Actions\Jobs\DeleteJobAction;
 use App\Operations\Actions\Jobs\ScheduleJobAction;
 use App\Operations\Actions\Jobs\StartJobAction;
 use App\Operations\Actions\Jobs\SubmitJobForApprovalAction;
 use App\Operations\Actions\Jobs\UpdateJobAction;
+use App\Operations\Enums\JobCardApprovalStatus;
+use App\Operations\Enums\JobShift;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use App\Operations\Models\Job;
+use App\Operations\Models\JobCard;
+use App\Operations\Support\JobPlanningReadinessService;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 test('job creation is tenant scoped and validates site ownership', function () {
     $this->seedAccessControl();
@@ -62,7 +70,7 @@ test('job creation is tenant scoped and validates site ownership', function () {
     ], $actor))->toThrow(BusinessException::class);
 });
 
-test('job workflow transitions set approval completion and cancellation metadata', function () {
+test('heavy machinery job workflow transitions through client job card verification and completion metadata', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
@@ -84,21 +92,30 @@ test('job workflow transitions set approval completion and cancellation metadata
         'planned_start_date' => now()->toDateString(),
         'planned_end_date' => now()->addDay()->toDateString(),
         'assigned_operator_id' => $operator->getKey(),
+        'job_type' => JobType::HeavyMachinery->value,
+        'equipment_requirement' => 'Forklift FL-18',
     ], $actor);
 
-    $job = app(SubmitJobForApprovalAction::class)->execute($job, $actor);
-    expect($job->status)->toBe(JobStatus::PendingApproval);
-
-    $job = app(ApproveJobAction::class)->execute($job, $actor);
-    expect($job->status)->toBe(JobStatus::Approved)
-        ->and($job->approved_by)->toBe($actor->getKey())
-        ->and($job->approved_at)->not->toBeNull();
-
     $job = app(ScheduleJobAction::class)->execute($job, $actor);
+    expect($job->status)->toBe(JobStatus::Scheduled);
+
     $job = app(StartJobAction::class)->execute($job, $actor);
-    $jobCard = $job->jobCards()->firstOrFail();
+    Storage::disk('local')->put('job-card-uploads/workflow-signed.txt', 'signed');
+    $jobCard = app(CreateJobCardAction::class)->execute($job, [
+        'card_date' => now()->toDateString(),
+        'shift' => JobShift::Day->value,
+        'equipment_reference' => 'Forklift FL-18',
+        'machine_number' => 'FLT-18-01',
+        'operated_by' => 'Kwame Mensah',
+        'total_hours' => 8,
+        'client_endorsed' => true,
+        'client_stamped' => true,
+        'hourly_rate' => 150,
+        'rate_currency' => 'GHS',
+    ], $actor, ['job-card-uploads/workflow-signed.txt']);
     app(SubmitJobCardAction::class)->execute($jobCard, $actor);
     app(ApproveJobCardAction::class)->execute($jobCard->fresh(), $actor);
+    app(MarkJobCardBillingReadyAction::class)->execute($jobCard->fresh(), $actor);
     $job = app(CompleteJobAction::class)->execute($job, $actor, [
         'actual_end_date' => now()->addHours(2),
     ]);
@@ -106,6 +123,132 @@ test('job workflow transitions set approval completion and cancellation metadata
     expect($job->status)->toBe(JobStatus::Completed)
         ->and($job->completed_by)->toBe($actor->getKey())
         ->and($job->completed_at)->not->toBeNull();
+});
+
+test('draft job can be edited without changing its identity', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $actor->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+    ]);
+    $site = ClientSite::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'status' => ClientSiteStatus::Active,
+    ]);
+
+    $job = app(CreateJobAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Initial planning',
+        'priority' => 'normal',
+        'job_type' => JobType::HeavyMachinery->value,
+    ], $actor);
+
+    $updated = app(UpdateJobAction::class)->execute($job, [
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Updated planning title',
+        'planned_start_date' => '2026-08-01',
+        'equipment_requirement' => 'Forklift FL-18',
+    ], $actor);
+
+    expect($updated->getKey())->toBe($job->getKey())
+        ->and($updated->uuid)->toBe($job->uuid)
+        ->and($updated->job_number)->toBe($job->job_number)
+        ->and($updated->title)->toBe('Updated planning title');
+});
+
+test('planning readiness detects missing fields and heavy machinery scheduling no longer requires approval chain', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $actor->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+    ]);
+
+    $job = app(CreateJobAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'title' => 'Incomplete planning',
+        'priority' => 'normal',
+        'job_type' => JobType::HeavyMachinery->value,
+    ], $actor);
+
+    $missing = app(JobPlanningReadinessService::class)->missingLabels($job);
+
+    expect($missing)->toContain('Equipment')
+        ->toContain('Planned operator')
+        ->toContain('Planned start date');
+
+    expect(fn () => app(ScheduleJobAction::class)->execute($job, $actor))
+        ->toThrow(BusinessException::class, 'Planning is incomplete.');
+
+    $operator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
+    $operator->companies()->sync([$company->getKey()]);
+
+    $readyJob = app(UpdateJobAction::class)->execute($job, [
+        'client_id' => $client->getKey(),
+        'title' => 'Ready planning',
+        'equipment_requirement' => 'Forklift FL-18',
+        'planned_start_date' => '2026-08-05',
+        'assigned_operator_id' => $operator->getKey(),
+        'shift' => JobShift::Day->value,
+    ], $actor);
+
+    expect(fn () => app(SubmitJobForApprovalAction::class)->execute($readyJob->fresh(), $actor))
+        ->toThrow(BusinessException::class, 'does not require the legacy approval chain');
+
+    $scheduled = app(ScheduleJobAction::class)->execute($readyJob, $actor);
+
+    expect($scheduled->status)->toBe(JobStatus::Scheduled);
+});
+
+test('safe draft deletion only works when no operational records exist', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $actor->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+    ]);
+
+    app(DeleteJobAction::class)->execute($job, $actor);
+    expect(Job::withTrashed()->find($job->getKey())?->trashed())->toBeTrue();
+
+    $protectedJob = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+    ]);
+    JobCard::factory()->create([
+        'job_id' => $protectedJob->getKey(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'approval_status' => JobCardApprovalStatus::Recorded,
+    ]);
+
+    expect(fn () => app(DeleteJobAction::class)->execute($protectedJob, $actor))
+        ->toThrow(BusinessException::class, 'Jobs with client Job Cards cannot be deleted.');
 });
 
 test('job cancellation requires a reason and tenant isolation is enforced', function () {

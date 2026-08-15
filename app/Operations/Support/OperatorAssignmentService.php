@@ -127,4 +127,65 @@ class OperatorAssignmentService
     {
         return $this->displayName($jobCard->operator, $jobCard->operated_by);
     }
+
+    /**
+     * @return list<array{user_id:?int, operator_name:?string}>
+     */
+    public function resolveOperatorEntries(mixed $operators, int $tenantId, int $companyId): array
+    {
+        if (! is_array($operators)) {
+            return [];
+        }
+
+        $resolved = [];
+
+        foreach (array_values($operators) as $index => $operator) {
+            if (! is_array($operator)) {
+                continue;
+            }
+
+            $assignment = $this->resolveAssignment(
+                $operator['user_id'] ?? null,
+                $operator['operator_name'] ?? null,
+                $tenantId,
+                $companyId,
+            );
+
+            if ($assignment['operator'] === null && $assignment['external_name'] === null) {
+                continue;
+            }
+
+            $resolved[] = [
+                'user_id' => $assignment['operator']?->getKey(),
+                'operator_name' => $assignment['external_name'],
+            ];
+        }
+
+        return $resolved;
+    }
+
+    /**
+     * @param  list<array{user_id:?int, operator_name:?string}>  $operators
+     */
+    public function syncJobCardOperators(JobCard $jobCard, array $operators): void
+    {
+        $jobCard->operators()->delete();
+
+        foreach ($operators as $index => $operator) {
+            $jobCard->operators()->create([
+                'user_id' => $operator['user_id'],
+                'operator_name' => $operator['operator_name'],
+                'sort_order' => $index,
+            ]);
+        }
+
+        $primary = $jobCard->operators()->with('user')->orderBy('sort_order')->first();
+
+        $jobCard->forceFill([
+            'operator_id' => $primary?->user_id,
+            'operated_by' => $primary?->user_id === null ? $primary?->operator_name : null,
+        ])->saveQuietly();
+        $jobCard->unsetRelation('operator');
+        $jobCard->unsetRelation('operators');
+    }
 }

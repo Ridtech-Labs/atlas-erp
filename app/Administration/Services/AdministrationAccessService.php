@@ -137,6 +137,31 @@ class AdministrationAccessService
         return $this->canAccessTenant($actor, $tenantId);
     }
 
+    public function canAccessManagedUser(?User $actor, ?User $subject): bool
+    {
+        if (! $actor instanceof User || ! $subject instanceof User) {
+            return false;
+        }
+
+        if (! $this->canAccessTenant($actor, $subject->tenant_id)) {
+            return false;
+        }
+
+        if ($this->isSuperAdministrator($actor)) {
+            return true;
+        }
+
+        $activeCompanyId = $this->activeCompanyId($actor);
+
+        if (! is_int($activeCompanyId)) {
+            return false;
+        }
+
+        return $subject->companies()
+            ->whereKey($activeCompanyId)
+            ->exists();
+    }
+
     public function canManageRole(User $actor, string $roleName): bool
     {
         if ($this->isSuperAdministrator($actor)) {

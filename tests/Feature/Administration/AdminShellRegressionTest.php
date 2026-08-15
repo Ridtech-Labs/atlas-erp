@@ -59,6 +59,24 @@ test('create client page shows the authenticated users tenant context', function
         ->assertDontSee('Atlas Demo Company');
 });
 
+test('multi company users receive a usable company selector', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay']);
+    $companyA = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $companyB = $this->company($tenant, ['name' => 'Kadmay Marine']);
+    $user = $this->tenantUser($tenant, [], [RoleName::OperationsManager->value]);
+    $user->companies()->sync([$companyA->getKey(), $companyB->getKey()]);
+    session(['active_company_id' => $companyA->getKey()]);
+
+    $this->actingAs($user)
+        ->get('/admin')
+        ->assertOk()
+        ->assertSee('name="company_id"', false)
+        ->assertSee('Kadmay Logistics')
+        ->assertSee('Kadmay Marine');
+});
+
 test('platform super administrator can not open tenant client creation without support tenant access', function () {
     $this->seedAccessControl();
 

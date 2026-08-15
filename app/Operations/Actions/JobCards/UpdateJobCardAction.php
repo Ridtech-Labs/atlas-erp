@@ -47,20 +47,35 @@ class UpdateJobCardAction
                 array_key_exists('operated_by', $data) ? $data['operated_by'] : $jobCard->operated_by,
                 $jobCard->tenant_id,
                 $jobCard->company_id,
-                true,
-                'Assign an operator before updating this Job Card.',
+                false,
             );
+            $resolvedOperators = $this->operators->resolveOperatorEntries($data['operators'] ?? [], $jobCard->tenant_id, $jobCard->company_id);
 
-            $jobCard->fill(Arr::except($data, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'attachments']));
+            if ($resolvedOperators === [] && ($assignment['operator'] !== null || $assignment['external_name'] !== null)) {
+                $resolvedOperators = [[
+                    'user_id' => $assignment['operator']?->getKey(),
+                    'operator_name' => $assignment['external_name'],
+                ]];
+            }
+
+            if ($resolvedOperators === []) {
+                throw new BusinessException('Record at least one operator on the client Job Card.', 422);
+            }
+
+            $jobCard->fill(Arr::except($data, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'operators', 'attachments']));
             $jobCard->operator_id = $assignment['operator']?->getKey();
             $jobCard->operated_by = $assignment['external_name'];
+            $jobCard->total_hours = $data['total_hours'] ?? $data['header_hours'] ?? $jobCard->total_hours;
             $jobCard->updated_by = $actor->getKey();
             $jobCard->save();
             $jobCard->unsetRelation('operator');
+            $this->operators->syncJobCardOperators($jobCard, $resolvedOperators);
 
             $this->attachDocuments($jobCard, $attachmentPaths);
+            $jobCard->syncBillingFigures();
+            $jobCard->saveQuietly();
 
-            $this->logger->log('job_card.updated', sprintf('Job Card updated by %s', $actor->full_name), $actor, $jobCard, [
+            $this->logger->log('job_card.updated', sprintf('Client Job Card updated by %s', $actor->full_name), $actor, $jobCard, [
                 'tenant_id' => $jobCard->tenant_id,
                 'company_id' => $jobCard->company_id,
                 'job_id' => $jobCard->job_id,

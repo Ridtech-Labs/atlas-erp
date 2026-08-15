@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Operations\Enums\JobPriority;
 use App\Operations\Enums\JobShift;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use App\Operations\Models\Job;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -34,6 +35,7 @@ class JobFactory extends Factory
             'client_site_id' => null,
             'title' => fake()->sentence(4),
             'description' => fake()->optional()->paragraph(),
+            'job_type' => JobType::HeavyMachinery,
             'status' => JobStatus::Draft,
             'priority' => fake()->randomElement(JobPriority::cases()),
             'currency' => 'GHS',

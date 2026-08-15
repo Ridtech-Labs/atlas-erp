@@ -44,13 +44,21 @@ class JobCard extends Model implements HasMedia
         'job_id',
         'client_id',
         'client_site_id',
+        'client_card_reference',
         'card_date',
         'shift',
         'equipment_reference',
+        'machine_number',
+        'from_time',
+        'to_time',
         'operator_id',
         'operated_by',
         'supervising_officer_name',
         'header_hours',
+        'total_hours',
+        'is_client_issued',
+        'client_endorsed',
+        'client_stamped',
         'officer_remarks',
         'approval_status',
         'approved_by',
@@ -58,6 +66,18 @@ class JobCard extends Model implements HasMedia
         'returned_by',
         'returned_at',
         'return_reason',
+        'verification_notes',
+        'verified_by',
+        'verified_at',
+        'billing_ready_at',
+        'billing_ready_by',
+        'rate_currency',
+        'hourly_rate',
+        'exchange_rate',
+        'converted_hourly_rate',
+        'billable_amount',
+        'rate_notes',
+        'legacy_generated',
         'created_by',
         'updated_by',
     ];
@@ -67,9 +87,20 @@ class JobCard extends Model implements HasMedia
         return [
             'card_date' => 'date',
             'header_hours' => 'decimal:2',
+            'total_hours' => 'decimal:2',
+            'is_client_issued' => 'boolean',
+            'client_endorsed' => 'boolean',
+            'client_stamped' => 'boolean',
             'approval_status' => JobCardApprovalStatus::class,
             'approved_at' => 'datetime',
             'returned_at' => 'datetime',
+            'verified_at' => 'datetime',
+            'billing_ready_at' => 'datetime',
+            'hourly_rate' => 'decimal:2',
+            'exchange_rate' => 'decimal:4',
+            'converted_hourly_rate' => 'decimal:2',
+            'billable_amount' => 'decimal:2',
+            'legacy_generated' => 'boolean',
         ];
     }
 
@@ -128,6 +159,13 @@ class JobCard extends Model implements HasMedia
 
     public function operatorDisplayName(): ?string
     {
+        if ($this->relationLoaded('operators') ? $this->operators->isNotEmpty() : $this->operators()->exists()) {
+            return $this->operators
+                ->map(fn (JobCardOperator $operator): ?string => $operator->displayName())
+                ->filter()
+                ->join(', ');
+        }
+
         return $this->operator->full_name ?? $this->operated_by;
     }
 
@@ -155,6 +193,94 @@ class JobCard extends Model implements HasMedia
         return $this->hasMany(JobCardWorkEntry::class)->orderBy('from_time');
     }
 
+    /**
+     * @return HasMany<JobCardOperator, $this>
+     */
+    public function operators(): HasMany
+    {
+        return $this->hasMany(JobCardOperator::class)->orderBy('sort_order');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function verifier(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
+    public function billingReadyBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'billing_ready_by');
+    }
+
+    public function usesVerificationWorkflow(): bool
+    {
+        return $this->job?->isHeavyMachinery() ?? true;
+    }
+
+    public function calculateBillableAmount(): ?float
+    {
+        if ($this->total_hours === null || $this->hourly_rate === null) {
+            return null;
+        }
+
+        $rate = $this->resolvedBillingRate();
+
+        if ($rate === null) {
+            return null;
+        }
+
+        $hours = number_format((float) $this->total_hours, 2, '.', '');
+        $resolvedRate = number_format($rate, 2, '.', '');
+
+        if (function_exists('bcmul')) {
+            return (float) bcadd(bcmul($hours, $resolvedRate, 4), '0', 2);
+        }
+
+        return (float) number_format((float) $this->total_hours * $rate, 2, '.', '');
+    }
+
+    public function resolvedBillingRate(): ?float
+    {
+        if ($this->converted_hourly_rate !== null) {
+            return (float) number_format((float) $this->converted_hourly_rate, 2, '.', '');
+        }
+
+        if ($this->hourly_rate === null) {
+            return null;
+        }
+
+        if ($this->exchange_rate === null) {
+            return (float) number_format((float) $this->hourly_rate, 2, '.', '');
+        }
+
+        $hourlyRate = number_format((float) $this->hourly_rate, 2, '.', '');
+        $exchangeRate = number_format((float) $this->exchange_rate, 4, '.', '');
+
+        if (function_exists('bcmul')) {
+            return (float) bcadd(bcmul($hourlyRate, $exchangeRate, 6), '0', 2);
+        }
+
+        return (float) number_format((float) $this->hourly_rate * (float) $this->exchange_rate, 2, '.', '');
+    }
+
+    public function syncBillingFigures(): void
+    {
+        $resolvedRate = $this->resolvedBillingRate();
+
+        if ($resolvedRate !== null && $this->converted_hourly_rate === null && $this->exchange_rate !== null) {
+            $this->converted_hourly_rate = $resolvedRate;
+        }
+
+        if ($this->total_hours !== null && $resolvedRate !== null) {
+            $this->billable_amount = $this->calculateBillableAmount();
+        }
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
@@ -164,16 +290,29 @@ class JobCard extends Model implements HasMedia
                 'company_id',
                 'job_id',
                 'card_number',
+                'client_card_reference',
                 'client_id',
                 'client_site_id',
                 'card_date',
                 'shift',
                 'equipment_reference',
+                'machine_number',
                 'operator_id',
+                'operated_by',
+                'total_hours',
+                'client_endorsed',
+                'client_stamped',
                 'approval_status',
                 'approved_at',
                 'returned_at',
                 'return_reason',
+                'verified_at',
+                'billing_ready_at',
+                'hourly_rate',
+                'rate_currency',
+                'exchange_rate',
+                'converted_hourly_rate',
+                'billable_amount',
             ])
             ->logOnlyDirty();
     }

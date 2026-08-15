@@ -23,7 +23,7 @@ class UserPolicy
     public function view(User $user, User $subject): bool
     {
         return $this->hasPermission($user, PermissionName::UsersView->value)
-            && $this->access->canAccessTenant($user, $subject->tenant_id);
+            && $this->access->canAccessManagedUser($user, $subject);
     }
 
     public function create(User $user): bool
@@ -34,13 +34,13 @@ class UserPolicy
     public function update(User $user, User $subject): bool
     {
         return $this->hasPermission($user, PermissionName::UsersUpdate->value)
-            && $this->access->canAccessTenant($user, $subject->tenant_id);
+            && $this->access->canAccessManagedUser($user, $subject);
     }
 
     public function delete(User $user, User $subject): bool
     {
         return $this->hasPermission($user, PermissionName::UsersDelete->value)
-            && $this->access->canAccessTenant($user, $subject->tenant_id);
+            && $this->access->canAccessManagedUser($user, $subject);
     }
 
     public function restore(User $user, User $subject): bool

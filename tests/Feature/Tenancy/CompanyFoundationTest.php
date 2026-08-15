@@ -74,6 +74,25 @@ test('authorized user can switch active company within the current tenant', func
     $this->assertEquals($companyB->getKey(), session('active_company_id'));
 });
 
+test('company administrators only receive authorized companies from explicit memberships', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $companyA = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $companyB = $this->company($tenant, ['name' => 'Kadmay Marine']);
+    $user = $this->actingAsCompanyAdministrator($tenant);
+    $user->companies()->sync([$companyA->getKey()]);
+
+    $authorizedCompanies = app(ActiveCompanyResolver::class)
+        ->authorizedCompaniesFor($user)
+        ->pluck('name')
+        ->all();
+
+    expect($authorizedCompanies)
+        ->toBe([$companyA->name])
+        ->not->toContain($companyB->name);
+});
+
 test('user can not switch to an unauthorized company', function () {
     $this->seedAccessControl();
 

@@ -70,16 +70,13 @@ class UserResource extends Resource
 
     public static function getRecordRouteBindingEloquentQuery(): Builder
     {
-        return parent::getRecordRouteBindingEloquentQuery()
-            ->withoutGlobalScopes([
-                SoftDeletingScope::class,
-            ]);
+        return static::getEloquentQuery();
     }
 
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()
-            ->with(['tenant', 'roles'])
+            ->with(['tenant', 'roles', 'companies'])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
@@ -95,6 +92,14 @@ class UserResource extends Resource
             return $query;
         }
 
-        return $query->where('tenant_id', $user->tenant_id);
+        $activeCompanyId = $access->activeCompanyId($user);
+
+        if (! is_int($activeCompanyId)) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query
+            ->where('tenant_id', $user->tenant_id)
+            ->whereHas('companies', fn (Builder $companyQuery) => $companyQuery->whereKey($activeCompanyId));
     }
 }

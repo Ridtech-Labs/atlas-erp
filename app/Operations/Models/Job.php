@@ -11,9 +11,12 @@ use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientSite;
 use App\Models\User;
+use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobPriority;
 use App\Operations\Enums\JobShift;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
+use App\Operations\Enums\WaybillStatus;
 use Database\Factories\JobFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -89,6 +92,7 @@ class Job extends Model
             'status' => JobStatus::class,
             'priority' => JobPriority::class,
             'shift' => JobShift::class,
+            'job_type' => JobType::class,
             'requested_start_date' => 'date',
             'scheduled_start_date' => 'date',
             'planned_start_date' => 'date',
@@ -154,6 +158,39 @@ class Job extends Model
         return $this->assignedOperator->full_name ?? $this->assigned_operator_name;
     }
 
+    public function isHeavyMachinery(): bool
+    {
+        return $this->resolvedJobType() === JobType::HeavyMachinery;
+    }
+
+    public function isTrucking(): bool
+    {
+        return $this->resolvedJobType() === JobType::Trucking;
+    }
+
+    public function operationalDocumentLabel(): string
+    {
+        return $this->isTrucking() ? 'Waybill' : 'Client Job Card';
+    }
+
+    public function resolvedJobType(): ?JobType
+    {
+        $rawJobType = $this->getRawOriginal('job_type');
+
+        return is_string($rawJobType) ? JobType::tryFrom($rawJobType) : null;
+    }
+
+    public function readyForCompletion(): bool
+    {
+        if ($this->isTrucking()) {
+            return $this->waybills()->exists()
+                && ! $this->waybills()->whereNotIn('status', [WaybillStatus::Verified->value, WaybillStatus::BillingReady->value])->exists();
+        }
+
+        return $this->jobCards()->exists()
+            && ! $this->jobCards()->where('approval_status', '!=', JobCardApprovalStatus::BillingReady->value)->exists();
+    }
+
     /**
      * @return BelongsTo<User, $this>
      */
@@ -184,6 +221,14 @@ class Job extends Model
     public function jobCards(): HasMany
     {
         return $this->hasMany(JobCard::class)->latest('card_date');
+    }
+
+    /**
+     * @return HasMany<Waybill, $this>
+     */
+    public function waybills(): HasMany
+    {
+        return $this->hasMany(Waybill::class)->latest('waybill_date');
     }
 
     public function getActivitylogOptions(): LogOptions

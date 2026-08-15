@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
 use App\Operations\Models\JobCardWorkEntry;
+use App\Operations\Models\Waybill;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -44,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
             'job' => Job::class,
             'job_card' => JobCard::class,
             'job_card_work_entry' => JobCardWorkEntry::class,
+            'waybill' => Waybill::class,
         ]);
     }
 }

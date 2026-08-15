@@ -36,41 +36,49 @@ class CreateJobCardAction
      */
     public function execute(Job $job, array $data, User $actor, array $attachmentPaths = []): JobCard
     {
+        $operators = $this->operators;
+        $logger = $this->logger;
+
         if (! $actor->hasPermissionTo(PermissionName::JobsCreate->value)
             || ! $this->access->canAccessActiveOperationalCompany($actor, $job->company_id, $job->tenant_id)) {
             throw new BusinessException('You are not allowed to create job cards for this job.', 403);
         }
 
-        $isAutomaticFirstCard = ($data['source'] ?? null) === 'job_start';
-
-        if (! $isAutomaticFirstCard && (string) $job->getRawOriginal('status') !== JobStatus::InProgress->value) {
-            throw new BusinessException('Additional job cards can only be created while the job is in progress.', 422);
+        if (! $job->isHeavyMachinery()) {
+            throw new BusinessException('Client Job Cards can only be recorded for heavy machinery jobs.', 422);
         }
 
-        return DB::transaction(function () use ($job, $data, $actor, $attachmentPaths, $isAutomaticFirstCard): JobCard {
-            if ($isAutomaticFirstCard) {
-                $existing = $job->jobCards()->orderBy('card_date')->orderBy('id')->first();
+        if ((string) $job->getRawOriginal('status') !== JobStatus::InProgress->value) {
+            throw new BusinessException('Client Job Cards can only be recorded while the job is in progress.', 422);
+        }
 
-                if ($existing instanceof JobCard) {
-                    return $existing;
-                }
-            }
-
+        return DB::transaction(function () use ($job, $data, $actor, $attachmentPaths, $logger, $operators): JobCard {
             if (! is_int($job->company_id)) {
                 throw new BusinessException('The active Job is missing its company context.', 422);
             }
 
-            $assignment = $this->operators->resolveAssignment(
+            $assignment = $operators->resolveAssignment(
                 $data['operator_id'] ?? null,
                 $data['operated_by'] ?? null,
                 $job->tenant_id,
                 $job->company_id,
-                true,
-                'Assign an operator before creating this Job Card.',
+                false,
             );
+            $resolvedOperators = $operators->resolveOperatorEntries($data['operators'] ?? [], $job->tenant_id, $job->company_id);
+
+            if ($resolvedOperators === [] && ($assignment['operator'] !== null || $assignment['external_name'] !== null)) {
+                $resolvedOperators = [[
+                    'user_id' => $assignment['operator']?->getKey(),
+                    'operator_name' => $assignment['external_name'],
+                ]];
+            }
+
+            if ($resolvedOperators === []) {
+                throw new BusinessException('Record at least one operator on the client Job Card.', 422);
+            }
 
             $jobCard = JobCard::query()->create([
-                ...Arr::except($data, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'operator_id', 'attachments', 'source']),
+                ...Arr::except($data, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'operator_id', 'operators', 'attachments', 'source']),
                 'card_number' => $data['card_number'] ?? $this->generateCardNumber($job),
                 'uuid' => (string) Str::uuid(),
                 'tenant_id' => $job->tenant_id,
@@ -83,21 +91,26 @@ class CreateJobCardAction
                 'shift' => $data['shift'] ?? $job->getRawOriginal('shift'),
                 'equipment_reference' => $data['equipment_reference'] ?? $job->equipment_requirement,
                 'operated_by' => $assignment['external_name'],
-                'approval_status' => $data['approval_status'] ?? JobCardApprovalStatus::Draft->value,
+                'approval_status' => $data['approval_status'] ?? JobCardApprovalStatus::Recorded->value,
+                'total_hours' => $data['total_hours'] ?? $data['header_hours'] ?? null,
+                'billable_amount' => null,
                 'created_by' => $actor->getKey(),
                 'updated_by' => $actor->getKey(),
             ]);
 
+            $operators->syncJobCardOperators($jobCard, $resolvedOperators);
             $this->attachDocuments($jobCard, $attachmentPaths);
+            $jobCard->syncBillingFigures();
+            $jobCard->saveQuietly();
 
-            $this->logger->log('job_card.created', sprintf('Job Card created by %s', $actor->full_name), $actor, $jobCard, [
+            $logger->log('job_card.created', sprintf('Client Job Card recorded by %s', $actor->full_name), $actor, $jobCard, [
                 'tenant_id' => $jobCard->tenant_id,
                 'company_id' => $jobCard->company_id,
                 'job_id' => $jobCard->job_id,
             ]);
 
             if ($jobCard->operatorDisplayName() !== null) {
-                $this->logger->log('job_card.operator_recorded', sprintf('Operator assigned: %s', $jobCard->operatorDisplayName()), $actor, $jobCard, [
+                $logger->log('job_card.operator_recorded', sprintf('Operators recorded: %s', $jobCard->operatorDisplayName()), $actor, $jobCard, [
                     'tenant_id' => $jobCard->tenant_id,
                     'company_id' => $jobCard->company_id,
                     'job_id' => $jobCard->job_id,

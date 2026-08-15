@@ -23,13 +23,13 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('full_name')->searchable(['first_name', 'last_name'])->sortable(),
-                TextColumn::make('tenant.name')->label('Company')->searchable(),
                 TextColumn::make('email')->searchable(),
+                TextColumn::make('roles.name')->label('Role(s)')->badge()->separator(', '),
+                TextColumn::make('companies.name')->label('Company')->badge()->separator(', ')->searchable(),
                 TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (UserStatus $state): string => $state->label())
                     ->color(fn (UserStatus $state): string => $state->color()),
-                TextColumn::make('roles.name')->badge()->separator(', '),
                 TextColumn::make('last_login_at')->since()->label('Last login'),
             ])
             ->filters([

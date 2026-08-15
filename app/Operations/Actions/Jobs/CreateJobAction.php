@@ -16,6 +16,7 @@ use App\CRM\Services\CrmTenantGuard;
 use App\Models\User;
 use App\Operations\Enums\JobShift;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use App\Operations\Models\Job;
 use App\Operations\Support\JobPlanningFieldMapper;
 use App\Operations\Support\OperatorAssignmentService;
@@ -83,6 +84,7 @@ class CreateJobAction
             $job->assigned_operator_id = $assignment['operator']?->getKey();
             $job->assigned_operator_name = $assignment['external_name'];
             $job->shift = $data['shift'] ?? JobShift::Custom->value;
+            $job->job_type = $data['job_type'] ?? JobType::HeavyMachinery->value;
             $job->job_number = $this->generateJobNumber($tenantId);
             $job->status = $data['status'] ?? JobStatus::Draft->value;
             $this->stampCreationAudit($job, $actor);

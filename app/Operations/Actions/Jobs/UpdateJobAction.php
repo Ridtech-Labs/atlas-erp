@@ -43,7 +43,7 @@ class UpdateJobAction
             throw new BusinessException('You are not allowed to update this job.', 403);
         }
 
-        if (in_array((string) $job->getRawOriginal('status'), [JobStatus::InProgress->value, JobStatus::OnHold->value, JobStatus::Completed->value], true)
+        if (in_array((string) $job->getRawOriginal('status'), [JobStatus::InProgress->value, JobStatus::OnHold->value, JobStatus::Completed->value, JobStatus::Cancelled->value], true)
             && ! $actor->hasPermissionTo(PermissionName::JobsApprove->value)) {
             throw new BusinessException('Planning fields are read-only after the job has started.', 422);
         }

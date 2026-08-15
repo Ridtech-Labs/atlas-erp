@@ -20,7 +20,8 @@ class UserInfolist
                     ->description('Who this user is, which workspace they belong to, and how they are permitted to operate.')
                     ->schema([
                         TextEntry::make('full_name'),
-                        TextEntry::make('tenant.name')->label('Company'),
+                        TextEntry::make('companies.name')->label('Company')->badge()->separator(', '),
+                        TextEntry::make('tenant.name')->label('Tenant account'),
                         TextEntry::make('email'),
                         TextEntry::make('phone')->placeholder('No phone recorded'),
                         ImageEntry::make('avatar_path')->disk('public'),

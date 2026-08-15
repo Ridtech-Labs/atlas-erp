@@ -127,7 +127,6 @@ class ActiveCompanyResolver
             return false;
         }
 
-        return $user->hasRole(RoleName::CompanyAdministrator->value)
-            || $user->hasRole(RoleName::SuperAdministrator->value);
+        return $user->hasRole(RoleName::SuperAdministrator->value);
     }
 }

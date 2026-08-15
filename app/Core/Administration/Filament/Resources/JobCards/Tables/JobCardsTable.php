@@ -16,27 +16,30 @@ class JobCardsTable
     {
         return $table
             ->columns([
-                TextColumn::make('card_number')->label('Card')->searchable()->sortable(),
+                TextColumn::make('card_number')->label('Atlas Record')->searchable()->sortable(),
+                TextColumn::make('client_card_reference')->label('Client Card')->searchable()->toggleable(),
                 TextColumn::make('job.job_number')->label('Job')->searchable(),
                 TextColumn::make('card_date')->date()->sortable(),
                 TextColumn::make('shift'),
                 TextColumn::make('equipment_reference')->label('Equipment')->toggleable(),
+                TextColumn::make('machine_number')->label('Machine No.')->toggleable(),
                 TextColumn::make('operator_id')
-                    ->label('Operator')
+                    ->label('Operators')
                     ->formatStateUsing(fn (mixed $state, $record): string => $record->operatorDisplayName() ?? 'Not assigned')
                     ->toggleable(),
                 TextColumn::make('work_entries_count')->counts('workEntries')->label('Entries'),
-                TextColumn::make('work_entries_sum_total_hours')->sum('workEntries', 'total_hours')->label('Hours'),
+                TextColumn::make('total_hours')->label('Hours'),
                 TextColumn::make('approval_status')
                     ->badge()
                     ->formatStateUsing(fn (JobCardApprovalStatus $state): string => $state->label())
                     ->color(fn (JobCardApprovalStatus $state): string => $state->color()),
-                TextColumn::make('approved_at')->since()->label('Approved')->toggleable(),
+                TextColumn::make('verified_at')->since()->label('Verified')->toggleable(),
+                TextColumn::make('billable_amount')->label('Billable')->money(fn ($record) => $record->rate_currency ?: $record->job?->currency ?: 'GHS')->toggleable(),
             ])
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make()
-                    ->visible(fn ($record) => $record->approval_status !== JobCardApprovalStatus::Approved),
+                    ->visible(fn ($record) => $record->approval_status !== JobCardApprovalStatus::BillingReady),
             ]);
     }
 }
