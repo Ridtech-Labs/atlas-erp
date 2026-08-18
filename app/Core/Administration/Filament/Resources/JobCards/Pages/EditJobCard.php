@@ -22,29 +22,51 @@ class EditJobCard extends EditRecord
 {
     protected static string $resource = JobCardResource::class;
 
+    public function mount(int|string $record): void
+    {
+        $this->record = $this->resolveRecord($record);
+
+        if ($this->currentRecord()->evidenceIsLockedForEditing()) {
+            abort_unless(static::getResource()::canView($this->currentRecord()), 403);
+
+            $this->redirect(JobCardResource::getUrl('view', ['record' => $this->currentRecord()]));
+
+            return;
+        }
+
+        $this->authorizeAccess();
+        $this->fillForm();
+        $this->previousUrl = url()->previous();
+    }
+
     protected function getHeaderActions(): array
     {
         return [
             Action::make('submit')
-                ->label('Send for verification')
+                ->label('Submit to Accounts')
                 ->action(fn () => app(SubmitJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->approvalStatusIsOneOf([JobCardApprovalStatus::Draft, JobCardApprovalStatus::Recorded, JobCardApprovalStatus::Returned])),
+                ->visible(fn (): bool => $this->canSubmit()),
             Action::make('approve')
-                ->label('Verify Job Card')
-                ->action(fn () => app(ApproveJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::PendingVerification)),
+                ->label('Review for Billing')
+                ->form([
+                    Textarea::make('verification_notes')
+                        ->label('Accounts review notes')
+                        ->placeholder('Record any Accounts review notes captured during billing review.'),
+                ])
+                ->action(fn (array $data) => app(ApproveJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser(), $data['verification_notes'] ?? null))
+                ->visible(fn (): bool => $this->canReview()),
             Action::make('billingReady')
                 ->label('Mark Billing Ready')
                 ->action(fn () => app(MarkJobCardBillingReadyAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::Verified)),
+                ->visible(fn (): bool => $this->canPrepareBilling()),
             Action::make('return')
-                ->label('Return for correction')
+                ->label('Return to Operations')
                 ->color('danger')
                 ->form([
-                    Textarea::make('return_reason')->required(),
+                    Textarea::make('return_reason')->label('Return reason')->required(),
                 ])
                 ->action(fn (array $data) => app(ReturnJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser(), (string) $data['return_reason']))
-                ->visible(fn (): bool => $this->approvalStatusIs(JobCardApprovalStatus::PendingVerification)),
+                ->visible(fn (): bool => $this->canReview()),
         ];
     }
 
@@ -107,5 +129,25 @@ class EditJobCard extends EditRecord
             array_map(static fn (JobCardApprovalStatus $status): string => $status->value, $statuses),
             true,
         );
+    }
+
+    private function canSubmit(): bool
+    {
+        return $this->approvalStatusIsOneOf([JobCardApprovalStatus::Draft, JobCardApprovalStatus::Recorded, JobCardApprovalStatus::Returned])
+            && $this->authenticatedUser()->hasPermissionTo('jobs.submit')
+            && $this->authenticatedUser()->can('update', $this->currentRecord());
+    }
+
+    private function canReview(): bool
+    {
+        return $this->approvalStatusIs(JobCardApprovalStatus::PendingVerification)
+            && $this->authenticatedUser()->can('approve', $this->currentRecord());
+    }
+
+    private function canPrepareBilling(): bool
+    {
+        return $this->approvalStatusIs(JobCardApprovalStatus::Verified)
+            && $this->authenticatedUser()->hasPermissionTo('job_cards.bill')
+            && $this->authenticatedUser()->can('view', $this->currentRecord());
     }
 }

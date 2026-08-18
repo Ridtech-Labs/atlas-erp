@@ -166,7 +166,7 @@
                 <div class="rounded-3xl border border-stone-200 bg-white p-5">
                     <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">{{ $operationalDocumentLabelPlural }}</div>
                     <div class="mt-3 text-3xl font-semibold text-stone-950">{{ $isTrucking ? $waybillCount : $jobCardCount }}</div>
-                    <div class="mt-2 text-sm text-stone-500">{{ $pendingVerificationCount }} pending verification · {{ $billingReadyCount }} billing ready</div>
+                    <div class="mt-2 text-sm text-stone-500">{{ $pendingVerificationCount }} awaiting Accounts review · {{ $billingReadyCount }} billing ready</div>
                 </div>
                 <div class="rounded-3xl border border-stone-200 bg-white p-5">
                     <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Recorded hours</div>
@@ -174,7 +174,7 @@
                     <div class="mt-2 text-sm text-stone-500">{{ number_format($totalNormalHours, 2) }} normal · {{ number_format($totalOvertimeHours, 2) }} overtime</div>
                 </div>
                 <div class="rounded-3xl border border-stone-200 bg-white p-5">
-                    <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Verification</div>
+                    <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Accounts Review</div>
                     <div class="mt-3 text-3xl font-semibold text-stone-950">{{ $verifiedCount }}</div>
                     <div class="mt-2 text-sm text-stone-500">{{ $returnedCount }} returned · {{ $recordedCount }} still in recording</div>
                 </div>
@@ -302,7 +302,7 @@
                     'crew' => 'Crew',
                     'equipment' => 'Equipment',
                     'operational' => $operationalDocumentLabelPlural,
-                    'verification' => 'Verification',
+                    'verification' => 'Accounts Review',
                     'billing' => 'Billing',
                     'documents' => 'Documents',
                     'activity' => 'Activity',
@@ -438,14 +438,14 @@
                                         <div class="mt-1 text-sm text-stone-500">{{ $planningSummary }}</div>
                                     </div>
                                     <div class="rounded-2xl bg-stone-50 p-4">
-                                        <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Verification attention</div>
+                                        <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Accounts review attention</div>
                                         <div class="mt-2 text-sm font-semibold text-stone-950">
                                             @if ($pendingVerificationCount > 0)
-                                                {{ $pendingVerificationCount }} {{ $operationalDocumentLabel }}{{ $pendingVerificationCount === 1 ? '' : 's' }} awaiting verification
+                                                {{ $pendingVerificationCount }} {{ $operationalDocumentLabel }}{{ $pendingVerificationCount === 1 ? '' : 's' }} awaiting Accounts review
                                             @elseif ($returnedCount > 0)
-                                                {{ $returnedCount }} returned {{ $operationalDocumentLabel }}{{ $returnedCount === 1 ? '' : 's' }} require correction
+                                                {{ $returnedCount }} returned {{ $operationalDocumentLabel }}{{ $returnedCount === 1 ? '' : 's' }} require operational correction
                                             @else
-                                                No immediate verification bottlenecks
+                                                No immediate Accounts review bottlenecks
                                             @endif
                                         </div>
                                     </div>
@@ -490,9 +490,11 @@
                             <div class="text-lg font-semibold text-stone-950">Planning record</div>
                             <div class="mt-1 text-sm text-stone-500">Draft Jobs remain editable so the operational record can be corrected before deployment.</div>
                         </div>
-                        <a href="{{ \App\Core\Administration\Filament\Resources\Jobs\JobResource::getUrl('edit', ['record' => $job]) }}" class="rounded-full bg-stone-950 px-4 py-2 text-sm font-medium text-white">
-                            {{ $jobStatus === JobStatus::Draft ? 'Edit Planning' : 'View Planning' }}
-                        </a>
+                        @if ($canEditPlanning)
+                            <a href="{{ \App\Core\Administration\Filament\Resources\Jobs\JobResource::getUrl('edit', ['record' => $job]) }}" class="rounded-full bg-stone-950 px-4 py-2 text-sm font-medium text-white">
+                                {{ $jobStatus === JobStatus::Draft ? 'Edit Job' : 'View Planning' }}
+                            </a>
+                        @endif
                     </div>
 
                     <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
@@ -551,7 +553,7 @@
                         <div>
                             <div class="text-lg font-semibold text-stone-950">{{ $operationalDocumentLabelPlural }}</div>
                             <div class="mt-1 text-sm text-stone-500">
-                                {{ $isTrucking ? 'Each Waybill captures one trucking execution record and its billing readiness.' : 'Each client-issued Job Card captures the actual work evidence that supports verification and billing.' }}
+                                {{ $isTrucking ? 'Each Waybill captures one trucking execution record and its billing readiness.' : 'Each client-issued Job Card captures the actual work evidence that supports Accounts review and billing.' }}
                             </div>
                         </div>
                         <a href="{{ $isTrucking ? $waybillsBrowseUrl : $jobCardsBrowseUrl }}" class="rounded-full bg-stone-950 px-4 py-2 text-sm font-medium text-white">
@@ -610,11 +612,11 @@
                 </div>
 
                 <div x-show="tab === 'verification'" class="rounded-3xl border border-stone-200 bg-white p-6">
-                    <div class="text-lg font-semibold text-stone-950">Verification</div>
+                    <div class="text-lg font-semibold text-stone-950">Accounts Review</div>
                     <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
                         <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Recorded</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $recordedCount }}</div></div>
-                        <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Pending verification</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $pendingVerificationCount }}</div></div>
-                        <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Verified</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $verifiedCount }}</div></div>
+                        <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Awaiting Accounts Review</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $pendingVerificationCount }}</div></div>
+                        <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Accounts Reviewed</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $verifiedCount }}</div></div>
                         <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Billing ready</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingReadyCount }}</div></div>
                     </div>
                 </div>
@@ -631,7 +633,7 @@
                         <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
                             <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Client Job Cards</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['job_card_count'] }}</div></div>
                             <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Total hours</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['total_hours'] }}</div></div>
-                            <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Verified cards</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['verified_cards'] }}</div></div>
+                            <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Accounts-reviewed cards</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['verified_cards'] }}</div></div>
                             <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Billing-ready cards</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['billing_ready_cards'] }}</div></div>
                             <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Total billable</div><div class="mt-2 text-2xl font-semibold text-stone-950">GHS {{ number_format((float) $billingSummary['total_billable'], 2) }}</div></div>
                         </div>
@@ -651,7 +653,7 @@
                                             <th class="px-4 py-3">Exchange</th>
                                             <th class="px-4 py-3">Converted rate</th>
                                             <th class="px-4 py-3">Billable</th>
-                                            <th class="px-4 py-3">Verification</th>
+                                            <th class="px-4 py-3">Accounts Review</th>
                                             <th class="px-4 py-3">Billing</th>
                                         </tr>
                                     </thead>

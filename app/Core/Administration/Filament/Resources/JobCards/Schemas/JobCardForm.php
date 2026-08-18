@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Resources\JobCards\Schemas;
 
+use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Core\Tenancy\Models\Company;
+use App\Models\User;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobShift;
 use App\Operations\Models\Job;
+use App\Operations\Models\JobCard;
 use App\Operations\Support\OperatorAssignmentService;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
@@ -18,7 +21,6 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\TimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
@@ -41,6 +43,10 @@ class JobCardForm
 
                             return $company instanceof Company ? $company->name : 'No active company';
                         }),
+                    Placeholder::make('recording_guidance')
+                        ->label('Recording guidance')
+                        ->content('Capture only what appears on the client-issued Job Card. Accounts review and billing are completed separately after this record is saved.')
+                        ->columnSpanFull(),
                     TextInput::make('client_card_reference')
                         ->label('Client Job Card reference')
                         ->maxLength(255)
@@ -51,8 +57,6 @@ class JobCardForm
                         ->required(),
                     TextInput::make('equipment_reference')->label('Forklift No. / equipment')->maxLength(255),
                     TextInput::make('machine_number')->maxLength(255)->placeholder('FLT-16T-04'),
-                    TimePicker::make('from_time')->seconds(false),
-                    TimePicker::make('to_time')->seconds(false),
                     Select::make('operator_source')
                         ->label('Operator type')
                         ->options([
@@ -139,21 +143,18 @@ class JobCardForm
                         ->reorderable(false)
                         ->columnSpanFull(),
                     TextInput::make('supervising_officer_name')->maxLength(255),
-                    TextInput::make('header_hours')->numeric()->step('0.01')->placeholder('8.00'),
-                    TextInput::make('total_hours')->numeric()->step('0.01')->placeholder('8.00'),
+                    Placeholder::make('work_entry_guidance')
+                        ->label('Work Entries')
+                        ->content(fn (?JobCard $record): string => $record instanceof JobCard
+                            ? 'Use Work Entries below to capture each physical row on the client-issued Job Card. Atlas totals the recorded hours automatically from those entries.'
+                            : 'After saving this Job Card header, add one or more Work Entries to record the actual rows from the physical client-issued Job Card.'),
+                    Placeholder::make('calculated_total_hours')
+                        ->label('Total Recorded Hours')
+                        ->content(fn (?JobCard $record): string => $record instanceof JobCard && $record->displayTotalHours() !== null
+                            ? number_format((float) $record->displayTotalHours(), 2)
+                            : 'Atlas will calculate this from Work Entries.'),
                     Toggle::make('client_endorsed')->label('Client endorsed'),
                     Toggle::make('client_stamped')->label('Client stamp confirmed'),
-                    Select::make('approval_status')
-                        ->options(collect(JobCardApprovalStatus::cases())->mapWithKeys(fn (JobCardApprovalStatus $status) => [$status->value => $status->label()])->all())
-                        ->default(JobCardApprovalStatus::Recorded->value)
-                        ->disabled(),
-                    TextInput::make('rate_currency')->length(3)->placeholder('GHS'),
-                    TextInput::make('hourly_rate')->numeric()->step('0.01')->placeholder('0.00'),
-                    TextInput::make('exchange_rate')->numeric()->step('0.0001')->placeholder('1.0000'),
-                    TextInput::make('converted_hourly_rate')->numeric()->step('0.01')->placeholder('0.00'),
-                    TextInput::make('billable_amount')->numeric()->step('0.01')->placeholder('Calculated from hours and rate'),
-                    Textarea::make('rate_notes')->rows(3)->columnSpanFull(),
-                    Textarea::make('verification_notes')->rows(3)->columnSpanFull(),
                     Textarea::make('officer_remarks')->rows(4)->columnSpanFull(),
                     FileUpload::make('attachments')
                         ->multiple()
@@ -163,7 +164,71 @@ class JobCardForm
                         ->columnSpanFull(),
                 ])
                 ->columns(2),
+            Section::make('Accounts Review')
+                ->schema([
+                    Placeholder::make('verification_guidance')
+                        ->label('Accounts review stage')
+                        ->content(function ($record): string {
+                            if (! $record instanceof JobCard) {
+                                return 'After recording, Finance or Accounts will review the Job Card against the uploaded client document before billing.';
+                            }
+
+                            return match ((string) $record->getRawOriginal('approval_status')) {
+                                JobCardApprovalStatus::PendingVerification->value => 'This Job Card is awaiting Accounts review against the client-issued document before billing can continue.',
+                                JobCardApprovalStatus::Returned->value => 'This Job Card was returned to Operations. Update the recorded evidence, then submit it back to Accounts.',
+                                JobCardApprovalStatus::Verified->value => 'This Job Card has been reviewed by Accounts and can now move into billing preparation.',
+                                JobCardApprovalStatus::BillingReady->value => 'This Job Card has completed Accounts review and has a billing basis ready for invoicing.',
+                                default => 'Use the Accounts review action after recording to confirm the evidence on the client-issued Job Card.',
+                            };
+                        })
+                        ->columnSpanFull(),
+                    Placeholder::make('verification_notes_display')
+                        ->label('Accounts review notes')
+                        ->content(fn ($record): string => $record instanceof JobCard && filled($record->verification_notes) ? (string) $record->verification_notes : 'No Accounts review notes recorded yet.')
+                        ->visible(fn ($record): bool => $record instanceof JobCard),
+                ])
+                ->columns(1),
+            Section::make('Billing Preparation')
+                ->schema([
+                    Placeholder::make('billing_guidance')
+                        ->label('Billing stage')
+                        ->content('Enter rate information only after Accounts review. Atlas will calculate the billing basis from the reviewed hours and the captured rate inputs.')
+                        ->columnSpanFull(),
+                    TextInput::make('rate_currency')->length(3)->placeholder('GHS'),
+                    TextInput::make('hourly_rate')->numeric()->step('0.01')->placeholder('0.00'),
+                    TextInput::make('exchange_rate')->numeric()->step('0.0001')->placeholder('1.0000'),
+                    TextInput::make('converted_hourly_rate')->numeric()->step('0.01')->placeholder('0.00'),
+                    Placeholder::make('billable_amount_preview')
+                        ->label('Calculated billable amount')
+                        ->content(function (Get $get, $record): string {
+                            if ($record instanceof JobCard && $record->billable_amount !== null) {
+                                return number_format((float) $record->billable_amount, 2);
+                            }
+
+                            $hours = $get('total_hours');
+                            $rate = $get('converted_hourly_rate') ?? $get('hourly_rate');
+
+                            if (! is_numeric($hours) || ! is_numeric($rate)) {
+                                return 'Atlas will calculate this after the rate basis is complete.';
+                            }
+
+                            return number_format((float) $hours * (float) $rate, 2);
+                        }),
+                    Textarea::make('rate_notes')->rows(3)->columnSpanFull(),
+                ])
+                ->columns(2)
+                ->visible(fn ($record): bool => $record instanceof JobCard
+                    && self::canManageBilling($record)
+                    && in_array((string) $record->getRawOriginal('approval_status'), [JobCardApprovalStatus::Verified->value, JobCardApprovalStatus::BillingReady->value], true)),
         ]);
+    }
+
+    private static function canManageBilling(JobCard $jobCard): bool
+    {
+        $user = auth()->user();
+
+        return $user instanceof User
+            && $user->hasPermissionTo(PermissionName::JobCardsBill->value);
     }
 
     /**

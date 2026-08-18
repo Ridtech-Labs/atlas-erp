@@ -112,9 +112,9 @@ class JobWorkspaceWidget extends Widget
                 'date' => $card->card_date,
                 'reference' => $card->client_card_reference,
                 'machine_number' => $card->machine_number,
-                'from' => $card->from_time,
-                'to' => $card->to_time,
-                'total_hours' => $card->total_hours,
+                'from' => $card->displayStartTime(),
+                'to' => $card->displayEndTime(),
+                'total_hours' => $card->displayTotalHours(),
                 'rate_currency' => $card->rate_currency,
                 'hourly_rate' => $card->hourly_rate,
                 'exchange_rate' => $card->exchange_rate,
@@ -167,7 +167,7 @@ class JobWorkspaceWidget extends Widget
             'latestCardOperatorName' => $latestCard?->operatorDisplayName(),
             'totalNormalHours' => round((float) $workEntries->sum('normal_hours'), 2),
             'totalOvertimeHours' => round((float) $workEntries->sum('overtime_hours'), 2),
-            'totalRecordedHours' => round((float) $workEntries->sum('total_hours'), 2),
+            'totalRecordedHours' => round((float) $jobCards->sum(fn (JobCard $card): float => (float) ($card->displayTotalHours() ?? 0)), 2),
             'jobCardCount' => $jobCards->count(),
             'waybillCount' => $waybills->count(),
             'pendingVerificationCount' => $isTrucking ? $pendingVerificationWaybills->count() : $pendingVerificationCards->count(),
@@ -178,16 +178,22 @@ class JobWorkspaceWidget extends Widget
             'attachmentCount' => $isTrucking
                 ? $waybills->sum(fn (Waybill $waybill): int => $waybill->getMedia('waybill-documents')->count())
                 : $jobCards->sum(fn (JobCard $card): int => $card->getMedia('job-card-documents')->count()),
-            'canCancel' => $job instanceof Job ? $workflow->canCancel($job) : false,
+            'canCancel' => $job instanceof Job
+                && $user instanceof User
+                && $workflow->canCancel($job)
+                && $user->can('cancel', $job),
             'deleteEligible' => $job instanceof Job
                 && $jobStatus === JobStatus::Draft
                 && $jobCards->isEmpty()
                 && $waybills->isEmpty()
                 && $user instanceof User
                 && $user->can('delete', $job),
+            'canEditPlanning' => $job instanceof Job
+                && $user instanceof User
+                && $user->can('update', $job),
             'billingSummary' => [
                 'job_card_count' => $jobCards->count(),
-                'total_hours' => number_format((float) $jobCards->sum('total_hours'), 2),
+                'total_hours' => number_format((float) $jobCards->sum(fn (JobCard $card): float => (float) ($card->displayTotalHours() ?? 0)), 2),
                 'verified_cards' => $verifiedCards->count(),
                 'billing_ready_cards' => $billingReadyCards->count(),
                 'total_billable' => $totalBillable,
@@ -413,6 +419,8 @@ class JobWorkspaceWidget extends Widget
         }
 
         $canApprove = $user->hasPermissionTo('jobs.approve');
+        $canBillJobCard = $user->hasPermissionTo('job_cards.bill');
+        $canUpdate = $user->can('update', $job);
         $canSchedule = $user->can('schedule', $job);
         $canStart = $user->can('start', $job);
         $canResume = $user->can('resume', $job);
@@ -440,23 +448,32 @@ class JobWorkspaceWidget extends Widget
                         'trigger' => 'schedule',
                     ]
                     : [
-                        'label' => 'Ready the Job for deployment',
+                        'label' => 'Awaiting Operations',
                         'button_label' => null,
-                        'helper' => 'Planning is complete. An authorized user can now mark this Job ready for deployment.',
+                        'helper' => 'Planning is complete. An Operations Manager can now mark this Job Ready for Deployment.',
                         'url' => null,
                         'kind' => 'attention',
                         'trigger' => null,
                     ])
-                : [
-                    'label' => 'Continue Planning',
-                    'button_label' => 'Edit Planning',
-                    'helper' => $planningMissingLabels === []
-                        ? 'Complete the remaining planning details before scheduling this Job.'
-                        : 'Complete: '.implode(', ', $planningMissingLabels).'.',
-                    'url' => JobResource::getUrl('edit', ['record' => $job]),
-                    'kind' => 'planning',
-                    'trigger' => null,
-                ],
+                : ($canUpdate
+                    ? [
+                        'label' => 'Complete Job Planning',
+                        'button_label' => 'Edit Job',
+                        'helper' => 'Review or update the Job information before handing it over to Operations.',
+                        'url' => JobResource::getUrl('edit', ['record' => $job]),
+                        'kind' => 'planning',
+                        'trigger' => null,
+                    ]
+                    : [
+                        'label' => 'Planning in progress',
+                        'button_label' => null,
+                        'helper' => $planningMissingLabels === []
+                            ? 'This Job still needs planning attention before Operations can take over.'
+                            : 'Planning still needs attention: '.implode(', ', $planningMissingLabels).'.',
+                        'url' => null,
+                        'kind' => 'attention',
+                        'trigger' => null,
+                    ]),
             JobStatus::PendingApproval => $canApprove
                 ? [
                     'label' => 'Approve Job',
@@ -618,6 +635,11 @@ class JobWorkspaceWidget extends Widget
         }
 
         if ($activeCard instanceof JobCard) {
+            $canApproveCard = auth()->user() instanceof User
+                && auth()->user()->can('approve', $activeCard);
+            $canBillJobCard = auth()->user() instanceof User
+                && auth()->user()->hasPermissionTo('job_cards.bill');
+
             return match ((string) $activeCard->getRawOriginal('approval_status')) {
                 JobCardApprovalStatus::Returned->value => [
                     'label' => 'Correct Returned Card',
@@ -628,12 +650,12 @@ class JobWorkspaceWidget extends Widget
                     'trigger' => null,
                 ],
                 JobCardApprovalStatus::PendingVerification->value, JobCardApprovalStatus::Submitted->value => [
-                    'label' => $canApprove ? 'Review / Verify Job Card' : 'Awaiting Verification',
-                    'button_label' => $canApprove ? 'Review / Verify Job Card' : null,
-                    'helper' => $canApprove
-                        ? 'A client-issued Job Card is waiting for verification.'
-                        : 'A client-issued Job Card is waiting for an authorized verifier.',
-                    'url' => JobCardResource::getUrl($canApprove ? 'edit' : 'view', ['record' => $activeCard]),
+                    'label' => $canApproveCard ? 'Review for Billing' : 'Awaiting Accounts Review',
+                    'button_label' => $canApproveCard ? 'Review for Billing' : null,
+                    'helper' => $canApproveCard
+                        ? 'A client-issued Job Card is waiting for Accounts review before billing can continue.'
+                        : 'A client-issued Job Card is waiting for Finance or an authorized administrator to review it for billing.',
+                    'url' => JobCardResource::getUrl('view', ['record' => $activeCard]),
                     'kind' => 'attention',
                     'trigger' => null,
                 ],
@@ -646,10 +668,12 @@ class JobWorkspaceWidget extends Widget
                     'trigger' => null,
                 ],
                 JobCardApprovalStatus::Verified->value => [
-                    'label' => 'Prepare Billing',
-                    'button_label' => 'Prepare Billing',
-                    'helper' => 'This verified Client Job Card can now be marked billing ready.',
-                    'url' => JobCardResource::getUrl('edit', ['record' => $activeCard]),
+                    'label' => $canBillJobCard ? 'Prepare Billing' : 'Awaiting Billing Preparation',
+                    'button_label' => $canBillJobCard ? 'Prepare Billing' : null,
+                    'helper' => $canBillJobCard
+                        ? 'This Accounts-reviewed Client Job Card can now be marked billing ready.'
+                        : 'This Accounts-reviewed Client Job Card is waiting for Finance or an authorized administrator to prepare billing.',
+                    'url' => JobCardResource::getUrl('view', ['record' => $activeCard]),
                     'kind' => 'success',
                     'trigger' => null,
                 ],
@@ -822,8 +846,8 @@ class JobWorkspaceWidget extends Widget
             ],
             [
                 'key' => 'verified',
-                'label' => 'Verified',
-                'description' => 'The Job Card has been checked for endorsement and total hours.',
+                'label' => 'Accounts Reviewed',
+                'description' => 'Finance has reviewed the client-endorsed Job Card and confirmed it can move into billing preparation.',
             ],
             [
                 'key' => 'billing_ready',

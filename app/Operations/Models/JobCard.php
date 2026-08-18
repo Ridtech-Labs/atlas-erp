@@ -63,6 +63,8 @@ class JobCard extends Model implements HasMedia
         'approval_status',
         'approved_by',
         'approved_at',
+        'submitted_by',
+        'submitted_at',
         'returned_by',
         'returned_at',
         'return_reason',
@@ -93,6 +95,7 @@ class JobCard extends Model implements HasMedia
             'client_stamped' => 'boolean',
             'approval_status' => JobCardApprovalStatus::class,
             'approved_at' => 'datetime',
+            'submitted_at' => 'datetime',
             'returned_at' => 'datetime',
             'verified_at' => 'datetime',
             'billing_ready_at' => 'datetime',
@@ -180,6 +183,14 @@ class JobCard extends Model implements HasMedia
     /**
      * @return BelongsTo<User, $this>
      */
+    public function submitter(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'submitted_by');
+    }
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function returnedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'returned_by');
@@ -220,6 +231,73 @@ class JobCard extends Model implements HasMedia
     public function usesVerificationWorkflow(): bool
     {
         return $this->job?->isHeavyMachinery() ?? true;
+    }
+
+    public function wasSubmittedBy(User $user): bool
+    {
+        return $this->submitted_by !== null && $this->submitted_by === $user->getKey();
+    }
+
+    public function evidenceIsLockedForEditing(): bool
+    {
+        return in_array((string) $this->getRawOriginal('approval_status'), [
+            JobCardApprovalStatus::PendingVerification->value,
+            JobCardApprovalStatus::Submitted->value,
+            JobCardApprovalStatus::Verified->value,
+            JobCardApprovalStatus::BillingReady->value,
+            JobCardApprovalStatus::Approved->value,
+        ], true);
+    }
+
+    public function workEntriesAreLocked(): bool
+    {
+        return $this->evidenceIsLockedForEditing();
+    }
+
+    public function hasAuthoritativeWorkEntries(): bool
+    {
+        return $this->relationLoaded('workEntries')
+            ? $this->workEntries->isNotEmpty()
+            : $this->workEntries()->exists();
+    }
+
+    public function displayTotalHours(): ?float
+    {
+        if ($this->hasAuthoritativeWorkEntries()) {
+            $entries = $this->relationLoaded('workEntries')
+                ? $this->workEntries
+                : $this->workEntries()->get();
+
+            return round((float) $entries->sum('total_hours'), 2);
+        }
+
+        return $this->total_hours === null ? null : round((float) $this->total_hours, 2);
+    }
+
+    public function displayStartTime(): ?string
+    {
+        if ($this->hasAuthoritativeWorkEntries()) {
+            $entries = $this->relationLoaded('workEntries')
+                ? $this->workEntries
+                : $this->workEntries()->get();
+
+            return $entries->sortBy('from_time')->first()?->from_time;
+        }
+
+        return $this->from_time;
+    }
+
+    public function displayEndTime(): ?string
+    {
+        if ($this->hasAuthoritativeWorkEntries()) {
+            $entries = $this->relationLoaded('workEntries')
+                ? $this->workEntries
+                : $this->workEntries()->get();
+
+            return $entries->sortBy('to_time')->last()?->to_time;
+        }
+
+        return $this->to_time;
     }
 
     public function calculateBillableAmount(): ?float

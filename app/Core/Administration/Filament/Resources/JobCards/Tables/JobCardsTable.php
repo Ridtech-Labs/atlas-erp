@@ -33,7 +33,7 @@ class JobCardsTable
                     ->badge()
                     ->formatStateUsing(fn (JobCardApprovalStatus $state): string => $state->label())
                     ->color(fn (JobCardApprovalStatus $state): string => $state->color()),
-                TextColumn::make('verified_at')->since()->label('Verified')->toggleable(),
+                TextColumn::make('verified_at')->since()->label('Accounts Reviewed')->toggleable(),
                 TextColumn::make('billable_amount')->label('Billable')->money(fn ($record) => $record->rate_currency ?: $record->job?->currency ?: 'GHS')->toggleable(),
             ])
             ->recordActions([

@@ -8,6 +8,7 @@ enum RoleName: string
 {
     case SuperAdministrator = 'Super Administrator';
     case CompanyAdministrator = 'Company Administrator';
+    case DataEntryClerk = 'Data Entry Clerk';
     case OperationsManager = 'Operations Manager';
     case FinanceManager = 'Finance Manager';
     case FleetManager = 'Fleet Manager';

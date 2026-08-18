@@ -10,6 +10,7 @@ use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\ReturnJobCardAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
+use App\Operations\Actions\JobCardWorkEntries\CreateJobCardWorkEntryAction;
 use App\Operations\Actions\Jobs\CompleteJobAction;
 use App\Operations\Actions\Jobs\HoldJobAction;
 use App\Operations\Actions\Jobs\StartJobAction;
@@ -24,6 +25,23 @@ use App\Operations\Models\JobCard;
 use App\Operations\Models\Waybill;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
+
+function attachWorkspaceJobCardEvidence(JobCard $jobCard, string $fileName = 'signed-card.txt'): void
+{
+    $jobCard->addMediaFromString('signed')->usingFileName($fileName)->toMediaCollection('job-card-documents');
+}
+
+function recordWorkspaceJobCardEntry(JobCard $jobCard, User $actor, array $overrides = []): void
+{
+    app(CreateJobCardWorkEntryAction::class)->execute($jobCard, array_merge([
+        'vessel' => 'MV Atlantic Trader',
+        'work_area' => 'Jubilee Terminal',
+        'from_time' => '08:00',
+        'to_time' => '16:00',
+        'normal_hours' => 8,
+        'overtime_hours' => 0,
+    ], $overrides), $actor);
+}
 
 test('authorized user can view the job workspace', function () {
     $this->seedAccessControl();
@@ -175,8 +193,9 @@ test('draft workspace shows planning readiness and schedule action only when rea
     ]);
 
     Livewire::test(JobWorkspaceWidget::class, ['record' => $draftJob])
-        ->assertSee('Continue Planning')
-        ->assertSee('Edit Planning')
+        ->assertSee('Complete Job Planning')
+        ->assertSee('Edit Job')
+        ->assertSee('Review or update the Job information before handing it over to Operations.')
         ->assertSee('Planning incomplete')
         ->assertSee('Equipment')
         ->assertSee('Planned operator')
@@ -227,8 +246,8 @@ test('heavy machinery workflow stages include plain language descriptions', func
         ->assertSee('The machine has been deployed and work is underway.')
         ->assertSee('Job Card Recorded')
         ->assertSee('The client-issued Job Card has been received and recorded.')
-        ->assertSee('Verified')
-        ->assertSee('The Job Card has been checked for endorsement and total hours.')
+        ->assertSee('Accounts Reviewed')
+        ->assertSee('Finance has reviewed the client-endorsed Job Card and confirmed it can move into billing preparation.')
         ->assertSee('Billing Ready')
         ->assertSee('Hours and rates have been compiled and this work is ready for invoicing.')
         ->assertSee('Completed')
@@ -360,9 +379,68 @@ test('unauthorized users do not receive executable ready for deployment ctas', f
     ]);
 
     Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
-        ->assertSee('Ready the Job for deployment')
-        ->assertSee('An authorized user can now mark this Job ready for deployment.')
+        ->assertSee('Awaiting Operations')
+        ->assertSee('An Operations Manager can now mark this Job Ready for Deployment.')
         ->assertDontSee('Mark Ready for Deployment');
+});
+
+test('data entry clerk sees edit job for editable draft and the workspace links to the same job record', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk-workspace@example.test'], [RoleName::DataEntryClerk->value]);
+    $clerk->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($clerk);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+        'job_type' => JobType::HeavyMachinery,
+        'equipment_requirement' => null,
+        'assigned_operator_id' => null,
+        'planned_start_date' => null,
+    ]);
+
+    $editUrl = JobResource::getUrl('edit', ['record' => $job]);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertSee('Complete Job Planning')
+        ->assertSee('Edit Job')
+        ->assertSee('Review or update the Job information before handing it over to Operations.')
+        ->assertSee($editUrl);
+});
+
+test('data entry clerk sees awaiting operations when draft planning is complete and cannot cancel jobs from the workspace', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk-awaiting-ops@example.test'], [RoleName::DataEntryClerk->value]);
+    $operator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
+    $clerk->companies()->sync([$company->getKey()]);
+    $operator->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($clerk);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+        'job_type' => JobType::HeavyMachinery,
+        'equipment_requirement' => 'Reach stacker',
+        'assigned_operator_id' => $operator->getKey(),
+        'planned_start_date' => '2026-08-16',
+        'shift' => JobShift::Day,
+    ]);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertSee('Awaiting Operations')
+        ->assertSee('An Operations Manager can now mark this Job Ready for Deployment.')
+        ->assertDontSee('Mark Ready for Deployment')
+        ->assertDontSee('Cancel Job');
 });
 
 test('workspace crew metric shows external operator name instead of the creator', function () {
@@ -393,8 +471,10 @@ test('draft job cannot be started and jobs with non-billing-ready client job car
 
     $tenant = $this->tenant();
     $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
-    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
-    $actor->companies()->sync([$company->getKey()]);
+    $approver = $this->tenantUser($tenant, ['email' => 'workspace-approver@example.test'], [RoleName::CompanyAdministrator->value]);
+    $submitter = $this->tenantUser($tenant, ['email' => 'workspace-submitter@example.test'], [RoleName::OperationsManager->value]);
+    $approver->companies()->sync([$company->getKey()]);
+    $submitter->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
 
     $draftJob = Job::factory()->create([
@@ -403,7 +483,7 @@ test('draft job cannot be started and jobs with non-billing-ready client job car
         'status' => JobStatus::Draft,
     ]);
 
-    expect(fn () => app(StartJobAction::class)->execute($draftJob, $actor))->toThrow(BusinessException::class);
+    expect(fn () => app(StartJobAction::class)->execute($draftJob, $approver))->toThrow(BusinessException::class);
 
     $job = Job::factory()->create([
         'tenant_id' => $tenant->getKey(),
@@ -419,7 +499,7 @@ test('draft job cannot be started and jobs with non-billing-ready client job car
         'approval_status' => JobCardApprovalStatus::Recorded,
     ]);
 
-    expect(fn () => app(CompleteJobAction::class)->execute($job, $actor, ['actual_end_date' => now()]))
+    expect(fn () => app(CompleteJobAction::class)->execute($job, $approver, ['actual_end_date' => now()]))
         ->toThrow(BusinessException::class);
 });
 
@@ -449,6 +529,41 @@ test('in progress workspace shows continue client job card and billing-ready com
     Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
         ->assertSee('Continue Client Job Card')
         ->assertSee('No billing-ready Client Job Cards exist yet.');
+});
+
+test('job workspace aggregates recorded hours from client job cards', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->actingAsCompanyAdministrator($tenant);
+    $actor->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::InProgress,
+        'job_type' => JobType::HeavyMachinery,
+    ]);
+
+    JobCard::factory()->create([
+        'job_id' => $job->getKey(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'approval_status' => JobCardApprovalStatus::Recorded,
+        'card_number' => 'JC-00001',
+        'from_time' => '08:00:00',
+        'to_time' => '16:00:00',
+        'total_hours' => 8,
+        'operated_by' => 'Kwame Mensah',
+    ]);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertSee('Recorded hours')
+        ->assertSee('8.00')
+        ->assertSee('JC-00001')
+        ->assertSee('8.00 total hours');
 });
 
 test('heavy machinery workspace shows billing tab and calculated billing basis', function () {
@@ -497,8 +612,10 @@ test('client job card verification workflow supports submit return verify and bi
 
     $tenant = $this->tenant();
     $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
-    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
-    $actor->companies()->sync([$company->getKey()]);
+    $approver = $this->tenantUser($tenant, ['email' => 'workspace-approver@example.test'], [RoleName::CompanyAdministrator->value]);
+    $submitter = $this->tenantUser($tenant, ['email' => 'workspace-submitter@example.test'], [RoleName::OperationsManager->value]);
+    $approver->companies()->sync([$company->getKey()]);
+    $submitter->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
 
     $job = Job::factory()->create([
@@ -512,43 +629,49 @@ test('client job card verification workflow supports submit return verify and bi
         'tenant_id' => $tenant->getKey(),
         'company_id' => $company->getKey(),
         'approval_status' => JobCardApprovalStatus::Recorded,
+        'shift' => JobShift::Day,
+        'equipment_reference' => 'Forklift FL-18',
+        'operated_by' => 'Kwame Mensah',
         'client_endorsed' => true,
         'client_stamped' => true,
         'machine_number' => 'FLT-18-01',
         'card_date' => now()->toDateString(),
-        'total_hours' => 8,
         'hourly_rate' => 150,
     ]);
-    $jobCard->addMediaFromString('signed')->usingFileName('signed-card.txt')->toMediaCollection('job-card-documents');
+    recordWorkspaceJobCardEntry($jobCard, $submitter);
+    attachWorkspaceJobCardEvidence($jobCard, 'signed-card.txt');
 
-    $submitted = app(SubmitJobCardAction::class)->execute($jobCard, $actor);
+    $submitted = app(SubmitJobCardAction::class)->execute($jobCard, $submitter);
     expect($submitted->approval_status)->toBe(JobCardApprovalStatus::PendingVerification);
 
-    $returned = app(ReturnJobCardAction::class)->execute($submitted, $actor, 'Hours need correction.');
+    $returned = app(ReturnJobCardAction::class)->execute($submitted, $approver, 'Hours need correction.');
     expect($returned->approval_status)->toBe(JobCardApprovalStatus::Returned)
         ->and($returned->return_reason)->toBe('Hours need correction.');
 
-    $resubmitted = app(SubmitJobCardAction::class)->execute($returned, $actor);
-    $approved = app(ApproveJobCardAction::class)->execute($resubmitted, $actor, 'Looks good.');
+    $resubmitted = app(SubmitJobCardAction::class)->execute($returned, $submitter);
+    $approved = app(ApproveJobCardAction::class)->execute($resubmitted, $approver, 'Looks good.');
 
     expect($approved->approval_status)->toBe(JobCardApprovalStatus::Verified)
-        ->and($approved->verified_by)->toBe($actor->getKey())
+        ->and($approved->verified_by)->toBe($approver->getKey())
         ->and($approved->verified_at)->not->toBeNull();
 
-    $billingReady = app(MarkJobCardBillingReadyAction::class)->execute($approved, $actor);
+    $billingReady = app(MarkJobCardBillingReadyAction::class)->execute($approved, $approver);
 
     expect($billingReady->approval_status)->toBe(JobCardApprovalStatus::BillingReady)
-        ->and($billingReady->billing_ready_by)->toBe($actor->getKey())
+        ->and($billingReady->billing_ready_by)->toBe($approver->getKey())
         ->and($billingReady->billing_ready_at)->not->toBeNull();
 });
 
-test('approver sees review pending card as the primary action', function () {
+test('finance manager sees accounts review pending card as the primary action when another user submitted it', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
     $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
-    $actor = $this->actingAsCompanyAdministrator($tenant);
+    $actor = $this->tenantUser($tenant, ['email' => 'finance-verifier@example.test'], [RoleName::FinanceManager->value]);
+    $submitter = $this->tenantUser($tenant, ['email' => 'clerk-workspace-submit@example.test'], [RoleName::DataEntryClerk->value]);
     $actor->companies()->sync([$company->getKey()]);
+    $submitter->companies()->sync([$company->getKey()]);
+    $this->actingAs($actor);
     session(['active_company_id' => $company->getKey()]);
 
     $job = Job::factory()->create([
@@ -562,11 +685,44 @@ test('approver sees review pending card as the primary action', function () {
         'tenant_id' => $tenant->getKey(),
         'company_id' => $company->getKey(),
         'approval_status' => JobCardApprovalStatus::PendingVerification,
+        'submitted_by' => $submitter->getKey(),
+        'submitted_at' => now(),
     ]);
 
     Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
-        ->assertSee('Review / Verify Job Card')
-        ->assertSee('awaiting verification');
+        ->assertSee('Review for Billing')
+        ->assertSee('Accounts review');
+});
+
+test('operations manager without accounts review permission sees awaiting accounts review for a legacy pending job card', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->tenantUser($tenant, ['email' => 'ops-workspace-legacy@example.test'], [RoleName::OperationsManager->value]);
+    $actor->companies()->sync([$company->getKey()]);
+    $this->actingAs($actor);
+    session(['active_company_id' => $company->getKey()]);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::InProgress,
+    ]);
+
+    JobCard::factory()->create([
+        'job_id' => $job->getKey(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'approval_status' => JobCardApprovalStatus::PendingVerification,
+        'submitted_by' => null,
+        'submitted_at' => null,
+    ]);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertDontSee('Review for Billing')
+        ->assertSee('Awaiting Accounts Review')
+        ->assertSee('waiting for Finance or an authorized administrator to review it for billing');
 });
 
 test('returned card becomes the primary correction action for operational users', function () {

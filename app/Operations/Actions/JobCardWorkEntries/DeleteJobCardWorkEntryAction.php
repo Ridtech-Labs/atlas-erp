@@ -11,55 +11,39 @@ use App\Core\Shared\Exceptions\BusinessException;
 use App\Models\User;
 use App\Operations\Models\JobCardWorkEntry;
 use App\Operations\Support\JobCardAggregateService;
-use App\Operations\Support\JobCardWorkEntryCalculator;
 use Illuminate\Support\Facades\DB;
 
-class UpdateJobCardWorkEntryAction
+class DeleteJobCardWorkEntryAction
 {
     public function __construct(
         private readonly AdministrationAccessService $access,
         private readonly AdministrationActivityLogger $logger,
         private readonly JobCardAggregateService $aggregates,
-        private readonly JobCardWorkEntryCalculator $calculator,
     ) {}
 
-    /**
-     * @param  array<string, mixed>  $data
-     */
-    public function execute(JobCardWorkEntry $entry, array $data, User $actor): JobCardWorkEntry
+    public function execute(JobCardWorkEntry $entry, User $actor): void
     {
         $jobCard = $entry->jobCard()->firstOrFail();
 
         if (! $actor->hasPermissionTo(PermissionName::JobsUpdate->value)
             || ! $this->access->canAccessActiveOperationalCompany($actor, $jobCard->company_id, $jobCard->tenant_id)) {
-            throw new BusinessException('You are not allowed to update this job card work entry.', 403);
+            throw new BusinessException('You are not allowed to delete this job card work entry.', 403);
         }
 
         if ($jobCard->workEntriesAreLocked()) {
             throw new BusinessException('Job card work entries are read-only once the Job Card has been submitted to Accounts.', 422);
         }
 
-        return DB::transaction(function () use ($entry, $jobCard, $data, $actor): JobCardWorkEntry {
-            $hours = $this->calculator->calculate($jobCard, $data);
-
-            $entry->fill([
-                'vessel' => $data['vessel'] ?? null,
-                'work_area' => $data['work_area'] ?? null,
-                'officer_name' => $data['officer_name'] ?? null,
-                'notes' => $data['notes'] ?? null,
-                ...$hours,
-            ]);
-            $entry->save();
-
-            $this->aggregates->syncTotals($jobCard);
-
-            $this->logger->log('job_card_work_entry.updated', 'Job card work entry updated', $actor, $entry, [
+        DB::transaction(function () use ($entry, $jobCard, $actor): void {
+            $this->logger->log('job_card_work_entry.deleted', 'Job card work entry deleted', $actor, $entry, [
                 'tenant_id' => $jobCard->tenant_id,
                 'company_id' => $jobCard->company_id,
                 'job_card_id' => $jobCard->getKey(),
             ]);
 
-            return $entry->refresh();
+            $entry->delete();
+
+            $this->aggregates->syncTotals($jobCard);
         });
     }
 }

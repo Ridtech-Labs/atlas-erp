@@ -417,9 +417,17 @@
     .fi-input-wrp,
     .fi-select-input,
     .fi-textarea {
-        border-color: var(--atlas-color-border-default);
-        background: var(--atlas-color-background-surface);
-        box-shadow: none;
+        border: 1px solid var(--atlas-color-border-interactive);
+        background: var(--atlas-color-field-background);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        transition: border-color var(--atlas-transition), background-color var(--atlas-transition), box-shadow var(--atlas-transition);
+    }
+
+    .fi-input-wrp:hover,
+    .fi-select-input:hover,
+    .fi-textarea:hover {
+        border-color: var(--atlas-color-border-interactive-hover);
+        background: var(--atlas-color-field-background-hover);
     }
 
     .fi-input-wrp:focus-within,
@@ -429,14 +437,91 @@
         box-shadow: var(--atlas-focus-ring);
     }
 
-    .fi-fo-field-label {
+    .fi-input,
+    .fi-textarea,
+    .fi-select-input {
+        color: var(--atlas-color-text-primary);
+    }
+
+    .fi-input::placeholder,
+    .fi-textarea::placeholder,
+    .fi-select-input::placeholder {
+        color: var(--atlas-color-text-muted);
+        opacity: 0.92;
+    }
+
+    .fi-input-wrp svg,
+    .fi-select-input svg,
+    .fi-textarea svg {
+        color: var(--atlas-color-field-affordance);
+    }
+
+    .fi-input-wrp:has(input[readonly]),
+    .fi-input-wrp:has(textarea[readonly]),
+    .fi-input-wrp:has(input[aria-readonly="true"]),
+    .fi-textarea[readonly],
+    .fi-textarea[aria-readonly="true"] {
+        border-color: var(--atlas-color-border-readonly);
+        background: var(--atlas-color-field-background-readonly);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .fi-input[readonly],
+    .fi-input[aria-readonly="true"],
+    .fi-textarea[readonly],
+    .fi-textarea[aria-readonly="true"] {
         color: var(--atlas-color-text-secondary);
-        font-size: var(--atlas-text-sm);
-        font-weight: var(--atlas-weight-semibold);
+        cursor: default;
+    }
+
+    .fi-input-wrp:has(input[disabled]),
+    .fi-input-wrp:has(textarea[disabled]),
+    .fi-input-wrp:has(select[disabled]),
+    .fi-select-input:disabled,
+    .fi-textarea:disabled {
+        border-color: var(--atlas-color-border-disabled);
+        background: var(--atlas-color-field-background-disabled);
+        box-shadow: none;
+        opacity: 1;
+    }
+
+    .fi-input:disabled,
+    .fi-select-input:disabled,
+    .fi-textarea:disabled,
+    .fi-input-wrp:has(input[disabled]) .fi-input,
+    .fi-input-wrp:has(textarea[disabled]) .fi-textarea,
+    .fi-input-wrp:has(select[disabled]) select {
+        color: var(--atlas-color-text-secondary);
+        -webkit-text-fill-color: var(--atlas-color-text-secondary);
+        cursor: not-allowed;
+        opacity: 1;
+    }
+
+    .fi-fo-placeholder,
+    .fi-fo-text,
+    .fi-in-entry {
+        color: var(--atlas-color-text-primary);
+    }
+
+    .fi-fo-field-wrp-helper-text {
+        color: var(--atlas-color-text-muted);
     }
 
     .fi-fo-field-wrp-error-message {
         color: var(--atlas-color-status-danger);
+    }
+
+    .fi-input-wrp[data-has-error],
+    .fi-select-input[data-has-error],
+    .fi-textarea[data-has-error] {
+        border-color: var(--atlas-color-status-danger);
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+    }
+
+    .fi-fo-field-label {
+        color: var(--atlas-color-text-secondary);
+        font-size: var(--atlas-text-sm);
+        font-weight: var(--atlas-weight-semibold);
     }
 
     .fi-tabs {

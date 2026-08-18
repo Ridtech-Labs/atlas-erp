@@ -38,6 +38,8 @@ class JobCardFactory extends Factory
             'approval_status' => JobCardApprovalStatus::Draft,
             'approved_by' => null,
             'approved_at' => null,
+            'submitted_by' => null,
+            'submitted_at' => null,
             'returned_by' => null,
             'returned_at' => null,
             'return_reason' => null,

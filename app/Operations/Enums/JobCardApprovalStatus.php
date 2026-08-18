@@ -18,9 +18,10 @@ enum JobCardApprovalStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::PendingVerification => 'Pending Verification',
+            self::PendingVerification => 'Awaiting Accounts Review',
+            self::Verified => 'Accounts Reviewed',
             self::BillingReady => 'Billing Ready',
-            self::Returned => 'Returned',
+            self::Returned => 'Returned to Operations',
             self::Submitted => 'Submitted',
             self::Approved => 'Approved',
             default => ucfirst(str_replace('_', ' ', $this->value)),

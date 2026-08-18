@@ -131,6 +131,34 @@ test('role assignment is applied during user creation', function () {
         ->and($user->companies()->pluck('companies.id')->all())->toContain($company->getKey());
 });
 
+test('data entry clerk role exists and can be assigned by a company administrator', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->actingAsCompanyAdministrator($tenant);
+    $actor->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $user = app(CreateUserAction::class)->execute([
+        'tenant_id' => $tenant->getKey(),
+        'first_name' => 'Clerk',
+        'last_name' => 'Assigned',
+        'email' => 'clerk-assigned@example.test',
+        'password' => 'password',
+    ], [RoleName::DataEntryClerk->value], $actor);
+
+    $response = $this->get(UserResource::getUrl('create'));
+
+    expect($user->hasRole(RoleName::DataEntryClerk->value))->toBeTrue()
+        ->and($actor->can('roles.assign'))->toBeTrue();
+
+    $response
+        ->assertOk()
+        ->assertSee(RoleName::DataEntryClerk->value)
+        ->assertDontSee(RoleName::SuperAdministrator->value);
+});
+
 test('administrator created operations manager can log in immediately with scoped permissions', function () {
     $this->seedAccessControl();
 

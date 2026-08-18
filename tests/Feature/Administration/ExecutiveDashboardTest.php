@@ -6,9 +6,12 @@ use App\CRM\Enums\ClientStatus;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientSite;
 use App\Models\User;
+use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobPriority;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use App\Operations\Models\Job;
+use App\Operations\Models\JobCard;
 use Carbon\CarbonImmutable;
 use Spatie\Activitylog\Models\Activity;
 
@@ -272,6 +275,185 @@ test('dashboard shows intentional empty states when a company has no operational
         ->assertSee('No system alerts');
 });
 
+test('data entry clerk receives a clerk focused dashboard without executive widgets or financial kpis', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay']);
+    $company = $tenant->companies()->first() ?? $this->company($tenant, ['name' => 'Kadmay']);
+    $clerk = $this->actingAsRole(RoleName::DataEntryClerk->value, $tenant, ['first_name' => 'Shani']);
+    $clerk->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'legal_name' => 'Tema Oil Refinery',
+        'status' => ClientStatus::Active,
+    ]);
+    $site = ClientSite::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'name' => 'Tema Jetty',
+    ]);
+
+    Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Reach Stacker operations',
+        'job_number' => 'JOB-00005',
+        'status' => JobStatus::Draft,
+        'job_type' => JobType::HeavyMachinery,
+        'created_by' => $clerk->getKey(),
+        'updated_by' => $clerk->getKey(),
+    ]);
+
+    $entryJob = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Crane support shift',
+        'job_number' => 'JOB-ENTRY-001',
+        'status' => JobStatus::InProgress,
+        'job_type' => JobType::HeavyMachinery,
+    ]);
+
+    $returnedCard = JobCard::factory()->create([
+        'job_id' => $entryJob->getKey(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'approval_status' => JobCardApprovalStatus::Returned,
+        'card_number' => 'JC-RETURN-001',
+    ]);
+
+    $data = app(ExecutiveDashboardService::class)->forUser($clerk);
+    $kpiLabels = collect($data['kpis'])->pluck('label')->all();
+
+    expect($data['dashboard_profile'])->toBe('data_entry')
+        ->and($data['show_export'])->toBeFalse()
+        ->and($data['approval_queue'])->toHaveCount(0)
+        ->and($kpiLabels)->toContain('Draft Jobs', 'Needs Entry', 'Needs Correction')
+        ->and($kpiLabels)->not->toContain('Revenue MTD', 'Pending Approvals', 'Completed MTD')
+        ->and($data['attention_items'])->toBeArray()
+        ->and(collect($data['attention_items'])->pluck('action_label')->all())->toContain('Edit Job', 'Correct Job Card');
+
+    $this->get('/admin')
+        ->assertOk()
+        ->assertSee('Good morning, Shani')
+        ->assertSee('Draft Jobs')
+        ->assertSee('Reach Stacker operations')
+        ->assertSee('Correct Job Card')
+        ->assertSee('New Job')
+        ->assertDontSee('Revenue MTD')
+        ->assertDontSee('Export Report')
+        ->assertDontSee('Approval Queue')
+        ->assertDontSee('Pending Approvals');
+});
+
+test('operations manager receives operational dashboard content without executive export or approval queue', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay']);
+    $company = $tenant->companies()->first() ?? $this->company($tenant, ['name' => 'Kadmay']);
+    $operationsManager = $this->actingAsRole(RoleName::OperationsManager->value, $tenant, ['first_name' => 'Kojo']);
+    $operationsManager->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'legal_name' => 'Dangote Logistics',
+        'status' => ClientStatus::Active,
+    ]);
+    $site = ClientSite::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'name' => 'Port Site B',
+    ]);
+
+    Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Bulk discharge support',
+        'job_number' => 'JOB-OPS-001',
+        'status' => JobStatus::Scheduled,
+        'job_type' => JobType::HeavyMachinery,
+        'planned_start_date' => CarbonImmutable::today()->toDateString(),
+    ]);
+
+    $data = app(ExecutiveDashboardService::class)->forUser($operationsManager);
+    $kpiLabels = collect($data['kpis'])->pluck('label')->all();
+
+    expect($data['dashboard_profile'])->toBe('operations')
+        ->and($data['show_export'])->toBeFalse()
+        ->and($data['approval_queue'])->toHaveCount(0)
+        ->and($kpiLabels)->toContain('Ready for Deployment', 'Active Jobs', 'Jobs Today')
+        ->and($kpiLabels)->not->toContain('Revenue MTD', 'Pending Approvals');
+
+    $this->get('/admin')
+        ->assertOk()
+        ->assertSee('Ready for Deployment')
+        ->assertSee('Bulk discharge support')
+        ->assertSee('Attention Required')
+        ->assertDontSee('Export Report')
+        ->assertDontSee('Approval Queue')
+        ->assertDontSee('Revenue MTD');
+});
+
+test('company administrator retains broader dashboard visibility including approval queue and export control', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay']);
+    $company = $tenant->companies()->first() ?? $this->company($tenant, ['name' => 'Kadmay']);
+    $administrator = $this->actingAsCompanyAdministrator($tenant, ['first_name' => 'Ridwan']);
+    $administrator->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'legal_name' => 'Kadmay Client',
+        'status' => ClientStatus::Active,
+    ]);
+    $site = ClientSite::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+    ]);
+
+    Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Pending approval item',
+        'job_number' => 'JOB-PENDING-ADMIN',
+        'status' => JobStatus::PendingApproval,
+        'job_type' => JobType::HeavyMachinery,
+    ]);
+
+    $data = app(ExecutiveDashboardService::class)->forUser($administrator);
+    $kpiLabels = collect($data['kpis'])->pluck('label')->all();
+
+    expect($data['dashboard_profile'])->toBe('company_admin')
+        ->and($data['show_export'])->toBeTrue()
+        ->and($data['approval_queue'])->toHaveCount(1)
+        ->and($kpiLabels)->toContain('Revenue MTD', 'Pending Approvals');
+
+    $this->get('/admin')
+        ->assertOk()
+        ->assertSee('Export Report')
+        ->assertSee('Approval Queue')
+        ->assertSee('Revenue MTD')
+        ->assertSee('Pending approval item');
+});
+
 test('dashboard actions are permission aware for restricted roles', function () {
     $this->seedAccessControl();
 
@@ -282,7 +464,7 @@ test('dashboard actions are permission aware for restricted roles', function () 
         ->assertOk()
         ->assertSee('No dashboard actions available')
         ->assertSee('Job visibility is restricted')
-        ->assertSee('Approval visibility is restricted')
         ->assertDontSee('New Client')
-        ->assertDontSee('New Job');
+        ->assertDontSee('New Job')
+        ->assertDontSee('Approval Queue');
 });

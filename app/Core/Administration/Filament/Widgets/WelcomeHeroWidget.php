@@ -35,6 +35,7 @@ class WelcomeHeroWidget extends Widget
                 ],
                 'summary' => 'Your workspace is loading.',
                 'primaryAction' => null,
+                'showExport' => false,
             ];
         }
 
@@ -48,6 +49,7 @@ class WelcomeHeroWidget extends Widget
             'operationalStatus' => $data['operational_status'],
             'summary' => $data['summary'],
             'primaryAction' => $data['primary_action'],
+            'showExport' => $data['show_export'] ?? false,
         ];
     }
 }

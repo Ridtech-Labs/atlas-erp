@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        @if (! $canViewJobs)
+        @if (! $canViewApprovalQueue)
             <div class="p-6">
                 <x-atlas.empty-state
                     title="Approval visibility is restricted"

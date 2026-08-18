@@ -39,15 +39,15 @@ class JobCardPolicy
     {
         $canAccess = $this->access->canAccessActiveOperationalCompany($user, $jobCard->company_id, $jobCard->tenant_id);
 
-        if (! $this->hasPermission($user, PermissionName::JobsUpdate->value) || ! $canAccess) {
+        if (! $canAccess) {
             return false;
         }
 
-        if ((string) $jobCard->getRawOriginal('approval_status') === JobCardApprovalStatus::Approved->value) {
-            return $this->hasPermission($user, PermissionName::JobsApprove->value);
+        if ($jobCard->evidenceIsLockedForEditing()) {
+            return false;
         }
 
-        return true;
+        return $this->hasPermission($user, PermissionName::JobsUpdate->value);
     }
 
     public function delete(User $user, JobCard $jobCard): bool
@@ -59,7 +59,11 @@ class JobCardPolicy
 
     public function approve(User $user, JobCard $jobCard): bool
     {
-        return $this->hasPermission($user, PermissionName::JobsApprove->value)
+        if (! $this->hasPermission($user, PermissionName::JobCardsVerify->value)) {
+            return false;
+        }
+
+        return ! $jobCard->wasSubmittedBy($user)
             && $this->access->canAccessActiveOperationalCompany($user, $jobCard->company_id, $jobCard->tenant_id);
     }
 

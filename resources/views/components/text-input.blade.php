@@ -1,3 +1,3 @@
 @props(['disabled' => false])
 
-<input @disabled($disabled) {{ $attributes->merge(['class' => 'rounded-[var(--atlas-radius-sm)] border-[var(--atlas-color-border-default)] bg-white text-sm text-[var(--atlas-color-text-primary)] shadow-sm focus:border-[var(--atlas-color-action-primary)] focus:ring-[var(--atlas-color-action-primary)]']) }}>
+<input @disabled($disabled) {{ $attributes->merge(['class' => 'rounded-[var(--atlas-radius-sm)] border-[var(--atlas-color-border-interactive)] bg-[var(--atlas-color-field-background)] text-sm text-[var(--atlas-color-text-primary)] shadow-sm transition focus:border-[var(--atlas-color-action-primary)] focus:bg-[var(--atlas-color-field-background-hover)] focus:ring-[var(--atlas-color-action-primary)] disabled:border-[var(--atlas-color-border-disabled)] disabled:bg-[var(--atlas-color-field-background-disabled)] disabled:text-[var(--atlas-color-text-secondary)] disabled:opacity-100']) }}>

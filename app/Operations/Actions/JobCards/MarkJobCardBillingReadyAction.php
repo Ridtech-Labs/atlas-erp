@@ -22,7 +22,7 @@ class MarkJobCardBillingReadyAction
 
     public function execute(JobCard $jobCard, User $actor): JobCard
     {
-        if (! $actor->hasPermissionTo(PermissionName::JobsApprove->value)
+        if (! $actor->hasPermissionTo(PermissionName::JobCardsBill->value)
             || ! $this->access->canAccessActiveOperationalCompany($actor, $jobCard->company_id, $jobCard->tenant_id)) {
             throw new BusinessException('You are not allowed to mark this client Job Card as billing ready.', 403);
         }

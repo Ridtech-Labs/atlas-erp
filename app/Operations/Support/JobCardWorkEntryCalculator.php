@@ -30,12 +30,20 @@ class JobCardWorkEntryCalculator
         $start = CarbonImmutable::parse("{$entryDate} {$fromTime}");
         $end = CarbonImmutable::parse("{$entryDate} {$toTime}");
 
-        if ($end->lessThanOrEqualTo($start)) {
+        if ($end->equalTo($start)) {
+            throw new BusinessException('A work entry must have a valid duration.', 422);
+        }
+
+        if ($end->lessThan($start)) {
             $end = $end->addDay();
         }
 
         $durationHours = round(abs($start->diffInMinutes($end)) / 60, 2);
         $overtimeHours = round((float) ($data['overtime_hours'] ?? 0), 2);
+
+        if ($overtimeHours < 0) {
+            throw new BusinessException('Overtime hours cannot be negative.', 422);
+        }
 
         if ($overtimeHours > $durationHours) {
             throw new BusinessException('Overtime hours cannot exceed the total shift duration.', 422);
@@ -44,6 +52,10 @@ class JobCardWorkEntryCalculator
         $normalHours = array_key_exists('normal_hours', $data)
             ? round((float) $data['normal_hours'], 2)
             : round($durationHours - $overtimeHours, 2);
+
+        if ($normalHours < 0) {
+            throw new BusinessException('Normal hours cannot be negative.', 422);
+        }
 
         $totalHours = round($normalHours + $overtimeHours, 2);
 

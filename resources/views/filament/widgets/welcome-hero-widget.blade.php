@@ -22,15 +22,17 @@
             </div>
 
             <div class="flex flex-wrap items-center gap-3 lg:justify-self-end">
-                <x-atlas.button
-                    tag="button"
-                    variant="secondary"
-                    size="lg"
-                    disabled
-                    class="min-w-[10.5rem]"
-                >
-                    Export Report
-                </x-atlas.button>
+                @if ($showExport)
+                    <x-atlas.button
+                        tag="button"
+                        variant="secondary"
+                        size="lg"
+                        disabled
+                        class="min-w-[10.5rem]"
+                    >
+                        Export Report
+                    </x-atlas.button>
+                @endif
 
                 @if ($primaryAction)
                     <x-atlas.button

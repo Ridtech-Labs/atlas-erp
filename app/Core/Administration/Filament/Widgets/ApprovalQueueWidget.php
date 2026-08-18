@@ -28,7 +28,7 @@ class ApprovalQueueWidget extends Widget
         if (! $user instanceof User) {
             return [
                 'items' => collect(),
-                'canViewJobs' => false,
+                'canViewApprovalQueue' => false,
             ];
         }
 
@@ -36,7 +36,7 @@ class ApprovalQueueWidget extends Widget
 
         return [
             'items' => $data['approval_queue'],
-            'canViewJobs' => $data['can']['view_jobs'],
+            'canViewApprovalQueue' => $data['can']['view_approval_queue'],
         ];
     }
 }

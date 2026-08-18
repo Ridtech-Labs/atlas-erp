@@ -24,10 +24,20 @@
     --atlas-color-border-muted: #f1f3fa;
     --atlas-color-border-strong: #d7dcec;
     --atlas-color-border-sidebar: #1a1d2e;
+    --atlas-color-border-interactive: #cfd6e8;
+    --atlas-color-border-interactive-hover: #b8c2dc;
+    --atlas-color-border-readonly: #d8dfef;
+    --atlas-color-border-disabled: #dbe1ee;
 
     --atlas-color-action-primary: #2b4eff;
     --atlas-color-action-primary-hover: #1e3fe8;
     --atlas-color-action-primary-soft: #e8edff;
+
+    --atlas-color-field-background: #fcfdff;
+    --atlas-color-field-background-hover: #ffffff;
+    --atlas-color-field-background-readonly: #f4f6fb;
+    --atlas-color-field-background-disabled: #eef2f8;
+    --atlas-color-field-affordance: #7c86a4;
 
     --atlas-color-status-success: #16a34a;
     --atlas-color-status-success-soft: #dcfce7;

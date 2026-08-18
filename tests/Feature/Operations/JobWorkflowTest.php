@@ -10,6 +10,7 @@ use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\CreateJobCardAction;
 use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
+use App\Operations\Actions\JobCardWorkEntries\CreateJobCardWorkEntryAction;
 use App\Operations\Actions\Jobs\CancelJobAction;
 use App\Operations\Actions\Jobs\CompleteJobAction;
 use App\Operations\Actions\Jobs\CreateJobAction;
@@ -75,6 +76,7 @@ test('heavy machinery job workflow transitions through client job card verificat
 
     $tenant = $this->tenant();
     $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $submitter = $this->tenantUser($tenant, ['email' => 'ops-job-workflow@example.test'], [RoleName::OperationsManager->value]);
     $operator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
     $client = Client::factory()->create(['tenant_id' => $tenant->getKey()]);
     $site = ClientSite::factory()->create([
@@ -82,6 +84,8 @@ test('heavy machinery job workflow transitions through client job card verificat
         'client_id' => $client->getKey(),
         'status' => ClientSiteStatus::Active,
     ]);
+    $actor->companies()->sync([$client->company_id]);
+    $submitter->companies()->sync([$client->company_id]);
     $operator->companies()->sync([$client->company_id]);
 
     $job = app(CreateJobAction::class)->execute([
@@ -107,13 +111,22 @@ test('heavy machinery job workflow transitions through client job card verificat
         'equipment_reference' => 'Forklift FL-18',
         'machine_number' => 'FLT-18-01',
         'operated_by' => 'Kwame Mensah',
-        'total_hours' => 8,
         'client_endorsed' => true,
         'client_stamped' => true,
-        'hourly_rate' => 150,
-        'rate_currency' => 'GHS',
     ], $actor, ['job-card-uploads/workflow-signed.txt']);
-    app(SubmitJobCardAction::class)->execute($jobCard, $actor);
+    app(CreateJobCardWorkEntryAction::class)->execute($jobCard, [
+        'vessel' => 'MV Atlantic Trader',
+        'work_area' => 'Jubilee Terminal',
+        'from_time' => '08:00',
+        'to_time' => '16:00',
+        'normal_hours' => 8,
+        'overtime_hours' => 0,
+    ], $actor);
+    $jobCard->forceFill([
+        'rate_currency' => 'GHS',
+        'hourly_rate' => 150,
+    ])->save();
+    app(SubmitJobCardAction::class)->execute($jobCard, $submitter);
     app(ApproveJobCardAction::class)->execute($jobCard->fresh(), $actor);
     app(MarkJobCardBillingReadyAction::class)->execute($jobCard->fresh(), $actor);
     $job = app(CompleteJobAction::class)->execute($job, $actor, [
@@ -249,6 +262,134 @@ test('safe draft deletion only works when no operational records exist', functio
 
     expect(fn () => app(DeleteJobAction::class)->execute($protectedJob, $actor))
         ->toThrow(BusinessException::class, 'Jobs with client Job Cards cannot be deleted.');
+});
+
+test('data entry clerk can create edit and safely delete draft jobs within the active company', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk@example.test'], [RoleName::DataEntryClerk->value]);
+    $clerk->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+    ]);
+    $site = ClientSite::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'status' => ClientSiteStatus::Active,
+    ]);
+
+    $job = app(CreateJobAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Draft planning job',
+        'priority' => 'normal',
+        'job_type' => JobType::HeavyMachinery->value,
+    ], $clerk);
+
+    $originalId = $job->getKey();
+    $originalUuid = $job->uuid;
+    $originalJobNumber = $job->job_number;
+
+    $updated = app(UpdateJobAction::class)->execute($job, [
+        'client_id' => $client->getKey(),
+        'client_site_id' => $site->getKey(),
+        'title' => 'Draft planning job updated',
+        'planned_start_date' => '2026-08-16',
+    ], $clerk);
+
+    app(DeleteJobAction::class)->execute($updated, $clerk);
+
+    expect($job->tenant_id)->toBe($tenant->getKey())
+        ->and($job->company_id)->toBe($company->getKey())
+        ->and($updated->getKey())->toBe($originalId)
+        ->and($updated->uuid)->toBe($originalUuid)
+        ->and($updated->job_number)->toBe($originalJobNumber)
+        ->and($updated->title)->toBe('Draft planning job updated')
+        ->and(Job::withTrashed()->find($job->getKey())?->trashed())->toBeTrue();
+});
+
+test('data entry clerk cannot mark ready for deployment or start jobs', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk-no-workflow@example.test'], [RoleName::DataEntryClerk->value]);
+    $clerk->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+        'planned_start_date' => '2026-08-16',
+        'equipment_requirement' => 'Forklift FL-18',
+        'assigned_operator_name' => 'Kwame Mensah',
+    ]);
+
+    expect(fn () => app(ScheduleJobAction::class)->execute($job, $clerk))
+        ->toThrow(BusinessException::class, 'You are not allowed to perform this workflow action.');
+
+    $scheduled = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Scheduled,
+    ]);
+
+    expect(fn () => app(StartJobAction::class)->execute($scheduled, $clerk))
+        ->toThrow(BusinessException::class, 'You are not allowed to perform this workflow action.');
+});
+
+test('data entry clerk cannot cancel legitimate jobs directly', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk-no-cancel@example.test'], [RoleName::DataEntryClerk->value]);
+    $clerk->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+    ]);
+
+    expect(fn () => app(CancelJobAction::class)->execute($job, $clerk, [
+        'cancellation_reason' => 'Attempted by data entry clerk',
+    ]))->toThrow(BusinessException::class, 'You are not allowed to perform this workflow action.');
+});
+
+test('data entry clerk cannot access another company or tenant jobs', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $otherTenant = $this->tenant(['name' => 'Other Holdings']);
+    $companyA = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $companyB = $this->company($tenant, ['name' => 'Kadmay Marine']);
+    $otherTenantCompany = $this->company($otherTenant, ['name' => 'Other Company']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk-scope@example.test'], [RoleName::DataEntryClerk->value]);
+    $clerk->companies()->sync([$companyA->getKey()]);
+    session(['active_company_id' => $companyA->getKey()]);
+
+    $crossCompanyJob = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $companyB->getKey(),
+        'status' => JobStatus::Draft,
+    ]);
+    $crossTenantJob = Job::factory()->create([
+        'tenant_id' => $otherTenant->getKey(),
+        'company_id' => $otherTenantCompany->getKey(),
+        'status' => JobStatus::Draft,
+    ]);
+
+    expect(Gate::forUser($clerk)->allows('view', $crossCompanyJob))->toBeFalse()
+        ->and(Gate::forUser($clerk)->allows('view', $crossTenantJob))->toBeFalse();
 });
 
 test('job cancellation requires a reason and tenant isolation is enforced', function () {

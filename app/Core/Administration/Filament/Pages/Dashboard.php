@@ -7,12 +7,14 @@ namespace App\Core\Administration\Filament\Pages;
 use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Core\Administration\Filament\Widgets\ApprovalQueueWidget;
+use App\Core\Administration\Filament\Widgets\AttentionRequiredWidget;
 use App\Core\Administration\Filament\Widgets\ExecutiveKpiOverviewWidget;
 use App\Core\Administration\Filament\Widgets\QuickNavigationWidget;
 use App\Core\Administration\Filament\Widgets\RecentActivityWidget;
 use App\Core\Administration\Filament\Widgets\SystemAlertsWidget;
 use App\Core\Administration\Filament\Widgets\UpcomingWorkWidget;
 use App\Core\Administration\Filament\Widgets\WelcomeHeroWidget;
+use App\Core\Administration\Services\ExecutiveDashboardService;
 use App\Models\User;
 use Filament\Pages\Dashboard as BaseDashboard;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
@@ -27,7 +29,8 @@ class Dashboard extends BaseDashboard
     public function getWidgets(): array
     {
         $access = app(AdministrationAccessService::class);
-        $isPlatformSession = $access->isPlatformSession(auth()->user());
+        $user = auth()->user();
+        $isPlatformSession = $access->isPlatformSession($user);
 
         if ($isPlatformSession) {
             return [
@@ -39,15 +42,54 @@ class Dashboard extends BaseDashboard
             ];
         }
 
-        return [
-            WelcomeHeroWidget::class,
-            ExecutiveKpiOverviewWidget::class,
-            UpcomingWorkWidget::class,
-            ApprovalQueueWidget::class,
-            RecentActivityWidget::class,
-            QuickNavigationWidget::class,
-            SystemAlertsWidget::class,
-        ];
+        if (! $user instanceof User) {
+            return [
+                WelcomeHeroWidget::class,
+                ExecutiveKpiOverviewWidget::class,
+                UpcomingWorkWidget::class,
+                QuickNavigationWidget::class,
+                SystemAlertsWidget::class,
+            ];
+        }
+
+        $dashboard = app(ExecutiveDashboardService::class)->forUser($user);
+        $profile = $dashboard['dashboard_profile'] ?? 'restricted';
+
+        return match ($profile) {
+            'data_entry' => [
+                WelcomeHeroWidget::class,
+                ExecutiveKpiOverviewWidget::class,
+                UpcomingWorkWidget::class,
+                AttentionRequiredWidget::class,
+                QuickNavigationWidget::class,
+                SystemAlertsWidget::class,
+            ],
+            'operations' => [
+                WelcomeHeroWidget::class,
+                ExecutiveKpiOverviewWidget::class,
+                UpcomingWorkWidget::class,
+                AttentionRequiredWidget::class,
+                RecentActivityWidget::class,
+                QuickNavigationWidget::class,
+                SystemAlertsWidget::class,
+            ],
+            'company_admin' => [
+                WelcomeHeroWidget::class,
+                ExecutiveKpiOverviewWidget::class,
+                UpcomingWorkWidget::class,
+                ApprovalQueueWidget::class,
+                RecentActivityWidget::class,
+                QuickNavigationWidget::class,
+                SystemAlertsWidget::class,
+            ],
+            default => [
+                WelcomeHeroWidget::class,
+                ExecutiveKpiOverviewWidget::class,
+                UpcomingWorkWidget::class,
+                QuickNavigationWidget::class,
+                SystemAlertsWidget::class,
+            ],
+        };
     }
 
     public function getHeading(): string

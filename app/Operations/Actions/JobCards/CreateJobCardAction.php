@@ -23,6 +23,31 @@ use Illuminate\Support\Str;
 
 class CreateJobCardAction
 {
+    /**
+     * @var list<string>
+     */
+    private const PROTECTED_WORKFLOW_FIELDS = [
+        'approval_status',
+        'approved_by',
+        'approved_at',
+        'submitted_by',
+        'submitted_at',
+        'returned_by',
+        'returned_at',
+        'return_reason',
+        'verification_notes',
+        'verified_by',
+        'verified_at',
+        'billing_ready_at',
+        'billing_ready_by',
+        'rate_currency',
+        'hourly_rate',
+        'exchange_rate',
+        'converted_hourly_rate',
+        'billable_amount',
+        'rate_notes',
+    ];
+
     public function __construct(
         private readonly AdministrationAccessService $access,
         private readonly AdministrationActivityLogger $logger,
@@ -57,14 +82,15 @@ class CreateJobCardAction
                 throw new BusinessException('The active Job is missing its company context.', 422);
             }
 
+            $recordingData = Arr::except($data, self::PROTECTED_WORKFLOW_FIELDS);
             $assignment = $operators->resolveAssignment(
-                $data['operator_id'] ?? null,
-                $data['operated_by'] ?? null,
+                $recordingData['operator_id'] ?? null,
+                $recordingData['operated_by'] ?? null,
                 $job->tenant_id,
                 $job->company_id,
                 false,
             );
-            $resolvedOperators = $operators->resolveOperatorEntries($data['operators'] ?? [], $job->tenant_id, $job->company_id);
+            $resolvedOperators = $operators->resolveOperatorEntries($recordingData['operators'] ?? [], $job->tenant_id, $job->company_id);
 
             if ($resolvedOperators === [] && ($assignment['operator'] !== null || $assignment['external_name'] !== null)) {
                 $resolvedOperators = [[
@@ -77,22 +103,27 @@ class CreateJobCardAction
                 throw new BusinessException('Record at least one operator on the client Job Card.', 422);
             }
 
+            $cardDate = $this->resolveCardDate($job, $recordingData);
+
             $jobCard = JobCard::query()->create([
-                ...Arr::except($data, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'operator_id', 'operators', 'attachments', 'source']),
-                'card_number' => $data['card_number'] ?? $this->generateCardNumber($job),
+                ...Arr::except($recordingData, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'operator_id', 'operators', 'attachments', 'source', 'from_time', 'to_time', 'header_hours', 'total_hours']),
+                'card_number' => $recordingData['card_number'] ?? $this->generateCardNumber($job),
                 'uuid' => (string) Str::uuid(),
                 'tenant_id' => $job->tenant_id,
                 'company_id' => $job->company_id,
                 'job_id' => $job->getKey(),
                 'client_id' => $job->client_id,
                 'client_site_id' => $job->client_site_id,
-                'card_date' => $this->resolveCardDate($job, $data),
+                'card_date' => $cardDate,
                 'operator_id' => $assignment['operator']?->getKey(),
-                'shift' => $data['shift'] ?? $job->getRawOriginal('shift'),
-                'equipment_reference' => $data['equipment_reference'] ?? $job->equipment_requirement,
+                'shift' => $recordingData['shift'] ?? $job->getRawOriginal('shift'),
+                'equipment_reference' => $recordingData['equipment_reference'] ?? $job->equipment_requirement,
                 'operated_by' => $assignment['external_name'],
-                'approval_status' => $data['approval_status'] ?? JobCardApprovalStatus::Recorded->value,
-                'total_hours' => $data['total_hours'] ?? $data['header_hours'] ?? null,
+                'approval_status' => JobCardApprovalStatus::Recorded->value,
+                'from_time' => null,
+                'to_time' => null,
+                'header_hours' => null,
+                'total_hours' => null,
                 'billable_amount' => null,
                 'created_by' => $actor->getKey(),
                 'updated_by' => $actor->getKey(),
@@ -100,7 +131,6 @@ class CreateJobCardAction
 
             $operators->syncJobCardOperators($jobCard, $resolvedOperators);
             $this->attachDocuments($jobCard, $attachmentPaths);
-            $jobCard->syncBillingFigures();
             $jobCard->saveQuietly();
 
             $logger->log('job_card.created', sprintf('Client Job Card recorded by %s', $actor->full_name), $actor, $jobCard, [
