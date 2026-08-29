@@ -56,6 +56,12 @@ class Dashboard extends BaseDashboard
         $profile = $dashboard['dashboard_profile'] ?? 'restricted';
 
         return match ($profile) {
+            'finance' => [
+                WelcomeHeroWidget::class,
+                ExecutiveKpiOverviewWidget::class,
+                QuickNavigationWidget::class,
+                SystemAlertsWidget::class,
+            ],
             'data_entry' => [
                 WelcomeHeroWidget::class,
                 ExecutiveKpiOverviewWidget::class,

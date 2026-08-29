@@ -1,6 +1,7 @@
 @php
     use App\Administration\Services\AdministrationAccessService;
     use App\Core\Administration\Filament\Pages\Dashboard;
+    use App\Core\Administration\Filament\Pages\FinanceDashboard;
     use App\Core\Administration\Filament\Pages\ManageSettings;
     use App\Core\Administration\Filament\Pages\SystemHealth;
     use App\Core\Administration\Filament\Resources\Activities\ActivityResource;
@@ -103,6 +104,13 @@
         ], [
             'label' => 'FINANCE',
             'items' => [
+                [
+                    'label' => 'Finance Dashboard',
+                    'url' => FinanceDashboard::canAccess() ? FinanceDashboard::getUrl() : null,
+                    'active' => request()->routeIs('filament.admin.pages.finance-dashboard'),
+                    'disabled' => false,
+                    'icon' => 'reports',
+                ],
                 [
                     'label' => 'Rate Agreements',
                     'url' => RateAgreementResource::canViewAny() ? RateAgreementResource::getUrl('index') : null,

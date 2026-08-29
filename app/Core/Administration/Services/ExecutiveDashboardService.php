@@ -21,6 +21,7 @@ use App\Core\Tenancy\Models\Tenant;
 use App\Core\Tenancy\Support\TenantContext;
 use App\CRM\Enums\ClientStatus;
 use App\CRM\Models\Client;
+use App\Finance\Services\FinanceReportingService;
 use App\Models\User;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobStatus;
@@ -232,7 +233,7 @@ class ExecutiveDashboardService
                 [
                     'label' => 'Revenue MTD',
                     'value' => '—',
-                    'description' => 'Billing control plane not implemented yet',
+                    'description' => 'Finance reporting is available inside an authorized tenant workspace.',
                     'trend' => null,
                     'status' => 'success',
                     'icon' => 'revenue',
@@ -575,8 +576,8 @@ class ExecutiveDashboardService
             ],
             [
                 'label' => 'Revenue MTD',
-                'value' => '—',
-                'description' => 'Finance module not yet implemented',
+                'value' => $this->financeRevenueMtd($tenantId, $user, $dashboardProfile),
+                'description' => $dashboardProfile === 'finance' ? 'Paid or closed Billing Records' : 'Finance reporting is available to authorized users.',
                 'trend' => null,
                 'status' => 'success',
                 'icon' => 'revenue',
@@ -1065,10 +1066,41 @@ class ExecutiveDashboardService
         return match (true) {
             $user->hasRole(RoleName::DataEntryClerk->value) => 'data_entry',
             $user->hasRole(RoleName::OperationsManager->value) => 'operations',
-            $user->hasRole(RoleName::FinanceManager->value) => 'finance',
+            $user->hasRole(RoleName::FinanceManager->value), $user->hasRole(RoleName::Accountant->value) => 'finance',
             $user->hasRole(RoleName::CompanyAdministrator->value) => 'company_admin',
             default => 'restricted',
         };
+    }
+
+    private function financeRevenueMtd(int $companyId, User $user, string $dashboardProfile): string
+    {
+        if ($dashboardProfile !== 'finance' && $dashboardProfile !== 'company_admin') {
+            return '—';
+        }
+
+        if (! $this->hasPermission($user, PermissionName::BillingRecordsView->value)) {
+            return '—';
+        }
+
+        $tenantId = $this->tenantContext->id() ?? $user->tenant_id;
+
+        if (! is_int($tenantId)) {
+            return '—';
+        }
+
+        $totals = app(FinanceReportingService::class)->revenueMtd($tenantId, $companyId);
+
+        if ($totals === []) {
+            return '—';
+        }
+
+        if (count($totals) > 1) {
+            return count($totals).' currencies';
+        }
+
+        $currency = array_key_first($totals);
+
+        return $currency.' '.$totals[$currency];
     }
 
     private function showsExecutiveExport(string $dashboardProfile): bool
