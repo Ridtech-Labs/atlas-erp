@@ -12,7 +12,6 @@ enum RoleName: string
     case OperationsManager = 'Operations Manager';
     case FinanceManager = 'Finance Manager';
     case Accountant = 'Accountant';
-    case FleetManager = 'Fleet Manager';
     case WarehouseManager = 'Warehouse Manager';
     case StandardUser = 'Standard User';
 

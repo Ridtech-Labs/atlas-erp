@@ -8,6 +8,8 @@
     use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
     use App\Core\Administration\Filament\Resources\BillingRecords\BillingRecordResource;
     use App\Core\Administration\Filament\Resources\Clients\ClientResource;
+    use App\Core\Administration\Filament\Resources\FleetAssets\FleetAssetResource;
+    use App\Core\Administration\Filament\Resources\FleetAssetTypes\FleetAssetTypeResource;
     use App\Core\Administration\Filament\Resources\Jobs\JobResource;
     use App\Core\Administration\Filament\Resources\RateAgreements\RateAgreementResource;
     use App\Core\Administration\Filament\Resources\Roles\RoleResource;
@@ -98,7 +100,20 @@
                     'disabled' => ! JobResource::canViewAny(),
                     'icon' => 'jobs',
                 ],
-                ['label' => 'Fleet', 'url' => null, 'active' => false, 'disabled' => true, 'icon' => 'fleet'],
+                [
+                    'label' => 'Fleet Assets',
+                    'url' => FleetAssetResource::canViewAny() ? FleetAssetResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.fleet-assets.*'),
+                    'disabled' => false,
+                    'icon' => 'fleet',
+                ],
+                [
+                    'label' => 'Asset Types',
+                    'url' => FleetAssetTypeResource::canViewAny() ? FleetAssetTypeResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.fleet-asset-types.*'),
+                    'disabled' => false,
+                    'icon' => 'fleet',
+                ],
                 ['label' => 'Inventory', 'url' => null, 'active' => false, 'disabled' => true, 'icon' => 'inventory'],
             ],
         ], [

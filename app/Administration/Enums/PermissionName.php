@@ -60,6 +60,8 @@ enum PermissionName: string
     case BillingBatchesManage = 'billing_batches.manage';
     case BillingRecordsView = 'billing_records.view';
     case BillingRecordsManage = 'billing_records.manage';
+    case FleetAssetsView = 'fleet_assets.view';
+    case FleetAssetsManage = 'fleet_assets.manage';
     case JobsSchedule = 'jobs.schedule';
     case JobsStart = 'jobs.start';
     case JobsHold = 'jobs.hold';

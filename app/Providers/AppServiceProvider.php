@@ -15,6 +15,8 @@ use App\Finance\Models\BillingBatchLine;
 use App\Finance\Models\BillingRecord;
 use App\Finance\Models\RateAgreement;
 use App\Finance\Models\RateAgreementLine;
+use App\Fleet\Models\FleetAsset;
+use App\Fleet\Models\FleetAssetType;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
@@ -56,6 +58,8 @@ class AppServiceProvider extends ServiceProvider
             'billing_batch' => BillingBatch::class,
             'billing_batch_line' => BillingBatchLine::class,
             'billing_record' => BillingRecord::class,
+            'fleet_asset' => FleetAsset::class,
+            'fleet_asset_type' => FleetAssetType::class,
         ]);
     }
 }
