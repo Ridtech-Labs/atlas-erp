@@ -10,6 +10,10 @@ use App\Core\Tenancy\Support\TenantContext;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientContact;
 use App\CRM\Models\ClientSite;
+use App\Finance\Models\BillingBatch;
+use App\Finance\Models\BillingBatchLine;
+use App\Finance\Models\RateAgreement;
+use App\Finance\Models\RateAgreementLine;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
@@ -46,6 +50,10 @@ class AppServiceProvider extends ServiceProvider
             'job_card' => JobCard::class,
             'job_card_work_entry' => JobCardWorkEntry::class,
             'waybill' => Waybill::class,
+            'rate_agreement' => RateAgreement::class,
+            'rate_agreement_line' => RateAgreementLine::class,
+            'billing_batch' => BillingBatch::class,
+            'billing_batch_line' => BillingBatchLine::class,
         ]);
     }
 }

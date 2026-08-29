@@ -599,9 +599,7 @@
                                                 <div>{{ number_format((float) $card->total_hours, 2) }} total hours</div>
                                             </div>
                                         </div>
-                                        <div class="text-right text-sm font-semibold text-stone-700">
-                                            {{ $card->billable_amount !== null ? 'Billable GHS '.number_format((float) $card->billable_amount, 2) : 'Billing basis pending' }}
-                                        </div>
+                                        <div class="text-right text-sm font-semibold text-stone-700">Commercial snapshot available in Billing Batch</div>
                                     </div>
                                 </a>
                             @empty
@@ -626,7 +624,7 @@
                         <div class="flex flex-wrap items-start justify-between gap-4">
                             <div>
                                 <div class="text-lg font-semibold text-stone-950">Billing</div>
-                                <div class="mt-1 text-sm text-stone-500">This reproduces the business purpose of Eben’s compilation sheet without generating an invoice yet.</div>
+                                <div class="mt-1 text-sm text-stone-500">Commercial values below are immutable snapshots from Billing Batch preparation. Invoice generation is not included here.</div>
                             </div>
                         </div>
 
@@ -635,7 +633,7 @@
                             <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Total hours</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['total_hours'] }}</div></div>
                             <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Accounts-reviewed cards</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['verified_cards'] }}</div></div>
                             <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Billing-ready cards</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['billing_ready_cards'] }}</div></div>
-                            <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Total billable</div><div class="mt-2 text-2xl font-semibold text-stone-950">GHS {{ number_format((float) $billingSummary['total_billable'], 2) }}</div></div>
+                            <div class="rounded-2xl bg-stone-50 p-4"><div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Commercial snapshots</div><div class="mt-2 text-2xl font-semibold text-stone-950">{{ $billingSummary['snapshot_count'] }}</div></div>
                         </div>
 
                         <div class="mt-6 overflow-hidden rounded-3xl border border-stone-200">
@@ -649,35 +647,31 @@
                                             <th class="px-4 py-3">From</th>
                                             <th class="px-4 py-3">To</th>
                                             <th class="px-4 py-3">Hours</th>
-                                            <th class="px-4 py-3">Original rate</th>
-                                            <th class="px-4 py-3">Exchange</th>
-                                            <th class="px-4 py-3">Converted rate</th>
-                                            <th class="px-4 py-3">Billable</th>
-                                            <th class="px-4 py-3">Accounts Review</th>
-                                            <th class="px-4 py-3">Billing</th>
+                                            <th class="px-4 py-3">Resolved rate</th>
+                                            <th class="px-4 py-3">Amount</th>
+                                            <th class="px-4 py-3">Billing Batch</th>
+                                            <th class="px-4 py-3">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-stone-200 bg-white">
                                         @forelse ($billingRows as $row)
                                             <tr class="align-top">
-                                                <td class="px-4 py-4">{{ $row['date']?->format('j M Y') ?? 'No date' }}</td>
+                                                <td class="px-4 py-4">{{ $row['date'] ?? 'No date' }}</td>
                                                 <td class="px-4 py-4">
-                                                    <a href="{{ $row['url'] }}" class="font-semibold text-stone-950 hover:text-blue-700">{{ $row['reference'] ?: $row['number'] }}</a>
+                                                    <a href="{{ $row['url'] }}" class="font-semibold text-stone-950 hover:text-blue-700">{{ $row['reference'] ?: $row['batch_number'] }}</a>
                                                 </td>
                                                 <td class="px-4 py-4">{{ $row['machine_number'] ?? 'Not captured' }}</td>
                                                 <td class="px-4 py-4">{{ $row['from'] ?? '-' }}</td>
                                                 <td class="px-4 py-4">{{ $row['to'] ?? '-' }}</td>
-                                                <td class="px-4 py-4">{{ $row['total_hours'] !== null ? number_format((float) $row['total_hours'], 2) : '-' }}</td>
-                                                <td class="px-4 py-4">{{ $row['hourly_rate'] !== null ? strtoupper((string) ($row['rate_currency'] ?? 'CUR')).' '.number_format((float) $row['hourly_rate'], 2).'/hr' : '-' }}</td>
-                                                <td class="px-4 py-4">{{ $row['exchange_rate'] !== null ? number_format((float) $row['exchange_rate'], 4) : '-' }}</td>
-                                                <td class="px-4 py-4">{{ $row['converted_hourly_rate'] !== null ? 'GHS '.number_format((float) $row['converted_hourly_rate'], 2).'/hr' : '-' }}</td>
-                                                <td class="px-4 py-4">{{ $row['billable_amount'] !== null ? 'GHS '.number_format((float) $row['billable_amount'], 2) : '-' }}</td>
-                                                <td class="px-4 py-4">{{ $row['verification_status'] }}</td>
-                                                <td class="px-4 py-4">{{ $row['billing_status'] }}</td>
+                                                <td class="px-4 py-4">{{ $row['hours'] !== null ? number_format((float) $row['hours'], 2) : '-' }}</td>
+                                                <td class="px-4 py-4">{{ strtoupper((string) $row['currency']) }} {{ number_format((float) $row['resolved_rate'], 2) }}/hr</td>
+                                                <td class="px-4 py-4">{{ strtoupper((string) $row['currency']) }} {{ number_format((float) $row['line_amount'], 2) }}</td>
+                                                <td class="px-4 py-4">{{ $row['batch_number'] }}</td>
+                                                <td class="px-4 py-4">{{ $row['batch_status'] }}</td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="12" class="px-4 py-8 text-center text-sm text-stone-500">No Client Job Cards have been recorded yet, so there is no billing basis to compile.</td>
+                                                <td colspan="10" class="px-4 py-8 text-center text-sm text-stone-500">No Billing Batch snapshots exist for this Job yet. Accounts-reviewed Work Entries can be added to a Billing Batch when Finance is ready.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>

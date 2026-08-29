@@ -192,31 +192,34 @@ class JobCardForm
                 ->schema([
                     Placeholder::make('billing_guidance')
                         ->label('Billing stage')
-                        ->content('Enter rate information only after Accounts review. Atlas will calculate the billing basis from the reviewed hours and the captured rate inputs.')
+                        ->content(function ($record): string {
+                            if (! $record instanceof JobCard) {
+                                return 'After Accounts review, Finance prepares a Billing Batch that resolves rates from active Rate Agreements and snapshots the commercial basis for invoicing.';
+                            }
+
+                            return match ((string) $record->getRawOriginal('approval_status')) {
+                                JobCardApprovalStatus::Verified->value => 'This Job Card has passed Accounts review and is ready for Billing Batch preparation. Rates are resolved from active Rate Agreements when Finance adds reviewed Work Entries to a Billing Batch.',
+                                JobCardApprovalStatus::BillingReady->value => 'This Job Card has been included in billing preparation. Its commercial snapshot now belongs to the related Billing Batch lines, not manual rate entry on the Job Card.',
+                                default => 'After Accounts review, Finance prepares a Billing Batch that resolves rates from active Rate Agreements and snapshots the commercial basis for invoicing.',
+                            };
+                        })
                         ->columnSpanFull(),
-                    TextInput::make('rate_currency')->length(3)->placeholder('GHS'),
-                    TextInput::make('hourly_rate')->numeric()->step('0.01')->placeholder('0.00'),
-                    TextInput::make('exchange_rate')->numeric()->step('0.0001')->placeholder('1.0000'),
-                    TextInput::make('converted_hourly_rate')->numeric()->step('0.01')->placeholder('0.00'),
-                    Placeholder::make('billable_amount_preview')
-                        ->label('Calculated billable amount')
-                        ->content(function (Get $get, $record): string {
-                            if ($record instanceof JobCard && $record->billable_amount !== null) {
-                                return number_format((float) $record->billable_amount, 2);
+                    Placeholder::make('billing_batch_summary')
+                        ->label('Commercial basis')
+                        ->content(function ($record): string {
+                            if (! $record instanceof JobCard) {
+                                return 'Billing Batch preparation will resolve the applicable rate and snapshot the commercial totals.';
                             }
 
-                            $hours = $get('total_hours');
-                            $rate = $get('converted_hourly_rate') ?? $get('hourly_rate');
-
-                            if (! is_numeric($hours) || ! is_numeric($rate)) {
-                                return 'Atlas will calculate this after the rate basis is complete.';
+                            if ((string) $record->getRawOriginal('approval_status') === JobCardApprovalStatus::BillingReady->value) {
+                                return 'Billing Batch preparation has marked this Job Card billing ready. Review the related Billing Batch lines for the resolved rate and commercial totals.';
                             }
 
-                            return number_format((float) $hours * (float) $rate, 2);
-                        }),
-                    Textarea::make('rate_notes')->rows(3)->columnSpanFull(),
+                            return 'No commercial values are captured directly on this Job Card in the Phase 2B workflow. Finance completes rate resolution and billing snapshots from Billing Batches.';
+                        })
+                        ->columnSpanFull(),
                 ])
-                ->columns(2)
+                ->columns(1)
                 ->visible(fn ($record): bool => $record instanceof JobCard
                     && self::canManageBilling($record)
                     && in_array((string) $record->getRawOriginal('approval_status'), [JobCardApprovalStatus::Verified->value, JobCardApprovalStatus::BillingReady->value], true)),

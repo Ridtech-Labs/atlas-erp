@@ -10,6 +10,8 @@ use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Enums\ClientStatus;
 use App\CRM\Enums\ClientType;
+use App\Finance\Models\BillingBatch;
+use App\Finance\Models\RateAgreement;
 use App\Models\User;
 use App\Operations\Models\Job;
 use Database\Factories\ClientFactory;
@@ -134,6 +136,22 @@ class Client extends Model
     public function jobs(): HasMany
     {
         return $this->hasMany(Job::class);
+    }
+
+    /**
+     * @return HasMany<RateAgreement, $this>
+     */
+    public function rateAgreements(): HasMany
+    {
+        return $this->hasMany(RateAgreement::class);
+    }
+
+    /**
+     * @return HasMany<BillingBatch, $this>
+     */
+    public function billingBatches(): HasMany
+    {
+        return $this->hasMany(BillingBatch::class);
     }
 
     public function getDisplayNameAttribute(): string

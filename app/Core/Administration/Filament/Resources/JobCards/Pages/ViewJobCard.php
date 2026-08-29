@@ -8,7 +8,6 @@ use App\Core\Administration\Filament\Resources\JobCards\JobCardResource;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
-use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\ReturnJobCardAction;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Models\JobCard;
@@ -55,10 +54,6 @@ class ViewJobCard extends ViewRecord
                 ])
                 ->action(fn (array $data) => app(ReturnJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser(), (string) $data['return_reason']))
                 ->visible(fn (): bool => $this->canReview()),
-            Action::make('billingReady')
-                ->label('Mark Billing Ready')
-                ->action(fn () => app(MarkJobCardBillingReadyAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->canPrepareBilling()),
             EditAction::make()
                 ->visible(fn (): bool => ! $this->currentRecord()->evidenceIsLockedForEditing()),
         ];
@@ -68,13 +63,6 @@ class ViewJobCard extends ViewRecord
     {
         return (string) $this->currentRecord()->getRawOriginal('approval_status') === JobCardApprovalStatus::PendingVerification->value
             && $this->authenticatedUser()->can('approve', $this->currentRecord());
-    }
-
-    private function canPrepareBilling(): bool
-    {
-        return (string) $this->currentRecord()->getRawOriginal('approval_status') === JobCardApprovalStatus::Verified->value
-            && $this->authenticatedUser()->hasPermissionTo('job_cards.bill')
-            && $this->authenticatedUser()->can('view', $this->currentRecord());
     }
 
     private function currentRecord(): JobCard

@@ -6,6 +6,13 @@ use App\Core\Administration\Filament\Resources\JobCards\Pages\EditJobCard;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientSite;
+use App\Finance\Actions\BillingBatches\AddJobCardsToBillingBatchAction;
+use App\Finance\Actions\BillingBatches\CreateBillingBatchAction;
+use App\Finance\Actions\BillingBatches\PrepareBillingBatchAction;
+use App\Finance\Actions\RateAgreements\CreateRateAgreementAction;
+use App\Finance\Enums\BillingBatchStatus;
+use App\Finance\Enums\RateAgreementStatus;
+use App\Finance\Services\BillingBatchEligibilityService;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\CreateJobCardAction;
@@ -374,6 +381,36 @@ test('finance manager sees accounts review and return controls on pending review
         ->assertOk()
         ->assertSee('Review for Billing')
         ->assertSee('Return to Operations');
+});
+
+test('verified job card view no longer exposes a direct mark billing ready action', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $finance = $this->tenantUser($tenant, ['email' => 'finance-no-direct-billing@example.test'], [RoleName::FinanceManager->value]);
+    $finance->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($finance);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::InProgress,
+    ]);
+
+    $jobCard = JobCard::factory()->create([
+        'job_id' => $job->getKey(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'approval_status' => JobCardApprovalStatus::Verified,
+        'card_date' => now()->toDateString(),
+    ]);
+
+    $this->get(JobCardResource::getUrl('view', ['record' => $jobCard]))
+        ->assertOk()
+        ->assertDontSee('Mark Billing Ready')
+        ->assertSee('Billing Batch');
 });
 
 test('multiple work entries can belong to one job card and overnight duration calculates correctly', function () {
@@ -1133,13 +1170,13 @@ test('job card operator fields cannot conflict', function () {
     ], $actor))->toThrow(BusinessException::class, 'Select a company operator or enter an external operator name, not both.');
 });
 
-test('job card verification and billing readiness are recorded and cross company access to the card is denied', function () {
+test('job card verification is recorded without hourly rate and verified work entries move to billing ready through billing batches', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
     $companyA = $this->company($tenant, ['name' => 'Kadmay Logistics']);
     $companyB = $this->company($tenant, ['name' => 'Kadmay Marine']);
-    $approver = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $approver = $this->tenantUser($tenant, [], [RoleName::FinanceManager->value]);
     $submitter = $this->tenantUser($tenant, ['email' => 'ops-submit-cross-company@example.test'], [RoleName::OperationsManager->value]);
     $approver->companies()->sync([$companyA->getKey()]);
     $submitter->companies()->sync([$companyA->getKey()]);
@@ -1147,15 +1184,38 @@ test('job card verification and billing readiness are recorded and cross company
     $outsider->companies()->sync([$companyB->getKey()]);
     session(['active_company_id' => $companyA->getKey()]);
 
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $companyA->getKey(),
+        'legal_name' => 'GPHA',
+    ]);
+
+    app(CreateRateAgreementAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'name' => 'GPHA accepted tariff',
+        'reference' => 'RA-GPHA-ACCEPTANCE',
+        'effective_from' => '2026-08-01',
+        'effective_to' => '2026-12-31',
+        'status' => RateAgreementStatus::Active->value,
+        'lines' => [[
+            'equipment_reference' => 'Forklift FL-18',
+            'billing_unit' => 'hourly',
+            'currency' => 'GHS',
+            'rate' => 150.00,
+        ]],
+    ], $approver);
+
     $job = Job::factory()->create([
         'tenant_id' => $tenant->getKey(),
         'company_id' => $companyA->getKey(),
+        'client_id' => $client->getKey(),
     ]);
 
     $jobCard = JobCard::factory()->create([
         'job_id' => $job->getKey(),
         'tenant_id' => $tenant->getKey(),
         'company_id' => $companyA->getKey(),
+        'client_id' => $client->getKey(),
         'card_date' => now()->toDateString(),
         'shift' => JobShift::Day,
         'equipment_reference' => 'Forklift FL-18',
@@ -1163,22 +1223,39 @@ test('job card verification and billing readiness are recorded and cross company
         'operated_by' => 'Kwame Mensah',
         'client_endorsed' => true,
         'client_stamped' => true,
-        'hourly_rate' => 150,
-        'rate_currency' => 'GHS',
     ]);
     recordJobCardWorkEntry($jobCard, $submitter);
     attachJobCardEvidence($jobCard, 'job-card-verification.txt');
 
     $submitted = app(SubmitJobCardAction::class)->execute($jobCard, $submitter);
     $approved = app(ApproveJobCardAction::class)->execute($submitted, $approver, 'Card reviewed and approved.');
-    $billingReady = app(MarkJobCardBillingReadyAction::class)->execute($approved, $approver);
 
-    expect($billingReady->approval_status)->toBe(JobCardApprovalStatus::BillingReady)
-        ->and($billingReady->submitted_by)->toBe($submitter->getKey())
-        ->and($billingReady->verified_by)->toBe($approver->getKey())
-        ->and($billingReady->verified_at)->not->toBeNull()
-        ->and($billingReady->billable_amount)->toBe('1200.00')
-        ->and(Gate::forUser($outsider)->allows('view', $billingReady))->toBeFalse();
+    expect($approved->approval_status)->toBe(JobCardApprovalStatus::Verified)
+        ->and($approved->submitted_by)->toBe($submitter->getKey())
+        ->and($approved->verified_by)->toBe($approver->getKey())
+        ->and($approved->verified_at)->not->toBeNull()
+        ->and($approved->hourly_rate)->toBeNull()
+        ->and($approved->rate_currency)->toBeNull()
+        ->and($approved->billable_amount)->toBeNull()
+        ->and(Gate::forUser($outsider)->allows('view', $approved))->toBeFalse();
+
+    $batch = app(CreateBillingBatchAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'notes' => 'Cross-company billing validation',
+    ], $approver);
+
+    expect(app(BillingBatchEligibilityService::class)->eligibleWorkEntries($batch)->pluck('job_card_id')->all())
+        ->toContain($approved->getKey());
+
+    $batch = app(AddJobCardsToBillingBatchAction::class)->execute(
+        $batch,
+        [$approved->workEntries()->firstOrFail()->getKey()],
+        $approver,
+    );
+    $prepared = app(PrepareBillingBatchAction::class)->execute($batch, $approver);
+
+    expect($prepared->status)->toBe(BillingBatchStatus::Prepared)
+        ->and($approved->fresh()->approval_status)->toBe(JobCardApprovalStatus::BillingReady);
 });
 
 test('data entry clerk cannot verify or return directly and submitter cannot verify own submission', function () {

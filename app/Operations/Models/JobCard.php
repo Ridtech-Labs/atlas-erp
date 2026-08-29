@@ -10,6 +10,7 @@ use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientSite;
+use App\Finance\Models\BillingBatchLine;
 use App\Models\User;
 use App\Operations\Enums\JobCardApprovalStatus;
 use Database\Factories\JobCardFactory;
@@ -210,6 +211,14 @@ class JobCard extends Model implements HasMedia
     public function operators(): HasMany
     {
         return $this->hasMany(JobCardOperator::class)->orderBy('sort_order');
+    }
+
+    /**
+     * @return HasMany<BillingBatchLine, $this>
+     */
+    public function billingBatchLines(): HasMany
+    {
+        return $this->hasMany(BillingBatchLine::class);
     }
 
     /**

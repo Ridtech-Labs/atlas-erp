@@ -6,6 +6,8 @@ namespace App\Core\Tenancy\Models;
 
 use App\Core\Shared\Concerns\HasPublicUuid;
 use App\CRM\Models\Client;
+use App\Finance\Models\BillingBatch;
+use App\Finance\Models\RateAgreement;
 use App\Models\User;
 use App\Operations\Models\Job;
 use Database\Factories\CompanyFactory;
@@ -85,5 +87,21 @@ class Company extends Model
     public function jobs(): HasMany
     {
         return $this->hasMany(Job::class);
+    }
+
+    /**
+     * @return HasMany<RateAgreement, $this>
+     */
+    public function rateAgreements(): HasMany
+    {
+        return $this->hasMany(RateAgreement::class);
+    }
+
+    /**
+     * @return HasMany<BillingBatch, $this>
+     */
+    public function billingBatches(): HasMany
+    {
+        return $this->hasMany(BillingBatch::class);
     }
 }

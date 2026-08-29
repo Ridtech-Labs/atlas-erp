@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Operations\Models;
 
+use App\Finance\Models\BillingBatchLine;
 use Database\Factories\JobCardWorkEntryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -47,5 +48,13 @@ class JobCardWorkEntry extends Model
     public function jobCard(): BelongsTo
     {
         return $this->belongsTo(JobCard::class);
+    }
+
+    /**
+     * @return BelongsTo<BillingBatchLine, $this>
+     */
+    public function billingBatchLine(): BelongsTo
+    {
+        return $this->belongsTo(BillingBatchLine::class, 'id', 'work_entry_id');
     }
 }

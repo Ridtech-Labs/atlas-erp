@@ -7,7 +7,6 @@ namespace App\Core\Administration\Filament\Resources\JobCards\Pages;
 use App\Core\Administration\Filament\Resources\JobCards\JobCardResource;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
-use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\ReturnJobCardAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
 use App\Operations\Actions\JobCards\UpdateJobCardAction;
@@ -55,10 +54,6 @@ class EditJobCard extends EditRecord
                 ])
                 ->action(fn (array $data) => app(ApproveJobCardAction::class)->execute($this->currentRecord(), $this->authenticatedUser(), $data['verification_notes'] ?? null))
                 ->visible(fn (): bool => $this->canReview()),
-            Action::make('billingReady')
-                ->label('Mark Billing Ready')
-                ->action(fn () => app(MarkJobCardBillingReadyAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->canPrepareBilling()),
             Action::make('return')
                 ->label('Return to Operations')
                 ->color('danger')
@@ -142,12 +137,5 @@ class EditJobCard extends EditRecord
     {
         return $this->approvalStatusIs(JobCardApprovalStatus::PendingVerification)
             && $this->authenticatedUser()->can('approve', $this->currentRecord());
-    }
-
-    private function canPrepareBilling(): bool
-    {
-        return $this->approvalStatusIs(JobCardApprovalStatus::Verified)
-            && $this->authenticatedUser()->hasPermissionTo('job_cards.bill')
-            && $this->authenticatedUser()->can('view', $this->currentRecord());
     }
 }

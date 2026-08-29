@@ -5,10 +5,14 @@ use App\Core\Shared\Exceptions\BusinessException;
 use App\CRM\Enums\ClientSiteStatus;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientSite;
+use App\Finance\Actions\BillingBatches\AddJobCardsToBillingBatchAction;
+use App\Finance\Actions\BillingBatches\CreateBillingBatchAction;
+use App\Finance\Actions\BillingBatches\PrepareBillingBatchAction;
+use App\Finance\Actions\RateAgreements\CreateRateAgreementAction;
+use App\Finance\Enums\RateAgreementStatus;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\CreateJobCardAction;
-use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
 use App\Operations\Actions\JobCardWorkEntries\CreateJobCardWorkEntryAction;
 use App\Operations\Actions\Jobs\CancelJobAction;
@@ -122,13 +126,31 @@ test('heavy machinery job workflow transitions through client job card verificat
         'normal_hours' => 8,
         'overtime_hours' => 0,
     ], $actor);
-    $jobCard->forceFill([
-        'rate_currency' => 'GHS',
-        'hourly_rate' => 150,
-    ])->save();
+    app(CreateRateAgreementAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'name' => 'Workflow completion tariff',
+        'effective_from' => '2026-07-01',
+        'effective_to' => '2026-12-31',
+        'status' => RateAgreementStatus::Active->value,
+        'lines' => [[
+            'equipment_reference' => 'Forklift FL-18',
+            'billing_unit' => 'hourly',
+            'currency' => 'GHS',
+            'rate' => 150.00,
+        ]],
+    ], $actor);
     app(SubmitJobCardAction::class)->execute($jobCard, $submitter);
     app(ApproveJobCardAction::class)->execute($jobCard->fresh(), $actor);
-    app(MarkJobCardBillingReadyAction::class)->execute($jobCard->fresh(), $actor);
+    $batch = app(CreateBillingBatchAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'notes' => 'Completion batch',
+    ], $actor);
+    $batch = app(AddJobCardsToBillingBatchAction::class)->execute(
+        $batch,
+        [$jobCard->fresh()->workEntries()->firstOrFail()->getKey()],
+        $actor,
+    );
+    app(PrepareBillingBatchAction::class)->execute($batch, $actor);
     $job = app(CompleteJobAction::class)->execute($job, $actor, [
         'actual_end_date' => now()->addHours(2),
     ]);

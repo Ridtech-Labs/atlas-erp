@@ -4,8 +4,10 @@
     use App\Core\Administration\Filament\Pages\ManageSettings;
     use App\Core\Administration\Filament\Pages\SystemHealth;
     use App\Core\Administration\Filament\Resources\Activities\ActivityResource;
+    use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
     use App\Core\Administration\Filament\Resources\Clients\ClientResource;
     use App\Core\Administration\Filament\Resources\Jobs\JobResource;
+    use App\Core\Administration\Filament\Resources\RateAgreements\RateAgreementResource;
     use App\Core\Administration\Filament\Resources\Roles\RoleResource;
     use App\Core\Administration\Filament\Resources\Tenants\TenantResource;
     use App\Core\Administration\Filament\Resources\Users\UserResource;
@@ -100,8 +102,20 @@
         ], [
             'label' => 'FINANCE',
             'items' => [
-                ['label' => 'Finance', 'url' => null, 'active' => false, 'disabled' => true, 'icon' => 'finance'],
-                ['label' => 'Reports', 'url' => null, 'active' => false, 'disabled' => true, 'icon' => 'reports'],
+                [
+                    'label' => 'Rate Agreements',
+                    'url' => RateAgreementResource::canViewAny() ? RateAgreementResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.rate-agreements.*'),
+                    'disabled' => false,
+                    'icon' => 'finance',
+                ],
+                [
+                    'label' => 'Billing Batches',
+                    'url' => BillingBatchResource::canViewAny() ? BillingBatchResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.billing-batches.*'),
+                    'disabled' => false,
+                    'icon' => 'reports',
+                ],
             ],
         ], [
             'label' => 'SYSTEM',

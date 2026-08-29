@@ -1,13 +1,18 @@
 <?php
 
 use App\Administration\Enums\RoleName;
+use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
 use App\Core\Administration\Filament\Widgets\JobWorkspaceWidget;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\CRM\Models\Client;
+use App\Finance\Actions\BillingBatches\AddJobCardsToBillingBatchAction;
+use App\Finance\Actions\BillingBatches\CreateBillingBatchAction;
+use App\Finance\Actions\BillingBatches\PrepareBillingBatchAction;
+use App\Finance\Actions\RateAgreements\CreateRateAgreementAction;
+use App\Finance\Enums\RateAgreementStatus;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
-use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Actions\JobCards\ReturnJobCardAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
 use App\Operations\Actions\JobCardWorkEntries\CreateJobCardWorkEntryAction;
@@ -22,6 +27,7 @@ use App\Operations\Enums\JobType;
 use App\Operations\Enums\WaybillStatus;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
+use App\Operations\Models\JobCardWorkEntry;
 use App\Operations\Models\Waybill;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -566,68 +572,124 @@ test('job workspace aggregates recorded hours from client job cards', function (
         ->assertSee('8.00 total hours');
 });
 
-test('heavy machinery workspace shows billing tab and calculated billing basis', function () {
+test('heavy machinery workspace shows Billing Batch commercial snapshots instead of legacy Job Card pricing', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
     $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
-    $actor = $this->actingAsCompanyAdministrator($tenant);
+    $actor = $this->actingAsRole(RoleName::FinanceManager->value, $tenant);
     $actor->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
 
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'legal_name' => 'GPHA',
+    ]);
+
+    app(CreateRateAgreementAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'name' => 'Workspace snapshot tariff',
+        'effective_from' => '2026-08-01',
+        'status' => RateAgreementStatus::Active->value,
+        'lines' => [[
+            'equipment_reference' => 'Reach Stacker',
+            'billing_unit' => 'hourly',
+            'currency' => 'GHS',
+            'rate' => 500.00,
+        ]],
+    ], $actor);
+
     $job = Job::factory()->create([
         'tenant_id' => $tenant->getKey(),
         'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
         'status' => JobStatus::InProgress,
         'job_type' => JobType::HeavyMachinery,
-    ]);
-
-    JobCard::factory()->create([
-        'job_id' => $job->getKey(),
-        'tenant_id' => $tenant->getKey(),
-        'company_id' => $company->getKey(),
-        'approval_status' => JobCardApprovalStatus::BillingReady,
-        'card_number' => 'JC-00041',
-        'client_card_reference' => 'GPHA-JC-41',
-        'machine_number' => 'FLT-16T-04',
-        'from_time' => '08:00',
-        'to_time' => '16:00',
-        'total_hours' => 8,
-        'rate_currency' => 'USD',
-        'hourly_rate' => 160,
-        'exchange_rate' => 11.56,
-        'converted_hourly_rate' => 1849.60,
-        'billable_amount' => 14796.80,
-    ]);
-
-    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
-        ->assertSee('Billing')
-        ->assertSee('Total billable')
-        ->assertSee('GPHA-JC-41')
-        ->assertSee('14,796.80');
-});
-
-test('client job card verification workflow supports submit return verify and billing ready', function () {
-    $this->seedAccessControl();
-
-    $tenant = $this->tenant();
-    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
-    $approver = $this->tenantUser($tenant, ['email' => 'workspace-approver@example.test'], [RoleName::CompanyAdministrator->value]);
-    $submitter = $this->tenantUser($tenant, ['email' => 'workspace-submitter@example.test'], [RoleName::OperationsManager->value]);
-    $approver->companies()->sync([$company->getKey()]);
-    $submitter->companies()->sync([$company->getKey()]);
-    session(['active_company_id' => $company->getKey()]);
-
-    $job = Job::factory()->create([
-        'tenant_id' => $tenant->getKey(),
-        'company_id' => $company->getKey(),
-        'status' => JobStatus::InProgress,
     ]);
 
     $jobCard = JobCard::factory()->create([
         'job_id' => $job->getKey(),
         'tenant_id' => $tenant->getKey(),
         'company_id' => $company->getKey(),
+        'approval_status' => JobCardApprovalStatus::Verified,
+        'card_number' => 'JC-00041',
+        'client_card_reference' => 'GPHA-JC-41',
+        'equipment_reference' => 'Reach Stacker',
+        'machine_number' => 'FLT-16T-04',
+        'from_time' => '08:00',
+        'to_time' => '16:00',
+        'total_hours' => 8,
+        'hourly_rate' => 999.00,
+        'rate_currency' => 'USD',
+        'billable_amount' => 7992.00,
+    ]);
+    $workEntry = JobCardWorkEntry::factory()->create([
+        'job_card_id' => $jobCard->getKey(),
+        'from_time' => '08:00:00',
+        'to_time' => '16:00:00',
+        'normal_hours' => 8.00,
+        'overtime_hours' => 0.00,
+        'total_hours' => 8.00,
+    ]);
+    $batch = app(CreateBillingBatchAction::class)->execute(['client_id' => $client->getKey()], $actor);
+    app(AddJobCardsToBillingBatchAction::class)->execute($batch, [$workEntry->getKey()], $actor);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertSee('Billing')
+        ->assertSee('Commercial snapshots')
+        ->assertSee('GPHA-JC-41')
+        ->assertSee('GHS 500.00/hr')
+        ->assertSee('GHS 4,000.00')
+        ->assertDontSee('USD 999.00/hr')
+        ->assertDontSee('7,992.00');
+});
+
+test('client job card verification workflow uses billing batches to reach billing ready', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $approver = $this->tenantUser($tenant, ['email' => 'workspace-approver@example.test'], [RoleName::FinanceManager->value]);
+    $submitter = $this->tenantUser($tenant, ['email' => 'workspace-submitter@example.test'], [RoleName::OperationsManager->value]);
+    $approver->companies()->sync([$company->getKey()]);
+    $submitter->companies()->sync([$company->getKey()]);
+    $this->actingAs($approver);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'legal_name' => 'GPHA',
+    ]);
+
+    app(CreateRateAgreementAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'name' => 'Workspace heavy machinery tariff',
+        'reference' => 'RA-WORKSPACE-001',
+        'effective_from' => '2026-08-01',
+        'effective_to' => '2026-12-31',
+        'status' => RateAgreementStatus::Active->value,
+        'lines' => [[
+            'equipment_reference' => 'Forklift FL-18',
+            'billing_unit' => 'hourly',
+            'currency' => 'GHS',
+            'rate' => 150.00,
+        ]],
+    ], $approver);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::InProgress,
+        'client_id' => $client->getKey(),
+    ]);
+
+    $jobCard = JobCard::factory()->create([
+        'job_id' => $job->getKey(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
         'approval_status' => JobCardApprovalStatus::Recorded,
         'shift' => JobShift::Day,
         'equipment_reference' => 'Forklift FL-18',
@@ -636,7 +698,6 @@ test('client job card verification workflow supports submit return verify and bi
         'client_stamped' => true,
         'machine_number' => 'FLT-18-01',
         'card_date' => now()->toDateString(),
-        'hourly_rate' => 150,
     ]);
     recordWorkspaceJobCardEntry($jobCard, $submitter);
     attachWorkspaceJobCardEvidence($jobCard, 'signed-card.txt');
@@ -655,11 +716,26 @@ test('client job card verification workflow supports submit return verify and bi
         ->and($approved->verified_by)->toBe($approver->getKey())
         ->and($approved->verified_at)->not->toBeNull();
 
-    $billingReady = app(MarkJobCardBillingReadyAction::class)->execute($approved, $approver);
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job->fresh()])
+        ->assertSee('Prepare Billing Batch')
+        ->assertSee(BillingBatchResource::getUrl('index'))
+        ->assertDontSee('Mark Billing Ready');
 
-    expect($billingReady->approval_status)->toBe(JobCardApprovalStatus::BillingReady)
-        ->and($billingReady->billing_ready_by)->toBe($approver->getKey())
-        ->and($billingReady->billing_ready_at)->not->toBeNull();
+    $batch = app(CreateBillingBatchAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'notes' => 'Workspace billing batch',
+    ], $approver);
+
+    $batch = app(AddJobCardsToBillingBatchAction::class)->execute(
+        $batch,
+        [$approved->workEntries()->firstOrFail()->getKey()],
+        $approver,
+    );
+    app(PrepareBillingBatchAction::class)->execute($batch, $approver);
+
+    expect($approved->fresh()->approval_status)->toBe(JobCardApprovalStatus::BillingReady)
+        ->and($approved->fresh()->billing_ready_by)->toBe($approver->getKey())
+        ->and($approved->fresh()->billing_ready_at)->not->toBeNull();
 });
 
 test('finance manager sees accounts review pending card as the primary action when another user submitted it', function () {

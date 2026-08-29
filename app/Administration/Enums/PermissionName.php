@@ -54,6 +54,10 @@ enum PermissionName: string
     case JobsApprove = 'jobs.approve';
     case JobCardsVerify = 'job_cards.verify';
     case JobCardsBill = 'job_cards.bill';
+    case RateAgreementsView = 'rate_agreements.view';
+    case RateAgreementsManage = 'rate_agreements.manage';
+    case BillingBatchesView = 'billing_batches.view';
+    case BillingBatchesManage = 'billing_batches.manage';
     case JobsSchedule = 'jobs.schedule';
     case JobsStart = 'jobs.start';
     case JobsHold = 'jobs.hold';

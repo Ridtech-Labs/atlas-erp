@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Widgets;
 
+use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
 use App\Core\Administration\Filament\Resources\JobCards\JobCardResource;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
 use App\Core\Administration\Filament\Resources\Waybills\WaybillResource;
 use App\Core\Shared\Exceptions\BusinessException;
+use App\Finance\Enums\BillingBatchStatus;
+use App\Finance\Models\BillingBatchLine;
 use App\Models\User;
 use App\Operations\Actions\Jobs\ApproveJobAction;
 use App\Operations\Actions\Jobs\CompleteJobAction;
@@ -22,6 +25,7 @@ use App\Operations\Models\JobCard;
 use App\Operations\Models\Waybill;
 use App\Operations\Services\JobWorkflowService;
 use App\Operations\Support\JobPlanningReadinessService;
+use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Filament\Notifications\Notification;
 use Filament\Widgets\Widget;
@@ -104,32 +108,45 @@ class JobWorkspaceWidget extends Widget
         $recordedWaybills = $waybills->filter(fn (Waybill $waybill): bool => (string) $waybill->getRawOriginal('status') === WaybillStatus::Recorded->value);
         $verifiedWaybills = $waybills->filter(fn (Waybill $waybill): bool => (string) $waybill->getRawOriginal('status') === WaybillStatus::Verified->value);
         $billingReadyWaybills = $waybills->filter(fn (Waybill $waybill): bool => (string) $waybill->getRawOriginal('status') === WaybillStatus::BillingReady->value);
+        /** @var Collection<int, BillingBatchLine> $billingLines */
+        $billingLines = $job instanceof Job && ! $isTrucking
+            ? BillingBatchLine::query()
+                ->with(['billingBatch', 'jobCard'])
+                ->where('job_id', $job->getKey())
+                ->whereHas('billingBatch', fn ($query) => $query
+                    ->where('tenant_id', $job->tenant_id)
+                    ->where('company_id', $job->company_id))
+                ->orderBy('activity_date')
+                ->orderBy('id')
+                ->get()
+            : collect();
         $billingRows = [];
 
-        foreach ($jobCards as $card) {
+        foreach ($billingLines as $line) {
+            $batch = $line->billingBatch;
+            $card = $line->jobCard;
+
+            if ($batch === null || $card === null) {
+                continue;
+            }
+
+            $currency = strtoupper((string) $line->currency);
+
             $billingRows[] = [
-                'number' => $card->card_number ?: 'Client Job Card',
-                'date' => $card->card_date,
-                'reference' => $card->client_card_reference,
-                'machine_number' => $card->machine_number,
-                'from' => $card->displayStartTime(),
-                'to' => $card->displayEndTime(),
-                'total_hours' => $card->displayTotalHours(),
-                'rate_currency' => $card->rate_currency,
-                'hourly_rate' => $card->hourly_rate,
-                'exchange_rate' => $card->exchange_rate,
-                'converted_hourly_rate' => $card->resolvedBillingRate(),
-                'billable_amount' => $card->billable_amount ?? $card->calculateBillableAmount(),
-                'verification_status' => JobCardApprovalStatus::tryFrom((string) $card->getRawOriginal('approval_status'))?->label() ?? 'Recorded',
-                'billing_status' => in_array((string) $card->getRawOriginal('approval_status'), [JobCardApprovalStatus::BillingReady->value], true) ? 'Billing Ready' : 'Not Billing Ready',
-                'url' => JobCardResource::getUrl('view', ['record' => $card]),
+                'batch_number' => $batch->batch_number,
+                'date' => CarbonImmutable::parse((string) $line->activity_date)->format('j M Y'),
+                'reference' => $card->client_card_reference ?? $card->card_number ?? $line->job_reference,
+                'machine_number' => $line->machine_number,
+                'from' => filled($line->from_time) ? substr((string) $line->from_time, 0, 5) : null,
+                'to' => filled($line->to_time) ? substr((string) $line->to_time, 0, 5) : null,
+                'hours' => $line->hours,
+                'currency' => $currency,
+                'resolved_rate' => $line->resolved_rate,
+                'line_amount' => $line->line_amount,
+                'batch_status' => BillingBatchStatus::tryFrom((string) $batch->getRawOriginal('status'))?->label() ?? 'Draft',
+                'url' => BillingBatchResource::getUrl('view', ['record' => $batch]),
             ];
         }
-
-        $totalBillable = $jobCards->reduce(
-            fn (string $carry, JobCard $card): string => $this->addDecimals($carry, $card->billable_amount ?? $card->calculateBillableAmount()),
-            '0.00',
-        );
 
         return [
             'job' => $job,
@@ -196,7 +213,7 @@ class JobWorkspaceWidget extends Widget
                 'total_hours' => number_format((float) $jobCards->sum(fn (JobCard $card): float => (float) ($card->displayTotalHours() ?? 0)), 2),
                 'verified_cards' => $verifiedCards->count(),
                 'billing_ready_cards' => $billingReadyCards->count(),
-                'total_billable' => $totalBillable,
+                'snapshot_count' => $billingLines->count(),
             ],
             'billingRows' => $billingRows,
             'showVerificationTab' => true,
@@ -668,12 +685,12 @@ class JobWorkspaceWidget extends Widget
                     'trigger' => null,
                 ],
                 JobCardApprovalStatus::Verified->value => [
-                    'label' => $canBillJobCard ? 'Prepare Billing' : 'Awaiting Billing Preparation',
-                    'button_label' => $canBillJobCard ? 'Prepare Billing' : null,
+                    'label' => $canBillJobCard ? 'Prepare Billing Batch' : 'Awaiting Billing Batch Preparation',
+                    'button_label' => $canBillJobCard ? 'Prepare Billing Batch' : null,
                     'helper' => $canBillJobCard
-                        ? 'This Accounts-reviewed Client Job Card can now be marked billing ready.'
-                        : 'This Accounts-reviewed Client Job Card is waiting for Finance or an authorized administrator to prepare billing.',
-                    'url' => JobCardResource::getUrl('view', ['record' => $activeCard]),
+                        ? 'This Accounts-reviewed Client Job Card is ready to be added to a Billing Batch, where Atlas will resolve the rate agreement and snapshot the commercial basis.'
+                        : 'This Accounts-reviewed Client Job Card is waiting for Finance or an authorized administrator to prepare a Billing Batch.',
+                    'url' => $canBillJobCard ? BillingBatchResource::getUrl('index') : JobCardResource::getUrl('view', ['record' => $activeCard]),
                     'kind' => 'success',
                     'trigger' => null,
                 ],
@@ -910,17 +927,5 @@ class JobWorkspaceWidget extends Widget
         return $jobCards->contains(
             fn (JobCard $card): bool => (string) $card->getRawOriginal('approval_status') === JobCardApprovalStatus::BillingReady->value,
         );
-    }
-
-    private function addDecimals(string $left, float|string|null $right): string
-    {
-        $normalizedLeft = number_format((float) $left, 2, '.', '');
-        $normalizedRight = number_format((float) ($right ?? 0), 2, '.', '');
-
-        if (function_exists('bcadd')) {
-            return bcadd($normalizedLeft, $normalizedRight, 2);
-        }
-
-        return number_format((float) $normalizedLeft + (float) $normalizedRight, 2, '.', '');
     }
 }

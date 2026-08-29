@@ -19,6 +19,10 @@ use App\CRM\Models\ClientSite;
 use App\CRM\Policies\ClientContactPolicy;
 use App\CRM\Policies\ClientPolicy;
 use App\CRM\Policies\ClientSitePolicy;
+use App\Finance\Models\BillingBatch;
+use App\Finance\Models\RateAgreement;
+use App\Finance\Policies\BillingBatchPolicy;
+use App\Finance\Policies\RateAgreementPolicy;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
@@ -50,6 +54,8 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(ClientSite::class, ClientSitePolicy::class);
         Gate::policy(Job::class, JobPolicy::class);
         Gate::policy(JobCard::class, JobCardPolicy::class);
+        Gate::policy(RateAgreement::class, RateAgreementPolicy::class);
+        Gate::policy(BillingBatch::class, BillingBatchPolicy::class);
 
         Gate::define('manageSettings', fn (User $user): bool => $this->hasPermission($user, 'settings.manage') || $this->hasPermission($user, 'settings.update'));
         Gate::define('viewHealth', fn (User $user): bool => $this->hasPermission($user, 'health.view'));
