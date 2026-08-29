@@ -8,6 +8,7 @@ use App\Core\Settings\Models\Setting;
 use App\Core\Shared\Concerns\HasPublicUuid;
 use App\Core\Shared\Enums\TenantStatus;
 use App\CRM\Models\Client;
+use App\Finance\Models\BillingRecord;
 use App\Models\User;
 use App\Operations\Models\Job;
 use Database\Factories\TenantFactory;
@@ -110,6 +111,14 @@ class Tenant extends Model implements HasMedia
     public function jobs(): HasMany
     {
         return $this->hasMany(Job::class, 'tenant_id');
+    }
+
+    /**
+     * @return HasMany<BillingRecord, $this>
+     */
+    public function billingRecords(): HasMany
+    {
+        return $this->hasMany(BillingRecord::class);
     }
 
     public function getActivitylogOptions(): LogOptions

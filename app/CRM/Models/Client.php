@@ -11,6 +11,7 @@ use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Enums\ClientStatus;
 use App\CRM\Enums\ClientType;
 use App\Finance\Models\BillingBatch;
+use App\Finance\Models\BillingRecord;
 use App\Finance\Models\RateAgreement;
 use App\Models\User;
 use App\Operations\Models\Job;
@@ -152,6 +153,14 @@ class Client extends Model
     public function billingBatches(): HasMany
     {
         return $this->hasMany(BillingBatch::class);
+    }
+
+    /**
+     * @return HasMany<BillingRecord, $this>
+     */
+    public function billingRecords(): HasMany
+    {
+        return $this->hasMany(BillingRecord::class);
     }
 
     public function getDisplayNameAttribute(): string

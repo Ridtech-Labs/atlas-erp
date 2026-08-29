@@ -12,6 +12,7 @@ use App\CRM\Models\ClientContact;
 use App\CRM\Models\ClientSite;
 use App\Finance\Models\BillingBatch;
 use App\Finance\Models\BillingBatchLine;
+use App\Finance\Models\BillingRecord;
 use App\Finance\Models\RateAgreement;
 use App\Finance\Models\RateAgreementLine;
 use App\Models\User;
@@ -54,6 +55,7 @@ class AppServiceProvider extends ServiceProvider
             'rate_agreement_line' => RateAgreementLine::class,
             'billing_batch' => BillingBatch::class,
             'billing_batch_line' => BillingBatchLine::class,
+            'billing_record' => BillingRecord::class,
         ]);
     }
 }

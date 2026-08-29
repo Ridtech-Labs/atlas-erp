@@ -5,6 +5,7 @@
     use App\Core\Administration\Filament\Pages\SystemHealth;
     use App\Core\Administration\Filament\Resources\Activities\ActivityResource;
     use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
+    use App\Core\Administration\Filament\Resources\BillingRecords\BillingRecordResource;
     use App\Core\Administration\Filament\Resources\Clients\ClientResource;
     use App\Core\Administration\Filament\Resources\Jobs\JobResource;
     use App\Core\Administration\Filament\Resources\RateAgreements\RateAgreementResource;
@@ -115,6 +116,13 @@
                     'active' => request()->routeIs('filament.admin.resources.billing-batches.*'),
                     'disabled' => false,
                     'icon' => 'reports',
+                ],
+                [
+                    'label' => 'Billing Records',
+                    'url' => BillingRecordResource::canViewAny() ? BillingRecordResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.billing-records.*'),
+                    'disabled' => false,
+                    'icon' => 'finance',
                 ],
             ],
         ], [

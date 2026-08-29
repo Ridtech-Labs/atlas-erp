@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\BillingBatches\Pages;
 
 use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
+use App\Core\Administration\Filament\Resources\BillingRecords\BillingRecordResource;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Finance\Actions\BillingBatches\AddJobCardsToBillingBatchAction;
 use App\Finance\Actions\BillingBatches\PrepareBillingBatchAction;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Models\BillingBatch;
+use App\Finance\Models\BillingRecord;
 use App\Finance\Services\BillingBatchEligibilityService;
 use App\Finance\Services\RateResolverService;
 use App\Models\User;
@@ -34,7 +36,7 @@ class ViewBillingBatch extends ViewRecord
 
     public function getSubheading(): ?string
     {
-        return 'Snapshot reviewed operational evidence, resolved rates, and commercial totals before invoice generation begins.';
+        return 'Snapshot reviewed operational evidence, resolved rates, and commercial totals before external VAT receipt recording begins.';
     }
 
     protected function getHeaderActions(): array
@@ -59,6 +61,12 @@ class ViewBillingBatch extends ViewRecord
                 ->requiresConfirmation()
                 ->action(fn () => app(PrepareBillingBatchAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
                 ->visible(fn (): bool => (string) $this->currentRecord()->getRawOriginal('status') === BillingBatchStatus::Draft->value && $this->currentRecord()->lines()->exists()),
+            Action::make('createBillingRecord')
+                ->label('Create Billing Record')
+                ->url(fn (): string => BillingRecordResource::getUrl('create', ['billing_batch' => $this->currentRecord()->getKey()]))
+                ->visible(fn (): bool => (string) $this->currentRecord()->getRawOriginal('status') === BillingBatchStatus::Prepared->value
+                    && ! $this->currentRecord()->billingRecord()->exists()
+                    && auth()->user()?->can('create', BillingRecord::class) === true),
         ];
     }
 

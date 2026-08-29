@@ -53,7 +53,7 @@ class BillingBatchInfolist
                         ->label('Currency rule')
                         ->state(fn (BillingBatch $record): string => $record->hasMixedCurrencies()
                             ? 'Mixed-currency batch detected'
-                            : 'Single-currency batch'),
+                            : 'Single-currency batch ready for external VAT receipt recording'),
                 ])
                 ->columns(2),
         ]);

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BillingBatch extends Model
@@ -80,6 +81,12 @@ class BillingBatch extends Model
     public function lines(): HasMany
     {
         return $this->hasMany(BillingBatchLine::class);
+    }
+
+    /** @return HasOne<BillingRecord, $this> */
+    public function billingRecord(): HasOne
+    {
+        return $this->hasOne(BillingRecord::class);
     }
 
     /**

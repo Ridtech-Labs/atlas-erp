@@ -177,7 +177,7 @@ class JobCardForm
                                 JobCardApprovalStatus::PendingVerification->value => 'This Job Card is awaiting Accounts review against the client-issued document before billing can continue.',
                                 JobCardApprovalStatus::Returned->value => 'This Job Card was returned to Operations. Update the recorded evidence, then submit it back to Accounts.',
                                 JobCardApprovalStatus::Verified->value => 'This Job Card has been reviewed by Accounts and can now move into billing preparation.',
-                                JobCardApprovalStatus::BillingReady->value => 'This Job Card has completed Accounts review and has a billing basis ready for invoicing.',
+                                JobCardApprovalStatus::BillingReady->value => 'This Job Card has completed Accounts review and has a commercial basis ready for external VAT receipt recording.',
                                 default => 'Use the Accounts review action after recording to confirm the evidence on the client-issued Job Card.',
                             };
                         })
@@ -194,13 +194,13 @@ class JobCardForm
                         ->label('Billing stage')
                         ->content(function ($record): string {
                             if (! $record instanceof JobCard) {
-                                return 'After Accounts review, Finance prepares a Billing Batch that resolves rates from active Rate Agreements and snapshots the commercial basis for invoicing.';
+                                return 'After Accounts review, Finance prepares a Billing Batch that resolves rates from active Rate Agreements and snapshots the commercial basis before external VAT receipt recording.';
                             }
 
                             return match ((string) $record->getRawOriginal('approval_status')) {
                                 JobCardApprovalStatus::Verified->value => 'This Job Card has passed Accounts review and is ready for Billing Batch preparation. Rates are resolved from active Rate Agreements when Finance adds reviewed Work Entries to a Billing Batch.',
                                 JobCardApprovalStatus::BillingReady->value => 'This Job Card has been included in billing preparation. Its commercial snapshot now belongs to the related Billing Batch lines, not manual rate entry on the Job Card.',
-                                default => 'After Accounts review, Finance prepares a Billing Batch that resolves rates from active Rate Agreements and snapshots the commercial basis for invoicing.',
+                                default => 'After Accounts review, Finance prepares a Billing Batch that resolves rates from active Rate Agreements and snapshots the commercial basis before external VAT receipt recording.',
                             };
                         })
                         ->columnSpanFull(),
