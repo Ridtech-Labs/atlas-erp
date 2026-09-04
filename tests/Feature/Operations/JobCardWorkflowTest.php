@@ -2,6 +2,7 @@
 
 use App\Administration\Enums\RoleName;
 use App\Core\Administration\Filament\Resources\JobCards\JobCardResource;
+use App\Core\Administration\Filament\Resources\JobCards\Pages\CreateJobCard;
 use App\Core\Administration\Filament\Resources\JobCards\Pages\EditJobCard;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\CRM\Models\Client;
@@ -13,6 +14,13 @@ use App\Finance\Actions\RateAgreements\CreateRateAgreementAction;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Enums\RateAgreementStatus;
 use App\Finance\Services\BillingBatchEligibilityService;
+use App\Fleet\Actions\CancelJobAssetAssignmentAction;
+use App\Fleet\Actions\CreateFleetAssetAction;
+use App\Fleet\Actions\CreateFleetAssetTypeAction;
+use App\Fleet\Actions\CreateJobAssetAssignmentAction;
+use App\Fleet\Actions\ReleaseJobAssetAssignmentAction;
+use App\Fleet\Enums\FleetAssetCategory;
+use App\Fleet\Services\JobCardFleetPrefillService;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\CreateJobCardAction;
@@ -878,6 +886,51 @@ test('record client job card form does not expose verification or billing inputs
         ->assertDontSee('Hourly rate')
         ->assertDontSee('Rate currency')
         ->assertDontSee('Calculated billable amount');
+});
+
+test('the real Job Card create page prefills the sole active Fleet assignment without creating a dynamic evidence link', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk-fleet-prefill@example.test'], [RoleName::DataEntryClerk->value]);
+    $operations = $this->tenantUser($tenant, ['email' => 'operations-fleet-prefill@example.test'], [RoleName::OperationsManager->value]);
+    $clerk->companies()->sync([$company->getKey()]);
+    $operations->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($clerk);
+    $type = app(CreateFleetAssetTypeAction::class)->execute([
+        'name' => 'Reach Stacker', 'category' => FleetAssetCategory::HeavyMachinery->value, 'is_active' => true,
+    ], $clerk);
+    $asset = app(CreateFleetAssetAction::class)->execute([
+        'fleet_asset_type_id' => $type->getKey(), 'asset_number' => 'RS-003', 'operational_status' => 'available',
+    ], $clerk);
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(), 'company_id' => $company->getKey(), 'status' => JobStatus::InProgress, 'job_type' => JobType::HeavyMachinery,
+    ]);
+    $prefill = app(JobCardFleetPrefillService::class);
+    expect($prefill->forJob($job))->toBe(['equipment_reference' => null, 'machine_number' => null]);
+
+    $this->actingAs($operations);
+    app(CreateJobAssetAssignmentAction::class)->execute($job, ['fleet_asset_id' => $asset->getKey()], $operations);
+
+    $this->actingAs($clerk);
+    $this->get(JobCardResource::getUrl('create', ['job' => $job->getKey()]))
+        ->assertOk();
+
+    Livewire::withQueryParams(['job' => $job->getKey()])
+        ->test(CreateJobCard::class)
+        ->assertSet('data.job_id', $job->getKey())
+        ->assertSet('data.equipment_reference', 'Reach Stacker')
+        ->assertSet('data.machine_number', 'RS-003');
+
+    expect($prefill->forJob($job))->toBe(['equipment_reference' => 'Reach Stacker', 'machine_number' => 'RS-003']);
+    app(ReleaseJobAssetAssignmentAction::class)->execute($job->assetAssignments()->firstOrFail(), $operations);
+    expect($prefill->forJob($job))->toBe(['equipment_reference' => null, 'machine_number' => null]);
+
+    $cancelled = app(CreateJobAssetAssignmentAction::class)->execute($job, ['fleet_asset_id' => $asset->getKey()], $operations);
+    app(CancelJobAssetAssignmentAction::class)->execute($cancelled, $operations, 'QA cancellation');
+    expect($prefill->forJob($job))->toBe(['equipment_reference' => null, 'machine_number' => null]);
 });
 
 test('accounts review notes belong to accounts review and billing fields only apply after review', function () {

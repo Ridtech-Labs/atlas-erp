@@ -10,6 +10,7 @@ use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Models\Client;
 use App\CRM\Models\ClientSite;
+use App\Fleet\Models\JobAssetAssignment;
 use App\Models\User;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobPriority;
@@ -229,6 +230,12 @@ class Job extends Model
     public function waybills(): HasMany
     {
         return $this->hasMany(Waybill::class)->latest('waybill_date');
+    }
+
+    /** @return HasMany<JobAssetAssignment, $this> */
+    public function assetAssignments(): HasMany
+    {
+        return $this->hasMany(JobAssetAssignment::class);
     }
 
     public function getActivitylogOptions(): LogOptions

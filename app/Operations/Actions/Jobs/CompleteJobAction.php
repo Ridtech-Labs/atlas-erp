@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Operations\Actions\Jobs;
 
 use App\Core\Shared\Exceptions\BusinessException;
+use App\Fleet\Actions\ReleaseJobAssetAssignmentAction;
+use App\Fleet\Enums\JobAssetAssignmentStatus;
 use App\Models\User;
 use App\Operations\Actions\Jobs\Transitions\TransitionsJobState;
 use App\Operations\Enums\JobStatus;
@@ -59,5 +61,10 @@ class CompleteJobAction extends TransitionsJobState
             'completed_at' => $actualEnd,
             'completed_by' => $actor->getKey(),
         ]);
+
+        $job->assetAssignments()
+            ->where('status', JobAssetAssignmentStatus::Assigned->value)
+            ->get()
+            ->each(fn ($assignment) => app(ReleaseJobAssetAssignmentAction::class)->execute($assignment, $actor, 'Job completed before dispatch tracking is available.'));
     }
 }

@@ -27,8 +27,10 @@ use App\Finance\Policies\BillingRecordPolicy;
 use App\Finance\Policies\RateAgreementPolicy;
 use App\Fleet\Models\FleetAsset;
 use App\Fleet\Models\FleetAssetType;
+use App\Fleet\Models\JobAssetAssignment;
 use App\Fleet\Policies\FleetAssetPolicy;
 use App\Fleet\Policies\FleetAssetTypePolicy;
+use App\Fleet\Policies\JobAssetAssignmentPolicy;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
@@ -65,6 +67,7 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(BillingRecord::class, BillingRecordPolicy::class);
         Gate::policy(FleetAssetType::class, FleetAssetTypePolicy::class);
         Gate::policy(FleetAsset::class, FleetAssetPolicy::class);
+        Gate::policy(JobAssetAssignment::class, JobAssetAssignmentPolicy::class);
 
         Gate::define('manageSettings', fn (User $user): bool => $this->hasPermission($user, 'settings.manage') || $this->hasPermission($user, 'settings.update'));
         Gate::define('viewHealth', fn (User $user): bool => $this->hasPermission($user, 'health.view'));

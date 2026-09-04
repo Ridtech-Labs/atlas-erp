@@ -17,6 +17,7 @@ use App\Finance\Models\RateAgreement;
 use App\Finance\Models\RateAgreementLine;
 use App\Fleet\Models\FleetAsset;
 use App\Fleet\Models\FleetAssetType;
+use App\Fleet\Models\JobAssetAssignment;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
@@ -60,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
             'billing_record' => BillingRecord::class,
             'fleet_asset' => FleetAsset::class,
             'fleet_asset_type' => FleetAssetType::class,
+            'job_asset_assignment' => JobAssetAssignment::class,
         ]);
     }
 }

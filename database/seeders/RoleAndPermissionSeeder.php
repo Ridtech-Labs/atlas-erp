@@ -71,6 +71,8 @@ class RoleAndPermissionSeeder extends Seeder
                 PermissionName::BillingRecordsManage->value,
                 PermissionName::FleetAssetsView->value,
                 PermissionName::FleetAssetsManage->value,
+                PermissionName::FleetAssignmentsView->value,
+                PermissionName::FleetAssignmentsManage->value,
                 PermissionName::JobsSchedule->value,
                 PermissionName::JobsStart->value,
                 PermissionName::JobsHold->value,
@@ -99,6 +101,8 @@ class RoleAndPermissionSeeder extends Seeder
                 PermissionName::JobsCancel->value,
                 PermissionName::FleetAssetsView->value,
                 PermissionName::FleetAssetsManage->value,
+                PermissionName::FleetAssignmentsView->value,
+                PermissionName::FleetAssignmentsManage->value,
             ],
             RoleName::DataEntryClerk->value => [
                 PermissionName::DashboardView->value,
@@ -114,6 +118,7 @@ class RoleAndPermissionSeeder extends Seeder
                 PermissionName::JobsSubmit->value,
                 PermissionName::FleetAssetsView->value,
                 PermissionName::FleetAssetsManage->value,
+                PermissionName::FleetAssignmentsView->value,
             ],
             RoleName::FinanceManager->value => [
                 PermissionName::DashboardView->value,

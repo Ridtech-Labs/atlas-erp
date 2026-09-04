@@ -11,6 +11,9 @@ use App\Finance\Actions\BillingBatches\CreateBillingBatchAction;
 use App\Finance\Actions\BillingBatches\PrepareBillingBatchAction;
 use App\Finance\Actions\RateAgreements\CreateRateAgreementAction;
 use App\Finance\Enums\RateAgreementStatus;
+use App\Fleet\Actions\CreateFleetAssetAction;
+use App\Fleet\Actions\CreateFleetAssetTypeAction;
+use App\Fleet\Enums\FleetAssetCategory;
 use App\Models\User;
 use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\ReturnJobCardAction;
@@ -66,6 +69,49 @@ test('authorized user can view the job workspace', function () {
     $this->get(JobResource::getUrl('view', ['record' => $job]))
         ->assertOk()
         ->assertSee($job->job_number);
+});
+
+test('Data Entry Clerk sees Asset Assignments without controls while Operations can manage them and Finance cannot see the section', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, [], [RoleName::DataEntryClerk->value]);
+    $operations = $this->tenantUser($tenant, [], [RoleName::OperationsManager->value]);
+    $finance = $this->tenantUser($tenant, [], [RoleName::FinanceManager->value]);
+    $clerk->companies()->sync([$company->getKey()]);
+    $operations->companies()->sync([$company->getKey()]);
+    $finance->companies()->sync([$company->getKey()]);
+    $job = Job::factory()->create(['tenant_id' => $tenant->getKey(), 'company_id' => $company->getKey()]);
+
+    $this->actingAs($clerk)->withSession(['active_company_id' => $company->getKey()]);
+    $type = app(CreateFleetAssetTypeAction::class)->execute([
+        'name' => 'Reach Stacker', 'category' => FleetAssetCategory::HeavyMachinery->value, 'is_active' => true,
+    ], $clerk);
+    $asset = app(CreateFleetAssetAction::class)->execute([
+        'fleet_asset_type_id' => $type->getKey(), 'asset_number' => 'RS-003', 'operational_status' => 'available',
+    ], $clerk);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertSee('Asset assignments')
+        ->assertDontSee('Assign asset')
+        ->assertDontSee('editAssetAssignment')
+        ->assertDontSee('releaseAssetAssignment')
+        ->assertDontSee('cancelAssetAssignment');
+
+    $this->actingAs($operations)->withSession(['active_company_id' => $company->getKey()]);
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertSee('Asset assignments')
+        ->assertSee('Assign asset')
+        ->set('assignmentData.fleet_asset_id', $asset->getKey())
+        ->call('assignAsset')
+        ->assertHasNoErrors();
+    expect($job->assetAssignments()->where('fleet_asset_id', $asset->getKey())->exists())->toBeTrue();
+
+    $this->actingAs($finance)->withSession(['active_company_id' => $company->getKey()]);
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job->fresh()])
+        ->assertDontSee('Asset assignments')
+        ->assertDontSee('Assign asset');
 });
 
 test('job list and workspace display the same status after workflow transitions', function () {

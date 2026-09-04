@@ -13,6 +13,7 @@ use Database\Factories\FleetAssetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
@@ -73,6 +74,12 @@ class FleetAsset extends Model
     public function type(): BelongsTo
     {
         return $this->belongsTo(FleetAssetType::class, 'fleet_asset_type_id');
+    }
+
+    /** @return HasMany<JobAssetAssignment, $this> */
+    public function jobAssignments(): HasMany
+    {
+        return $this->hasMany(JobAssetAssignment::class);
     }
 
     public function getActivitylogOptions(): LogOptions

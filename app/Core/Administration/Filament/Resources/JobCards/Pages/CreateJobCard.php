@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\JobCards\Pages;
 
 use App\Core\Administration\Filament\Resources\JobCards\JobCardResource;
+use App\Fleet\Services\JobCardFleetPrefillService;
 use App\Models\User;
 use App\Operations\Actions\JobCards\CreateJobCardAction;
 use App\Operations\Models\Job;
@@ -14,6 +15,25 @@ use Illuminate\Database\Eloquent\Model;
 class CreateJobCard extends CreateRecord
 {
     protected static string $resource = JobCardResource::class;
+
+    protected function fillForm(): void
+    {
+        $jobId = (int) request()->integer('job');
+        $data = ['job_id' => $jobId];
+
+        if ($jobId > 0) {
+            $job = Job::query()->find($jobId);
+
+            if ($job instanceof Job) {
+                $data = [
+                    ...$data,
+                    ...app(JobCardFleetPrefillService::class)->forJob($job),
+                ];
+            }
+        }
+
+        $this->form->fill($data);
+    }
 
     protected function handleRecordCreation(array $data): Model
     {

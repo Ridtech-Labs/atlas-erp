@@ -533,9 +533,9 @@
                     </div>
                 </div>
 
-                <div x-show="tab === 'equipment'" class="rounded-3xl border border-stone-200 bg-white p-6">
+                <div x-show="tab === 'overview' || tab === 'equipment'" class="rounded-3xl border border-stone-200 bg-white p-6">
                     <div class="text-lg font-semibold text-stone-950">Equipment</div>
-                    <div class="mt-1 text-sm text-stone-500">The planning requirement stays visible beside what was actually recorded on the operational document.</div>
+                    <div class="mt-1 text-sm text-stone-500">Plan assets here. Assignment reserves planning availability only; dispatch and return are not recorded in this workspace.</div>
                     <div class="mt-6 grid gap-4 md:grid-cols-2">
                         <div class="rounded-2xl bg-stone-50 p-4">
                             <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Required equipment</div>
@@ -546,6 +546,57 @@
                             <div class="mt-2 text-sm font-semibold text-stone-950">{{ $isTrucking ? ($latestWaybill?->truck_number ?? 'No Waybill yet') : ($latestCard?->equipment_reference ?? 'No Client Job Card yet') }}</div>
                         </div>
                     </div>
+
+                    @if ($canViewAssignments)
+                    <div class="mt-6 rounded-2xl border border-stone-200 bg-stone-50 p-5">
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <div>
+                                <div class="text-base font-semibold text-stone-950">Asset assignments</div>
+                                <div class="mt-1 text-sm text-stone-500">Each assignment holds one Fleet asset for an explicit planning window.</div>
+                            </div>
+                            <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold text-stone-600">{{ $assetAssignments->where('status', \App\Fleet\Enums\JobAssetAssignmentStatus::Assigned)->count() }} active</span>
+                        </div>
+
+                        <div class="mt-5 space-y-3">
+                            @forelse ($assetAssignments as $assignment)
+                                <div class="rounded-2xl border border-stone-200 bg-white px-4 py-4">
+                                    <div class="flex flex-wrap items-start justify-between gap-3">
+                                        <div>
+                                            <div class="text-sm font-semibold text-stone-950">{{ $assignment->asset?->asset_number ?? 'Fleet asset' }}</div>
+                                            <div class="mt-1 text-xs text-stone-500">{{ $assignment->asset?->type?->name ?? 'Asset type unavailable' }} · {{ $assignment->planned_start_at?->format('j M Y H:i') }} to {{ $assignment->planned_end_at?->format('j M Y H:i') }}</div>
+                                            @if ($assignment->operatorDisplayName())<div class="mt-1 text-xs text-stone-500">Operator: {{ $assignment->operatorDisplayName() }}</div>@endif
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide {{ $assignment->status === \App\Fleet\Enums\JobAssetAssignmentStatus::Assigned ? 'bg-emerald-50 text-emerald-700' : 'bg-stone-100 text-stone-600' }}">{{ $assignment->status?->label() }}</span>
+                                            @if ($canManageAssignments && $assignment->status === \App\Fleet\Enums\JobAssetAssignmentStatus::Assigned)
+                                                <button type="button" wire:click="editAssetAssignment({{ $assignment->getKey() }})" class="rounded-full border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700">Edit</button>
+                                                <button type="button" wire:click="releaseAssetAssignment({{ $assignment->getKey() }})" class="rounded-full border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700">Release</button>
+                                                <button type="button" wire:click="cancelAssetAssignment({{ $assignment->getKey() }})" class="rounded-full border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700">Cancel</button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="rounded-2xl border border-dashed border-stone-300 bg-white px-4 py-5 text-sm text-stone-500">No Fleet assets are assigned to this Job yet.</div>
+                            @endforelse
+                        </div>
+
+                        @if ($canManageAssignments)
+                            <form wire:submit="assignAsset" class="mt-5 grid gap-3 rounded-2xl border border-stone-200 bg-white p-4 md:grid-cols-2 xl:grid-cols-3">
+                                <select wire:model="assignmentData.fleet_asset_id" required class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 focus:border-stone-950 focus:ring-stone-950">
+                                    <option value="">Select available asset</option>
+                                    @foreach ($availableAssets as $asset)<option value="{{ $asset->getKey() }}">{{ $asset->asset_number }} · {{ $asset->type?->name }}</option>@endforeach
+                                </select>
+                                <input wire:model="assignmentData.operator_user_id" type="number" min="1" placeholder="Internal operator user ID (optional)" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-950 focus:ring-stone-950">
+                                <input wire:model="assignmentData.operator_name" type="text" placeholder="Or external operator name" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-950 focus:ring-stone-950">
+                                <input wire:model.live.debounce.300ms="assignmentData.planned_start_at" type="datetime-local" aria-label="Planned assignment start" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 focus:border-stone-950 focus:ring-stone-950">
+                                <input wire:model.live.debounce.300ms="assignmentData.planned_end_at" type="datetime-local" aria-label="Planned assignment end" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 focus:border-stone-950 focus:ring-stone-950">
+                                <button type="submit" class="rounded-xl bg-stone-950 px-4 py-2 text-sm font-semibold text-white">{{ $editingAssignmentId ? 'Save assignment' : 'Assign asset' }}</button>
+                                <div class="md:col-span-2 xl:col-span-3 text-xs text-stone-500">Leave the planning window blank to reserve the Job's planned date range. Date-only Jobs reserve the full day.</div>
+                            </form>
+                        @endif
+                    </div>
+                    @endif
                 </div>
 
                 <div x-show="tab === 'operational'" class="rounded-3xl border border-stone-200 bg-white p-6">

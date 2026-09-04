@@ -11,6 +11,12 @@ use App\Core\Administration\Filament\Resources\Waybills\WaybillResource;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Models\BillingBatchLine;
+use App\Fleet\Actions\CancelJobAssetAssignmentAction;
+use App\Fleet\Actions\CreateJobAssetAssignmentAction;
+use App\Fleet\Actions\ReleaseJobAssetAssignmentAction;
+use App\Fleet\Actions\UpdateJobAssetAssignmentAction;
+use App\Fleet\Models\JobAssetAssignment;
+use App\Fleet\Services\JobAssetAvailabilityService;
 use App\Models\User;
 use App\Operations\Actions\Jobs\ApproveJobAction;
 use App\Operations\Actions\Jobs\CompleteJobAction;
@@ -40,6 +46,11 @@ class JobWorkspaceWidget extends Widget
 
     public ?Job $record = null;
 
+    /** @var array<string, mixed> */
+    public array $assignmentData = [];
+
+    public ?int $editingAssignmentId = null;
+
     protected function getViewData(): array
     {
         $user = auth()->user();
@@ -52,6 +63,8 @@ class JobWorkspaceWidget extends Widget
             'jobCards.workEntries',
             'waybills',
             'completer',
+            'assetAssignments.asset.type',
+            'assetAssignments.operatorUser',
         ]);
 
         $jobStatus = $job instanceof Job
@@ -96,6 +109,14 @@ class JobWorkspaceWidget extends Widget
         $workEntries = $jobCards->flatMap(fn (JobCard $card): Collection => $card->workEntries);
         $latestCard = $jobCards->first();
         $latestWaybill = $waybills->first();
+        $assetAssignments = $job instanceof Job
+            ? $job->assetAssignments->sortByDesc('assigned_at')->values()
+            : collect();
+        $canViewAssignments = $job instanceof Job && $user instanceof User && $user->can('viewAny', JobAssetAssignment::class);
+        $canManageAssignments = $job instanceof Job && $user instanceof User && $user->can('create', JobAssetAssignment::class);
+        $availableAssets = $canManageAssignments
+            ? app(JobAssetAvailabilityService::class)->availableFor($job, $this->assignmentData)
+            : collect();
         $operationalDocumentLabel = $job?->operationalDocumentLabel() ?? 'Operational Document';
         $operationalDocumentLabelPlural = $operationalDocumentLabel === 'Waybill' ? 'Waybills' : 'Client Job Cards';
         $pendingVerificationCards = $jobCards->filter(fn (JobCard $card): bool => in_array((string) $card->getRawOriginal('approval_status'), [JobCardApprovalStatus::PendingVerification->value, JobCardApprovalStatus::Submitted->value], true));
@@ -181,6 +202,10 @@ class JobWorkspaceWidget extends Widget
             'jobCardsIndexUrl' => $job instanceof Job ? JobCardResource::getUrl('index', ['job' => $job->getKey()]) : '#',
             'waybillsIndexUrl' => $job instanceof Job ? WaybillResource::getUrl('index', ['job' => $job->getKey()]) : '#',
             'plannedOperatorName' => $job?->plannedOperatorName(),
+            'assetAssignments' => $assetAssignments,
+            'canViewAssignments' => $canViewAssignments,
+            'canManageAssignments' => $canManageAssignments,
+            'availableAssets' => $availableAssets,
             'latestCardOperatorName' => $latestCard?->operatorDisplayName(),
             'totalNormalHours' => round((float) $workEntries->sum('normal_hours'), 2),
             'totalOvertimeHours' => round((float) $workEntries->sum('overtime_hours'), 2),
@@ -220,6 +245,82 @@ class JobWorkspaceWidget extends Widget
             'showBillingTab' => ! $isTrucking,
             'approvalRequired' => $job instanceof Job ? $workflow->approvalRequired($job) : false,
         ];
+    }
+
+    public function assignAsset(): void
+    {
+        $job = $this->record;
+        $user = auth()->user();
+        if (! $job instanceof Job || ! $user instanceof User) {
+            abort(403);
+        }
+
+        try {
+            if ($this->editingAssignmentId !== null) {
+                $assignment = JobAssetAssignment::query()->whereKey($this->editingAssignmentId)->firstOrFail();
+                if ($assignment->job_id !== $job->getKey()) {
+                    abort(403);
+                }
+                app(UpdateJobAssetAssignmentAction::class)->execute($assignment, $this->assignmentData, $user);
+            } else {
+                app(CreateJobAssetAssignmentAction::class)->execute($job, $this->assignmentData, $user);
+            }
+            $this->assignmentData = [];
+            $this->editingAssignmentId = null;
+            Notification::make()->success()->title('Fleet assignment saved')->body('The asset planning reservation has been saved.')->send();
+        } catch (BusinessException $exception) {
+            Notification::make()->danger()->title('Asset could not be assigned')->body($exception->getMessage())->send();
+        }
+
+        $this->dispatch('$refresh');
+    }
+
+    public function editAssetAssignment(int $assignmentId): void
+    {
+        $assignment = JobAssetAssignment::query()->whereKey($assignmentId)->firstOrFail();
+        if (! $this->record instanceof Job || $assignment->job_id !== $this->record->getKey() || ! auth()->user()?->can('update', $assignment)) {
+            abort(403);
+        }
+
+        $this->editingAssignmentId = $assignment->getKey();
+        $this->assignmentData = [
+            'fleet_asset_id' => $assignment->fleet_asset_id,
+            'operator_user_id' => $assignment->operator_user_id,
+            'operator_name' => $assignment->operator_name,
+            'planned_start_at' => CarbonImmutable::parse((string) $assignment->getRawOriginal('planned_start_at'))->format('Y-m-d\\TH:i'),
+            'planned_end_at' => CarbonImmutable::parse((string) $assignment->getRawOriginal('planned_end_at'))->format('Y-m-d\\TH:i'),
+            'notes' => $assignment->notes,
+        ];
+    }
+
+    public function releaseAssetAssignment(int $assignmentId): void
+    {
+        $this->changeAssetAssignment($assignmentId, false);
+    }
+
+    public function cancelAssetAssignment(int $assignmentId): void
+    {
+        $this->changeAssetAssignment($assignmentId, true);
+    }
+
+    private function changeAssetAssignment(int $assignmentId, bool $cancel): void
+    {
+        $user = auth()->user();
+        $assignment = JobAssetAssignment::query()->whereKey($assignmentId)->firstOrFail();
+        if (! $user instanceof User || ! $this->record instanceof Job || $assignment->job_id !== $this->record->getKey()) {
+            abort(403);
+        }
+
+        try {
+            $cancel
+                ? app(CancelJobAssetAssignmentAction::class)->execute($assignment, $user)
+                : app(ReleaseJobAssetAssignmentAction::class)->execute($assignment, $user);
+            Notification::make()->success()->title($cancel ? 'Fleet assignment cancelled' : 'Fleet assignment released')->send();
+        } catch (BusinessException $exception) {
+            Notification::make()->danger()->title('Assignment could not be updated')->body($exception->getMessage())->send();
+        }
+
+        $this->dispatch('$refresh');
     }
 
     public function runWorkflowAction(string $trigger): void

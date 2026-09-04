@@ -7,6 +7,7 @@ namespace App\Core\Administration\Filament\Resources\JobCards\Schemas;
 use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Core\Tenancy\Models\Company;
+use App\Fleet\Services\JobCardFleetPrefillService;
 use App\Models\User;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobShift;
@@ -55,8 +56,31 @@ class JobCardForm
                     Select::make('shift')
                         ->options(collect(JobShift::cases())->mapWithKeys(fn (JobShift $shift) => [$shift->value => $shift->label()])->all())
                         ->required(),
-                    TextInput::make('equipment_reference')->label('Forklift No. / equipment')->maxLength(255),
-                    TextInput::make('machine_number')->maxLength(255)->placeholder('FLT-16T-04'),
+                    TextInput::make('equipment_reference')
+                        ->label('Forklift No. / equipment')
+                        ->default(fn (Get $get): ?string => self::fleetPrefill((int) ($get('job_id') ?? request()->integer('job')))['equipment_reference'])
+                        ->maxLength(255),
+                    Select::make('fleet_asset_id')
+                        ->label('Assigned Fleet asset')
+                        ->options(fn (Get $get): array => self::activeFleetAssetOptions((int) ($get('job_id') ?? request()->integer('job'))))
+                        ->visible(fn (Get $get): bool => count(self::activeFleetAssetOptions((int) ($get('job_id') ?? request()->integer('job')))) > 1)
+                        ->required(fn (Get $get): bool => count(self::activeFleetAssetOptions((int) ($get('job_id') ?? request()->integer('job')))) > 1)
+                        ->live()
+                        ->afterStateUpdated(function (?int $state, Set $set, Get $get): void {
+                            $jobId = (int) ($get('job_id') ?? request()->integer('job'));
+                            $job = Job::query()->find($jobId);
+                            if ($job instanceof Job) {
+                                $identity = app(JobCardFleetPrefillService::class)->selectedForJob($job, $state);
+                                $set('equipment_reference', $identity['equipment_reference']);
+                                $set('machine_number', $identity['machine_number']);
+                            }
+                        }),
+                    TextInput::make('machine_number')
+                        ->default(fn (Get $get): ?string => self::fleetPrefill((int) ($get('job_id') ?? request()->integer('job')))['machine_number'])
+                        ->readOnly(fn (Get $get): bool => self::machineIsFleetDerived((int) ($get('job_id') ?? request()->integer('job')), $get('fleet_asset_id')))
+                        ->helperText(fn (Get $get): ?string => self::machineIsFleetDerived((int) ($get('job_id') ?? request()->integer('job')), $get('fleet_asset_id')) ? 'Derived from assigned Fleet Asset.' : null)
+                        ->maxLength(255)
+                        ->placeholder('FLT-16T-04'),
                     Select::make('operator_source')
                         ->label('Operator type')
                         ->options([
@@ -258,5 +282,43 @@ class JobCardForm
         }
 
         return app(OperatorAssignmentService::class)->defaultJobCardAssignment($job);
+    }
+
+    /** @return array{equipment_reference:?string, machine_number:?string} */
+    private static function fleetPrefill(int $jobId): array
+    {
+        if ($jobId <= 0) {
+            return ['equipment_reference' => null, 'machine_number' => null];
+        }
+
+        $job = Job::query()->find($jobId);
+
+        return $job instanceof Job
+            ? app(JobCardFleetPrefillService::class)->forJob($job)
+            : ['equipment_reference' => null, 'machine_number' => null];
+    }
+
+    /** @return array<int, string> */
+    private static function activeFleetAssetOptions(int $jobId): array
+    {
+        $job = Job::query()->find($jobId);
+        if (! $job instanceof Job) {
+            return [];
+        }
+
+        return app(JobCardFleetPrefillService::class)->activeAssignments($job)
+            ->mapWithKeys(fn ($assignment): array => [$assignment->fleet_asset_id => sprintf('%s (%s)', $assignment->asset?->asset_number, $assignment->asset?->type?->name)])
+            ->all();
+    }
+
+    private static function machineIsFleetDerived(int $jobId, mixed $fleetAssetId): bool
+    {
+        $job = Job::query()->find($jobId);
+        if (! $job instanceof Job) {
+            return false;
+        }
+        $assignments = app(JobCardFleetPrefillService::class)->activeAssignments($job);
+
+        return $assignments->count() === 1 || ($assignments->count() > 1 && filled($fleetAssetId));
     }
 }

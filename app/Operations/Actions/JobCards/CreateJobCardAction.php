@@ -9,6 +9,7 @@ use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Core\Shared\Services\TenantSequenceService;
+use App\Fleet\Services\JobCardFleetPrefillService;
 use App\Models\User;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobStatus;
@@ -53,6 +54,7 @@ class CreateJobCardAction
         private readonly AdministrationActivityLogger $logger,
         private readonly TenantSequenceService $sequences,
         private readonly OperatorAssignmentService $operators,
+        private readonly JobCardFleetPrefillService $fleetPrefill,
     ) {}
 
     /**
@@ -104,9 +106,10 @@ class CreateJobCardAction
             }
 
             $cardDate = $this->resolveCardDate($job, $recordingData);
+            $fleetPrefill = $this->fleetPrefill->selectedForJob($job, isset($recordingData['fleet_asset_id']) ? (int) $recordingData['fleet_asset_id'] : null);
 
             $jobCard = JobCard::query()->create([
-                ...Arr::except($recordingData, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'operator_id', 'operators', 'attachments', 'source', 'from_time', 'to_time', 'header_hours', 'total_hours']),
+                ...Arr::except($recordingData, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'fleet_asset_id', 'operator_id', 'operators', 'attachments', 'source', 'from_time', 'to_time', 'header_hours', 'total_hours']),
                 'card_number' => $recordingData['card_number'] ?? $this->generateCardNumber($job),
                 'uuid' => (string) Str::uuid(),
                 'tenant_id' => $job->tenant_id,
@@ -117,7 +120,8 @@ class CreateJobCardAction
                 'card_date' => $cardDate,
                 'operator_id' => $assignment['operator']?->getKey(),
                 'shift' => $recordingData['shift'] ?? $job->getRawOriginal('shift'),
-                'equipment_reference' => $recordingData['equipment_reference'] ?? $job->equipment_requirement,
+                'equipment_reference' => $recordingData['equipment_reference'] ?? $fleetPrefill['equipment_reference'] ?? $job->equipment_requirement,
+                'machine_number' => $fleetPrefill['machine_number'] ?? $recordingData['machine_number'] ?? null,
                 'operated_by' => $assignment['external_name'],
                 'approval_status' => JobCardApprovalStatus::Recorded->value,
                 'from_time' => null,
