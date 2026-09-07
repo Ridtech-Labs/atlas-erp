@@ -1,0 +1,7 @@
+<x-filament-panels::page>
+    <div class="space-y-6">
+        <div><h2 class="text-xl font-semibold text-stone-950">Fleet Utilization</h2><p class="mt-1 text-sm text-stone-500">Completed dispatches are included by return date. Actual hours use dispatch-to-return time only.</p></div>
+        <div class="grid gap-3 rounded-2xl border border-stone-200 bg-white p-4 md:grid-cols-3"><input wire:model.live="from" type="date" class="rounded-xl border-stone-300"><input wire:model.live="until" type="date" class="rounded-xl border-stone-300"></div>
+        <div class="overflow-hidden rounded-2xl border border-stone-200 bg-white"><table class="w-full text-sm"><thead class="bg-stone-50 text-left text-xs uppercase text-stone-500"><tr><th class="p-4">Asset</th><th class="p-4">Type</th><th class="p-4">Completed Dispatches</th><th class="p-4">Actual Hours</th><th class="p-4">Average</th></tr></thead><tbody>@forelse($this->rows() as $row)<tr class="border-t border-stone-100"><td class="p-4 font-semibold">{{ $row['asset_number'] }}</td><td class="p-4">{{ $row['asset_type'] ?? 'Unclassified' }}</td><td class="p-4">{{ $row['completed_dispatches'] }}</td><td class="p-4">{{ number_format($row['actual_hours'], 2) }}</td><td class="p-4">{{ number_format($row['average_hours'], 2) }}</td></tr>@empty<tr><td colspan="5" class="p-8 text-center text-stone-500">No completed dispatches returned in this period.</td></tr>@endforelse</tbody></table></div>
+    </div>
+</x-filament-panels::page>

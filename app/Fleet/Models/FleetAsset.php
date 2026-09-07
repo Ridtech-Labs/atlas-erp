@@ -9,6 +9,7 @@ use App\Core\Shared\Concerns\HasPublicUuid;
 use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\Fleet\Enums\FleetAssetOperationalStatus;
+use App\Fleet\Enums\JobAssetAssignmentStatus;
 use Database\Factories\FleetAssetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -80,6 +81,30 @@ class FleetAsset extends Model
     public function jobAssignments(): HasMany
     {
         return $this->hasMany(JobAssetAssignment::class);
+    }
+
+    /** @return HasMany<JobAssetAssignment, $this> */
+    public function blockingJobAssignments(): HasMany
+    {
+        return $this->jobAssignments()->whereIn('status', [JobAssetAssignmentStatus::Assigned->value, JobAssetAssignmentStatus::Dispatched->value]);
+    }
+
+    /** @return array{label:string,assignment:?JobAssetAssignment} */
+    public function derivedAvailability(): array
+    {
+        $master = (string) $this->getRawOriginal('operational_status');
+        if ($master === FleetAssetOperationalStatus::OutOfService->value) {
+            return ['label' => 'Out of Service', 'assignment' => null];
+        }
+        if ($master === FleetAssetOperationalStatus::Inactive->value) {
+            return ['label' => 'Inactive', 'assignment' => null];
+        }
+        $assignments = $this->relationLoaded('blockingJobAssignments')
+            ? $this->blockingJobAssignments
+            : $this->blockingJobAssignments()->with('job')->get();
+        $assignment = $assignments->sortByDesc(fn (JobAssetAssignment $item): int => (string) $item->getRawOriginal('status') === JobAssetAssignmentStatus::Dispatched->value ? 2 : 1)->first();
+
+        return ['label' => (string) $assignment?->getRawOriginal('status') === JobAssetAssignmentStatus::Dispatched->value ? 'Dispatched' : ($assignment ? 'Assigned' : 'Available'), 'assignment' => $assignment];
     }
 
     public function getActivitylogOptions(): LogOptions

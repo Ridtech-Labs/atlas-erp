@@ -535,7 +535,7 @@
 
                 <div x-show="tab === 'overview' || tab === 'equipment'" class="rounded-3xl border border-stone-200 bg-white p-6">
                     <div class="text-lg font-semibold text-stone-950">Equipment</div>
-                    <div class="mt-1 text-sm text-stone-500">Plan assets here. Assignment reserves planning availability only; dispatch and return are not recorded in this workspace.</div>
+                    <div class="mt-1 text-sm text-stone-500">Assignments reserve assets, then record actual dispatch and return for this Job.</div>
                     <div class="mt-6 grid gap-4 md:grid-cols-2">
                         <div class="rounded-2xl bg-stone-50 p-4">
                             <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Required equipment</div>
@@ -570,11 +570,15 @@
                                             <span class="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide {{ $assignment->status === \App\Fleet\Enums\JobAssetAssignmentStatus::Assigned ? 'bg-emerald-50 text-emerald-700' : 'bg-stone-100 text-stone-600' }}">{{ $assignment->status?->label() }}</span>
                                             @if ($canManageAssignments && $assignment->status === \App\Fleet\Enums\JobAssetAssignmentStatus::Assigned)
                                                 <button type="button" wire:click="editAssetAssignment({{ $assignment->getKey() }})" class="rounded-full border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700">Edit</button>
+                                                @if (auth()->user()?->hasPermissionTo('fleet_dispatch.dispatch'))<button type="button" wire:click="dispatchAssetAssignment({{ $assignment->getKey() }})" class="rounded-full bg-stone-950 px-3 py-1.5 text-xs font-semibold text-white">Dispatch</button>@endif
                                                 <button type="button" wire:click="releaseAssetAssignment({{ $assignment->getKey() }})" class="rounded-full border border-stone-200 px-3 py-1.5 text-xs font-semibold text-stone-700">Release</button>
                                                 <button type="button" wire:click="cancelAssetAssignment({{ $assignment->getKey() }})" class="rounded-full border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700">Cancel</button>
                                             @endif
+                                            @if ($assignment->status === \App\Fleet\Enums\JobAssetAssignmentStatus::Dispatched && auth()->user()?->hasPermissionTo('fleet_dispatch.return'))<button type="button" wire:click="returnAssetAssignment({{ $assignment->getKey() }})" class="rounded-full bg-stone-950 px-3 py-1.5 text-xs font-semibold text-white">Return</button>@endif
                                         </div>
                                     </div>
+                                    @if ($assignment->dispatched_at)<div class="mt-2 text-xs text-stone-500">Dispatched: {{ $assignment->dispatched_at->format('j M Y H:i') }}</div>@endif
+                                    @if ($assignment->returned_at)<div class="mt-1 text-xs text-stone-500">Returned: {{ $assignment->returned_at->format('j M Y H:i') }}</div>@endif
                                 </div>
                             @empty
                                 <div class="rounded-2xl border border-dashed border-stone-300 bg-white px-4 py-5 text-sm text-stone-500">No Fleet assets are assigned to this Job yet.</div>

@@ -37,7 +37,7 @@ class JobAssetAvailabilityService
             ->where('operational_status', FleetAssetOperationalStatus::Available->value)
             ->whereHas('type', fn ($query) => $query->where('is_active', true))
             ->whereDoesntHave('jobAssignments', fn ($query) => $query
-                ->where('status', JobAssetAssignmentStatus::Assigned->value)
+                ->whereIn('status', [JobAssetAssignmentStatus::Assigned->value, JobAssetAssignmentStatus::Dispatched->value])
                 ->where('planned_start_at', '<', $window['end'])
                 ->where('planned_end_at', '>', $window['start']))
             ->orderBy('asset_number')
@@ -49,7 +49,7 @@ class JobAssetAvailabilityService
         return JobAssetAssignment::query()
             ->when($exceptAssignmentId !== null, fn ($query) => $query->whereKeyNot($exceptAssignmentId))
             ->where('fleet_asset_id', $asset->getKey())
-            ->where('status', JobAssetAssignmentStatus::Assigned->value)
+            ->whereIn('status', [JobAssetAssignmentStatus::Assigned->value, JobAssetAssignmentStatus::Dispatched->value])
             ->where('planned_start_at', '<', $end)
             ->where('planned_end_at', '>', $start)
             ->exists();

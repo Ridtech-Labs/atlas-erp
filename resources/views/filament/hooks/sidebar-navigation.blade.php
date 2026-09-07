@@ -2,6 +2,7 @@
     use App\Administration\Services\AdministrationAccessService;
     use App\Core\Administration\Filament\Pages\Dashboard;
     use App\Core\Administration\Filament\Pages\FinanceDashboard;
+    use App\Core\Administration\Filament\Pages\FleetUtilization;
     use App\Core\Administration\Filament\Pages\ManageSettings;
     use App\Core\Administration\Filament\Pages\SystemHealth;
     use App\Core\Administration\Filament\Resources\Activities\ActivityResource;
@@ -113,6 +114,13 @@
                     'active' => request()->routeIs('filament.admin.resources.fleet-asset-types.*'),
                     'disabled' => false,
                     'icon' => 'fleet',
+                ],
+                [
+                    'label' => 'Fleet Utilization',
+                    'url' => FleetUtilization::canAccess() ? FleetUtilization::getUrl() : null,
+                    'active' => request()->routeIs('filament.admin.pages.fleet-utilization'),
+                    'disabled' => ! FleetUtilization::canAccess(),
+                    'icon' => 'reports',
                 ],
                 ['label' => 'Inventory', 'url' => null, 'active' => false, 'disabled' => true, 'icon' => 'inventory'],
             ],

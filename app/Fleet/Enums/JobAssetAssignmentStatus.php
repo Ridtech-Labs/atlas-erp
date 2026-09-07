@@ -7,6 +7,8 @@ namespace App\Fleet\Enums;
 enum JobAssetAssignmentStatus: string
 {
     case Assigned = 'assigned';
+    case Dispatched = 'dispatched';
+    case Returned = 'returned';
     case Released = 'released';
     case Cancelled = 'cancelled';
 
@@ -14,6 +16,8 @@ enum JobAssetAssignmentStatus: string
     {
         return match ($this) {
             self::Assigned => 'Assigned',
+            self::Dispatched => 'Dispatched',
+            self::Returned => 'Returned',
             self::Released => 'Released',
             self::Cancelled => 'Cancelled',
         };

@@ -1,5 +1,6 @@
 <?php
 
+use App\Administration\Enums\PermissionName;
 use App\Administration\Enums\RoleName;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Fleet\Actions\CancelJobAssetAssignmentAction;
@@ -15,6 +16,8 @@ use App\Fleet\Models\JobAssetAssignment;
 use App\Fleet\Services\JobAssetAvailabilityService;
 use App\Operations\Models\Job;
 use Illuminate\Support\Facades\Gate;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 function assignmentContext($test, $user, $company): void
 {
@@ -47,6 +50,23 @@ function assignmentAsset($actor, string $number = 'RS-003'): FleetAsset
         'operational_status' => 'available',
     ], $actor);
 }
+
+test('canonical permission sync creates dispatch permissions for only operational assignment roles', function () {
+    $this->seedAccessControl();
+    foreach ([PermissionName::FleetDispatchDispatch, PermissionName::FleetDispatchReturn] as $permission) {
+        expect(Permission::query()->where('name', $permission->value)->where('guard_name', 'web')->exists())->toBeTrue();
+    }
+    $operations = Role::findByName(RoleName::OperationsManager->value, 'web');
+    $administrator = Role::findByName(RoleName::CompanyAdministrator->value, 'web');
+    $clerk = Role::findByName(RoleName::DataEntryClerk->value, 'web');
+    $finance = Role::findByName(RoleName::FinanceManager->value, 'web');
+    expect($operations->hasPermissionTo(PermissionName::FleetDispatchDispatch->value))->toBeTrue()
+        ->and($operations->hasPermissionTo(PermissionName::FleetDispatchReturn->value))->toBeTrue()
+        ->and($administrator->hasPermissionTo(PermissionName::FleetDispatchDispatch->value))->toBeTrue()
+        ->and($administrator->hasPermissionTo(PermissionName::FleetDispatchReturn->value))->toBeTrue()
+        ->and($clerk->hasPermissionTo(PermissionName::FleetDispatchDispatch->value))->toBeFalse()
+        ->and($finance->hasPermissionTo(PermissionName::FleetDispatchReturn->value))->toBeFalse();
+});
 
 test('Data Entry Clerk remains the Fleet master-data role but has view-only Job Asset Assignments', function () {
     $this->seedAccessControl();

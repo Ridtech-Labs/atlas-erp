@@ -6,6 +6,7 @@ namespace App\Core\Administration\Filament\Resources\FleetAssets\Tables;
 
 use App\Fleet\Enums\FleetAssetCategory;
 use App\Fleet\Enums\FleetAssetOperationalStatus;
+use App\Fleet\Models\FleetAsset;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
@@ -25,6 +26,21 @@ class FleetAssetsTable
                 TextColumn::make('registration_number')->label('Registration')->searchable()->placeholder('Not registered'),
                 TextColumn::make('make')->searchable()->toggleable(),
                 TextColumn::make('model')->searchable()->toggleable(),
+                TextColumn::make('current_state')
+                    ->label('Current state')
+                    ->badge()
+                    ->state(fn (FleetAsset $record): string => $record->derivedAvailability()['label'])
+                    ->description(function (FleetAsset $record): ?string {
+                        $assignment = $record->derivedAvailability()['assignment'];
+                        if ($assignment === null) {
+                            return null;
+                        }
+
+                        return $assignment->job->job_number ?? 'Assigned Job';
+                    })
+                    ->color(fn (FleetAsset $record): string => match ($record->derivedAvailability()['label']) {
+                        'Dispatched' => 'warning', 'Assigned' => 'info', 'Available' => 'success', default => 'gray',
+                    }),
                 TextColumn::make('operational_status')->label('Operational status')->badge()->formatStateUsing(fn (FleetAssetOperationalStatus $state): string => $state->label())->color(fn (FleetAssetOperationalStatus $state): string => $state->color()),
                 TextColumn::make('updated_at')->since()->label('Updated')->sortable()->toggleable(),
             ])

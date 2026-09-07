@@ -35,6 +35,7 @@ class JobAssetAssignment extends Model
         'uuid', 'tenant_id', 'company_id', 'job_id', 'fleet_asset_id', 'operator_user_id', 'operator_name',
         'planned_start_at', 'planned_end_at', 'assigned_at', 'assigned_by', 'status', 'released_at',
         'released_by', 'release_reason', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'notes',
+        'dispatched_at', 'dispatched_by', 'dispatch_notes', 'returned_at', 'returned_by', 'return_notes',
     ];
 
     protected function casts(): array
@@ -46,6 +47,8 @@ class JobAssetAssignment extends Model
             'assigned_at' => 'datetime',
             'released_at' => 'datetime',
             'cancelled_at' => 'datetime',
+            'dispatched_at' => 'datetime',
+            'returned_at' => 'datetime',
         ];
     }
 

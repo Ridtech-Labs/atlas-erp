@@ -67,7 +67,7 @@ class FleetAssetResource extends Resource
         $companyId = ($user = auth()->user()) ? app(AdministrationAccessService::class)->activeCompanyId($user) : null;
 
         return is_int($companyId)
-            ? parent::getEloquentQuery()->with('type')->where('company_id', $companyId)
+            ? parent::getEloquentQuery()->with(['type', 'blockingJobAssignments.job'])->where('company_id', $companyId)
             : parent::getEloquentQuery()->whereRaw('1 = 0');
     }
 

@@ -52,6 +52,10 @@ class CompleteJobAction extends TransitionsJobState
             );
         }
 
+        if ($job->assetAssignments()->where('status', JobAssetAssignmentStatus::Dispatched->value)->exists()) {
+            throw new BusinessException('Return all dispatched Fleet assets before completing this Job.', 422);
+        }
+
         if ($actualEnd < $job->actual_start_date) {
             throw new BusinessException('Actual end date cannot precede actual start date.', 422);
         }
@@ -65,6 +69,6 @@ class CompleteJobAction extends TransitionsJobState
         $job->assetAssignments()
             ->where('status', JobAssetAssignmentStatus::Assigned->value)
             ->get()
-            ->each(fn ($assignment) => app(ReleaseJobAssetAssignmentAction::class)->execute($assignment, $actor, 'Job completed before dispatch tracking is available.'));
+            ->each(fn ($assignment) => app(ReleaseJobAssetAssignmentAction::class)->execute($assignment, $actor, 'Job completed without dispatch.'));
     }
 }

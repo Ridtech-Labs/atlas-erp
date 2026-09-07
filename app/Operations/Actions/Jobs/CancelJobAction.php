@@ -41,6 +41,9 @@ class CancelJobAction extends TransitionsJobState
         if ($reason === '') {
             throw new BusinessException('A cancellation reason is required.', 422);
         }
+        if ($job->assetAssignments()->where('status', JobAssetAssignmentStatus::Dispatched->value)->exists()) {
+            throw new BusinessException('Return all dispatched Fleet assets before cancelling this Job.', 422);
+        }
 
         $job->forceFill([
             'cancelled_at' => now(),

@@ -13,7 +13,9 @@ use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Models\BillingBatchLine;
 use App\Fleet\Actions\CancelJobAssetAssignmentAction;
 use App\Fleet\Actions\CreateJobAssetAssignmentAction;
+use App\Fleet\Actions\DispatchJobAssetAssignmentAction;
 use App\Fleet\Actions\ReleaseJobAssetAssignmentAction;
+use App\Fleet\Actions\ReturnJobAssetAssignmentAction;
 use App\Fleet\Actions\UpdateJobAssetAssignmentAction;
 use App\Fleet\Models\JobAssetAssignment;
 use App\Fleet\Services\JobAssetAvailabilityService;
@@ -301,6 +303,34 @@ class JobWorkspaceWidget extends Widget
     public function cancelAssetAssignment(int $assignmentId): void
     {
         $this->changeAssetAssignment($assignmentId, true);
+    }
+
+    public function dispatchAssetAssignment(int $assignmentId): void
+    {
+        $this->runAssetAssignmentAction($assignmentId, fn (JobAssetAssignment $assignment, User $user) => app(DispatchJobAssetAssignmentAction::class)->execute($assignment, $user));
+    }
+
+    public function returnAssetAssignment(int $assignmentId): void
+    {
+        $this->runAssetAssignmentAction($assignmentId, fn (JobAssetAssignment $assignment, User $user) => app(ReturnJobAssetAssignmentAction::class)->execute($assignment, $user));
+    }
+
+    private function runAssetAssignmentAction(int $assignmentId, callable $action): void
+    {
+        try {
+            $user = auth()->user();
+            if (! $user instanceof User) {
+                abort(403);
+            }
+            $assignment = JobAssetAssignment::query()->whereKey($assignmentId)->firstOrFail();
+            if (! $this->record instanceof Job || $assignment->job_id !== $this->record->getKey()) {
+                abort(403);
+            }
+            $action($assignment, $user);
+            $this->dispatch('$refresh');
+        } catch (BusinessException $exception) {
+            Notification::make()->danger()->title($exception->getMessage())->send();
+        }
     }
 
     private function changeAssetAssignment(int $assignmentId, bool $cancel): void
