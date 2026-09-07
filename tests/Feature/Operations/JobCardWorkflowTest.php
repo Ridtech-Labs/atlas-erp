@@ -848,7 +848,7 @@ test('operations manager without accounts review permission cannot review or ret
 
     expect($operationsManager->hasPermissionTo('job_cards.verify'))->toBeFalse()
         ->and($operationsManager->hasPermissionTo('job_cards.bill'))->toBeFalse()
-        ->and($operationsManager->hasPermissionTo('jobs.approve'))->toBeFalse()
+        ->and($operationsManager->hasPermissionTo('jobs.approve'))->toBeTrue()
         ->and($operationsManager->can('users.view'))->toBeFalse()
         ->and($operationsManager->can('roles.manage'))->toBeFalse()
         ->and($operationsManager->can('settings.manage'))->toBeFalse();

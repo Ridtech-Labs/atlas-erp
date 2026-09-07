@@ -3,6 +3,7 @@
 use App\Administration\Enums\RoleName;
 use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
 use App\Core\Administration\Filament\Resources\BillingBatches\Pages\ViewBillingBatch;
+use App\Core\Administration\Filament\Resources\RateAgreements\Pages\CreateRateAgreement;
 use App\Core\Administration\Filament\Resources\RateAgreements\RateAgreementResource;
 use App\Core\Administration\Filament\Resources\RateAgreements\Schemas\RateAgreementForm;
 use App\Core\Shared\Exceptions\BusinessException;
@@ -14,6 +15,7 @@ use App\Finance\Actions\BillingBatches\RemoveBillingBatchLineAction;
 use App\Finance\Actions\RateAgreements\CreateRateAgreementAction;
 use App\Finance\Actions\RateAgreements\UpdateRateAgreementAction;
 use App\Finance\Enums\BillingBatchStatus;
+use App\Finance\Enums\BillingUnit;
 use App\Finance\Enums\RateAgreementStatus;
 use App\Finance\Models\RateAgreement;
 use App\Finance\Services\BillingBatchEligibilityService;
@@ -611,6 +613,87 @@ test('free text equipment values remain permitted for rate agreement lines', fun
     ], $finance);
 
     expect($agreement->lines()->firstOrFail()->equipment_reference)->toBe('Unlisted Custom Asset');
+});
+
+test('rate agreement line billing unit changes clear incompatible repeater fields', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay']);
+    $finance = $this->tenantUser($tenant, ['email' => 'finance-rate-unit-form@example.test'], [RoleName::FinanceManager->value]);
+    $finance->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($finance);
+
+    Livewire::test(CreateRateAgreement::class)
+        ->set('data.lines.0.equipment_reference', 'Reach Stacker')
+        ->set('data.lines.0.machine_number', 'RS-003')
+        ->set('data.lines.0.billing_unit', BillingUnit::Trip->value)
+        ->assertSet('data.lines.0.equipment_reference', null)
+        ->assertSet('data.lines.0.machine_number', null)
+        ->set('data.lines.0.pickup_point', 'Tema Port')
+        ->set('data.lines.0.destination', 'Kumasi Depot')
+        ->set('data.lines.0.billing_unit', BillingUnit::Hourly->value)
+        ->assertSet('data.lines.0.pickup_point', null)
+        ->assertSet('data.lines.0.destination', null);
+});
+
+test('rate agreement actions persist only fields applicable to the billing unit', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay']);
+    $finance = $this->tenantUser($tenant, ['email' => 'finance-rate-unit-persistence@example.test'], [RoleName::FinanceManager->value]);
+    $finance->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+    ]);
+
+    $agreement = app(CreateRateAgreementAction::class)->execute([
+        'client_id' => $client->getKey(),
+        'name' => 'Tema to Kumasi trucking tariff',
+        'effective_from' => '2026-09-01',
+        'status' => RateAgreementStatus::Active->value,
+        'lines' => [[
+            'equipment_reference' => 'Reach Stacker',
+            'machine_number' => 'RS-003',
+            'pickup_point' => 'Tema Port',
+            'destination' => 'Kumasi Depot',
+            'billing_unit' => BillingUnit::Trip->value,
+            'currency' => 'GHS',
+            'rate' => 2500.00,
+        ]],
+    ], $finance);
+
+    $tripLine = $agreement->lines()->firstOrFail();
+
+    expect($tripLine->equipment_reference)->toBeNull()
+        ->and($tripLine->machine_number)->toBeNull()
+        ->and($tripLine->pickup_point)->toBe('Tema Port')
+        ->and($tripLine->destination)->toBe('Kumasi Depot');
+
+    $updated = app(UpdateRateAgreementAction::class)->execute($agreement, [
+        'name' => 'Reach Stacker hourly tariff',
+        'effective_from' => '2026-09-01',
+        'status' => RateAgreementStatus::Active->value,
+        'lines' => [[
+            'equipment_reference' => 'Reach Stacker',
+            'pickup_point' => 'Tema Port',
+            'destination' => 'Kumasi Depot',
+            'billing_unit' => BillingUnit::Hourly->value,
+            'currency' => 'GHS',
+            'rate' => 500.00,
+        ]],
+    ], $finance);
+
+    $hourlyLine = $updated->lines()->firstOrFail();
+
+    expect($hourlyLine->equipment_reference)->toBe('Reach Stacker')
+        ->and($hourlyLine->pickup_point)->toBeNull()
+        ->and($hourlyLine->destination)->toBeNull();
 });
 
 test('finance manager can create a billing batch from verified evidence and snapshot commercial values', function () {

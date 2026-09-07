@@ -15,6 +15,7 @@ use App\Operations\Actions\JobCards\ApproveJobCardAction;
 use App\Operations\Actions\JobCards\CreateJobCardAction;
 use App\Operations\Actions\JobCards\SubmitJobCardAction;
 use App\Operations\Actions\JobCardWorkEntries\CreateJobCardWorkEntryAction;
+use App\Operations\Actions\Jobs\ApproveJobAction;
 use App\Operations\Actions\Jobs\CancelJobAction;
 use App\Operations\Actions\Jobs\CompleteJobAction;
 use App\Operations\Actions\Jobs\CreateJobAction;
@@ -158,6 +159,103 @@ test('heavy machinery job workflow transitions through client job card verificat
     expect($job->status)->toBe(JobStatus::Completed)
         ->and($job->completed_by)->toBe($actor->getKey())
         ->and($job->completed_at)->not->toBeNull();
+});
+
+test('trucking jobs require submission and approval before they can be made ready for deployment', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $operations = $this->tenantUser($tenant, ['email' => 'operations-trucking-approval@example.test'], [RoleName::OperationsManager->value]);
+    $operator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
+    $operations->companies()->sync([$company->getKey()]);
+    $operator->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+        'job_type' => JobType::Trucking,
+        'equipment_requirement' => 'Haulage truck',
+        'assigned_operator_id' => $operator->getKey(),
+        'planned_start_date' => '2026-09-08',
+    ]);
+
+    expect(fn () => app(ScheduleJobAction::class)->execute($job, $operations))
+        ->toThrow(BusinessException::class, 'Jobs in Draft status cannot transition to Scheduled.');
+
+    $submitted = app(SubmitJobForApprovalAction::class)->execute($job, $operations);
+    expect($submitted->status)->toBe(JobStatus::PendingApproval);
+
+    $approved = app(ApproveJobAction::class)->execute($submitted, $operations);
+    expect($approved->status)->toBe(JobStatus::Approved);
+
+    $scheduled = app(ScheduleJobAction::class)->execute($approved, $operations);
+    expect($scheduled->status)->toBe(JobStatus::Scheduled);
+});
+
+test('job approval is assigned to operations while clerk and finance remain denied', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $clerk = $this->tenantUser($tenant, ['email' => 'clerk-job-approval@example.test'], [RoleName::DataEntryClerk->value]);
+    $operations = $this->tenantUser($tenant, ['email' => 'operations-job-approval@example.test'], [RoleName::OperationsManager->value]);
+    $finance = $this->tenantUser($tenant, ['email' => 'finance-job-approval@example.test'], [RoleName::FinanceManager->value]);
+    $administrator = $this->tenantUser($tenant, ['email' => 'administrator-job-approval@example.test'], [RoleName::CompanyAdministrator->value]);
+    $superAdministrator = $this->tenantUser($tenant, ['email' => 'super-job-approval@example.test'], [RoleName::SuperAdministrator->value]);
+
+    foreach ([$clerk, $operations, $finance, $administrator, $superAdministrator] as $user) {
+        $user->companies()->sync([$company->getKey()]);
+    }
+    session(['active_company_id' => $company->getKey()]);
+
+    expect($clerk->hasPermissionTo('jobs.submit'))->toBeTrue()
+        ->and($clerk->hasPermissionTo('jobs.approve'))->toBeFalse()
+        ->and($operations->hasPermissionTo('jobs.submit'))->toBeTrue()
+        ->and($operations->hasPermissionTo('jobs.approve'))->toBeTrue()
+        ->and($finance->hasPermissionTo('jobs.approve'))->toBeFalse()
+        ->and($administrator->hasPermissionTo('jobs.approve'))->toBeTrue()
+        ->and($superAdministrator->hasPermissionTo('jobs.approve'))->toBeTrue();
+
+    $truckingJob = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+        'job_type' => JobType::Trucking,
+    ]);
+
+    $submitted = app(SubmitJobForApprovalAction::class)->execute($truckingJob, $clerk);
+    expect($submitted->status)->toBe(JobStatus::PendingApproval);
+
+    expect(fn () => app(ApproveJobAction::class)->execute($submitted, $clerk))
+        ->toThrow(BusinessException::class, 'You are not allowed to perform this workflow action.');
+    expect(fn () => app(ApproveJobAction::class)->execute($submitted, $finance))
+        ->toThrow(BusinessException::class, 'You are not allowed to perform this workflow action.');
+
+    $approved = app(ApproveJobAction::class)->execute($submitted, $operations);
+    expect($approved->status)->toBe(JobStatus::Approved)
+        ->and($approved->approved_by)->toBe($operations->getKey())
+        ->and($approved->approved_at)->not->toBeNull();
+
+    $heavyMachineryPendingApproval = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::PendingApproval,
+        'job_type' => JobType::HeavyMachinery,
+    ]);
+    expect(app(ApproveJobAction::class)->execute($heavyMachineryPendingApproval, $operations)->status)
+        ->toBe(JobStatus::Approved);
+
+    $companyAdminPendingApproval = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::PendingApproval,
+        'job_type' => JobType::Trucking,
+    ]);
+    expect(app(ApproveJobAction::class)->execute($companyAdminPendingApproval, $administrator)->status)
+        ->toBe(JobStatus::Approved);
 });
 
 test('draft job can be edited without changing its identity', function () {

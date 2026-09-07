@@ -62,6 +62,7 @@ class EditJob extends EditRecord
                 ->action(fn () => app(ScheduleJobAction::class)->execute($this->currentJob(), $this->authenticatedUser()))
                 ->visible(fn () => $this->record instanceof Job
                     && $this->statusIsOneOf([JobStatus::Draft, JobStatus::Approved])
+                    && (! app(JobWorkflowService::class)->approvalRequired($this->currentJob()) || $this->statusIs(JobStatus::Approved))
                     && app(JobPlanningReadinessService::class)->isReadyToSchedule($this->currentJob())
                     && $this->authenticatedUser()->can('schedule', $this->currentJob())),
             Action::make('start')

@@ -19,6 +19,8 @@ class RateAgreementLine extends Model
         'rate_agreement_id',
         'equipment_reference',
         'machine_number',
+        'pickup_point',
+        'destination',
         'billing_unit',
         'currency',
         'rate',

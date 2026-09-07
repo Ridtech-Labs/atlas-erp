@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Operations\Actions\Jobs;
 
 use App\Administration\Enums\PermissionName;
+use App\Administration\Enums\RoleName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
@@ -44,7 +45,7 @@ class UpdateJobAction
         }
 
         if (in_array((string) $job->getRawOriginal('status'), [JobStatus::InProgress->value, JobStatus::OnHold->value, JobStatus::Completed->value, JobStatus::Cancelled->value], true)
-            && ! $actor->hasPermissionTo(PermissionName::JobsApprove->value)) {
+            && ! $actor->hasAnyRole([RoleName::CompanyAdministrator->value, RoleName::SuperAdministrator->value])) {
             throw new BusinessException('Planning fields are read-only after the job has started.', 422);
         }
 

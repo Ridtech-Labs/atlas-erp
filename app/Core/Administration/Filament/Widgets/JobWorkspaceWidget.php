@@ -25,6 +25,7 @@ use App\Operations\Actions\Jobs\CompleteJobAction;
 use App\Operations\Actions\Jobs\ResumeJobAction;
 use App\Operations\Actions\Jobs\ScheduleJobAction;
 use App\Operations\Actions\Jobs\StartJobAction;
+use App\Operations\Actions\Jobs\SubmitJobForApprovalAction;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobStatus;
 use App\Operations\Enums\WaybillStatus;
@@ -364,6 +365,7 @@ class JobWorkspaceWidget extends Widget
 
         try {
             $updatedJob = match ($trigger) {
+                'submit' => app(SubmitJobForApprovalAction::class)->execute($job, $user),
                 'approve' => app(ApproveJobAction::class)->execute($job, $user),
                 'schedule' => app(ScheduleJobAction::class)->execute($job, $user),
                 'start' => app(StartJobAction::class)->execute($job, $user),
@@ -569,10 +571,12 @@ class JobWorkspaceWidget extends Widget
         $canApprove = $user->hasPermissionTo('jobs.approve');
         $canBillJobCard = $user->hasPermissionTo('job_cards.bill');
         $canUpdate = $user->can('update', $job);
+        $canSubmit = $user->can('submit', $job);
         $canSchedule = $user->can('schedule', $job);
         $canStart = $user->can('start', $job);
         $canResume = $user->can('resume', $job);
         $canComplete = $user->can('complete', $job);
+        $approvalRequired = app(JobWorkflowService::class)->approvalRequired($job);
         $completionBlockers = $this->completionBlockers($job, $status, $job->jobCards, $job->waybills);
 
         return match ($status) {
@@ -586,7 +590,25 @@ class JobWorkspaceWidget extends Widget
             ],
             JobStatus::Cancelled => null,
             JobStatus::Draft => $planningReady
-                ? ($canSchedule
+                ? ($approvalRequired
+                    ? ($canSubmit
+                        ? [
+                            'label' => 'Submit Job for Approval',
+                            'button_label' => 'Submit for Approval',
+                            'helper' => 'Planning is complete. Submit this Trucking Job for approval before it can be made ready for deployment.',
+                            'url' => null,
+                            'kind' => 'primary',
+                            'trigger' => 'submit',
+                        ]
+                        : [
+                            'label' => 'Awaiting Job Approval Submission',
+                            'button_label' => null,
+                            'helper' => 'Planning is complete and this Trucking Job is waiting for an authorized user to submit it for approval.',
+                            'url' => null,
+                            'kind' => 'attention',
+                            'trigger' => null,
+                        ])
+                    : ($canSchedule
                     ? [
                         'label' => 'Ready the Job for deployment',
                         'button_label' => 'Mark Ready for Deployment',
@@ -602,7 +624,7 @@ class JobWorkspaceWidget extends Widget
                         'url' => null,
                         'kind' => 'attention',
                         'trigger' => null,
-                    ])
+                    ]))
                 : ($canUpdate
                     ? [
                         'label' => 'Complete Job Planning',

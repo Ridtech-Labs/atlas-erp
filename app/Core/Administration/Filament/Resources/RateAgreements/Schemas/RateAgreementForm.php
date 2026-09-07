@@ -20,6 +20,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 
 class RateAgreementForm
@@ -81,15 +82,31 @@ class RateAgreementForm
                                 ->helperText('Use the commercial equipment class/type Atlas should match against operational Job Card evidence.')
                                 ->datalist(fn (Get $get, ?RateAgreement $record): array => self::equipmentClassSuggestions(
                                     self::selectedClientId($get, $record),
-                                )),
+                                ))
+                                ->visible(fn (Get $get): bool => $get('billing_unit') !== BillingUnit::Trip->value),
                             TextInput::make('machine_number')
                                 ->maxLength(255)
                                 ->placeholder('Optional exact machine reference')
-                                ->helperText('Use this only when one specific machine has its own override rate.'),
+                                ->helperText('Use this only when one specific machine has its own override rate.')
+                                ->visible(fn (Get $get): bool => $get('billing_unit') !== BillingUnit::Trip->value),
                             Select::make('billing_unit')
                                 ->options(collect(BillingUnit::cases())->mapWithKeys(fn (BillingUnit $unit) => [$unit->value => $unit->label()])->all())
                                 ->default(BillingUnit::Hourly->value)
+                                ->live()
+                                ->afterStateUpdated(function (?string $state, Set $set): void {
+                                    if ($state === BillingUnit::Trip->value) {
+                                        $set('equipment_reference', null);
+                                        $set('machine_number', null);
+
+                                        return;
+                                    }
+
+                                    $set('pickup_point', null);
+                                    $set('destination', null);
+                                })
                                 ->required(),
+                            TextInput::make('pickup_point')->label('Pickup point')->maxLength(255)->visible(fn (Get $get): bool => $get('billing_unit') === BillingUnit::Trip->value)->required(fn (Get $get): bool => $get('billing_unit') === BillingUnit::Trip->value),
+                            TextInput::make('destination')->maxLength(255)->visible(fn (Get $get): bool => $get('billing_unit') === BillingUnit::Trip->value)->required(fn (Get $get): bool => $get('billing_unit') === BillingUnit::Trip->value),
                             TextInput::make('currency')
                                 ->default('GHS')
                                 ->length(3)

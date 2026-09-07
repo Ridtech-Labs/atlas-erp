@@ -370,6 +370,45 @@ test('mark ready for deployment action is executable from the workspace and reta
         ->and($job->jobCards()->count())->toBe(0);
 });
 
+test('trucking draft workspace presents submission for approval instead of an unavailable deployment action', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $operations = $this->tenantUser($tenant, ['email' => 'operations-trucking-workspace@example.test'], [RoleName::OperationsManager->value]);
+    $operator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
+    $operations->companies()->sync([$company->getKey()]);
+    $operator->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($operations);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::Draft,
+        'job_type' => JobType::Trucking,
+        'equipment_requirement' => 'Haulage truck',
+        'assigned_operator_id' => $operator->getKey(),
+        'planned_start_date' => '2026-09-08',
+    ]);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
+        ->assertSee('Submit Job for Approval')
+        ->assertSee('Submit for Approval')
+        ->assertDontSee('Mark Ready for Deployment')
+        ->call('runWorkflowAction', 'submit')
+        ->assertRedirect(JobResource::getUrl('view', ['record' => $job->fresh()]));
+
+    expect($job->fresh()->status)->toBe(JobStatus::PendingApproval);
+
+    Livewire::test(JobWorkspaceWidget::class, ['record' => $job->fresh()])
+        ->assertSee('Approve Job')
+        ->call('runWorkflowAction', 'approve')
+        ->assertRedirect(JobResource::getUrl('view', ['record' => $job->fresh()]));
+
+    expect($job->fresh()->status)->toBe(JobStatus::Approved);
+});
+
 test('ready for deployment workspace exposes start job and in progress exposes record client job card without auto creating one', function () {
     $this->seedAccessControl();
 

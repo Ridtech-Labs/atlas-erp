@@ -8,6 +8,7 @@ use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
+use App\Finance\Enums\BillingUnit;
 use App\Finance\Models\RateAgreement;
 use App\Models\User;
 use DateTimeInterface;
@@ -64,15 +65,37 @@ class UpdateRateAgreementAction
     {
         $equipmentReference = $this->normalizeOptionalString($line['equipment_reference'] ?? null);
         $machineNumber = $this->normalizeOptionalString($line['machine_number'] ?? null);
+        $pickupPoint = $this->normalizeOptionalString($line['pickup_point'] ?? null);
+        $destination = $this->normalizeOptionalString($line['destination'] ?? null);
+        $unit = BillingUnit::tryFrom((string) ($line['billing_unit'] ?? ''));
 
-        if ($equipmentReference === null && $machineNumber === null) {
+        if (! $unit instanceof BillingUnit) {
+            throw new BusinessException('Select a valid billing unit.', 422);
+        }
+        if ($unit === BillingUnit::Hourly && $equipmentReference === null && $machineNumber === null) {
             throw new BusinessException('Each Rate Agreement line must target either an equipment class/type or a specific machine.', 422);
+        }
+        if ($unit === BillingUnit::Trip && ($pickupPoint === null || $destination === null)) {
+            throw new BusinessException('Trip rate lines require both pickup point and destination.', 422);
+        }
+        if (! is_numeric($line['rate'] ?? null) || (float) $line['rate'] <= 0) {
+            throw new BusinessException('Rate Agreement line rates must be positive.', 422);
+        }
+
+        if ($unit === BillingUnit::Trip) {
+            $equipmentReference = null;
+            $machineNumber = null;
+        } else {
+            $pickupPoint = null;
+            $destination = null;
         }
 
         return [
             'equipment_reference' => $equipmentReference,
             'machine_number' => $machineNumber,
-            'billing_unit' => $line['billing_unit'],
+            'pickup_point' => $pickupPoint,
+            'destination' => $destination,
+            'billing_unit' => $unit->value,
             'currency' => strtoupper((string) $line['currency']),
             'rate' => $line['rate'],
             'effective_from' => $this->normalizeInheritedDate($line['effective_from'] ?? null, $this->agreementDateString($agreement, 'effective_from')),

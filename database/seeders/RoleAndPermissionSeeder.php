@@ -95,6 +95,7 @@ class RoleAndPermissionSeeder extends Seeder
                 PermissionName::JobsCreate->value,
                 PermissionName::JobsUpdate->value,
                 PermissionName::JobsSubmit->value,
+                PermissionName::JobsApprove->value,
                 PermissionName::JobsSchedule->value,
                 PermissionName::JobsStart->value,
                 PermissionName::JobsHold->value,
