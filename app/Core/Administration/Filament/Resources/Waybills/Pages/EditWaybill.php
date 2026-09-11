@@ -6,7 +6,6 @@ namespace App\Core\Administration\Filament\Resources\Waybills\Pages;
 
 use App\Core\Administration\Filament\Resources\Waybills\WaybillResource;
 use App\Models\User;
-use App\Operations\Actions\Waybills\MarkWaybillBillingReadyAction;
 use App\Operations\Actions\Waybills\ReturnWaybillForCorrectionAction;
 use App\Operations\Actions\Waybills\SubmitWaybillForVerificationAction;
 use App\Operations\Actions\Waybills\UpdateWaybillAction;
@@ -33,10 +32,6 @@ class EditWaybill extends EditRecord
                 ->label('Verify Waybill')
                 ->action(fn () => app(VerifyWaybillAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
                 ->visible(fn (): bool => $this->statusIs(WaybillStatus::PendingVerification)),
-            Action::make('billingReady')
-                ->label('Mark Billing Ready')
-                ->action(fn () => app(MarkWaybillBillingReadyAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->statusIs(WaybillStatus::Verified)),
             Action::make('return')
                 ->label('Return for correction')
                 ->color('danger')

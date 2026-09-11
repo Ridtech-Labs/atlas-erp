@@ -7,6 +7,7 @@ namespace App\Finance\Models;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
 use App\Operations\Models\JobCardWorkEntry;
+use App\Operations\Models\Waybill;
 use Database\Factories\BillingBatchLineFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -19,6 +20,9 @@ class BillingBatchLine extends Model
 
     protected $fillable = [
         'billing_batch_id',
+        'source_type',
+        'source_id',
+        'source_reference',
         'work_entry_id',
         'job_card_id',
         'job_id',
@@ -31,6 +35,13 @@ class BillingBatchLine extends Model
         'equipment_reference',
         'machine_number',
         'hours',
+        'quantity',
+        'billing_unit',
+        'pickup_point',
+        'destination',
+        'truck_number',
+        'driver_name',
+        'client_reference',
         'resolved_rate',
         'currency',
         'line_amount',
@@ -45,6 +56,7 @@ class BillingBatchLine extends Model
             'from_time' => 'datetime:H:i:s',
             'to_time' => 'datetime:H:i:s',
             'hours' => 'decimal:2',
+            'quantity' => 'decimal:2',
             'resolved_rate' => 'decimal:2',
             'line_amount' => 'decimal:2',
         ];
@@ -69,6 +81,12 @@ class BillingBatchLine extends Model
     public function workEntry(): BelongsTo
     {
         return $this->belongsTo(JobCardWorkEntry::class, 'work_entry_id');
+    }
+
+    /** @return BelongsTo<Waybill, $this> */
+    public function waybill(): BelongsTo
+    {
+        return $this->belongsTo(Waybill::class, 'source_id')->where('source_type', 'trucking_waybill');
     }
 
     /**

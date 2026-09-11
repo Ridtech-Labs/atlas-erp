@@ -243,7 +243,7 @@ test('waybill verification rejects invalid state and incomplete data', function 
         ->toThrow(BusinessException::class);
 });
 
-test('waybill billing ready requires verified state and repeated transitions are rejected safely', function () {
+test('direct Waybill billing ready transitions are retired in favour of Finance Billing Batch preparation', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
@@ -274,21 +274,17 @@ test('waybill billing ready requires verified state and repeated transitions are
     ], $actor, ['waybill-uploads/billing-proof.txt']);
 
     expect(fn () => app(MarkWaybillBillingReadyAction::class)->execute($waybill, $actor))
-        ->toThrow(BusinessException::class, 'Only verified Waybills can move to billing ready.');
+        ->toThrow(BusinessException::class, 'only when Finance prepares their Billing Batch');
 
     $verified = app(VerifyWaybillAction::class)->execute(
         app(SubmitWaybillForVerificationAction::class)->execute($waybill, $actor),
         $actor,
     );
 
-    $billingReady = app(MarkWaybillBillingReadyAction::class)->execute($verified, $actor);
+    expect(fn () => app(MarkWaybillBillingReadyAction::class)->execute($verified, $actor))
+        ->toThrow(BusinessException::class, 'only when Finance prepares their Billing Batch');
 
-    expect($billingReady->status)->toBe(WaybillStatus::BillingReady);
-
-    expect(fn () => app(MarkWaybillBillingReadyAction::class)->execute($billingReady, $actor))
-        ->toThrow(BusinessException::class, 'Only verified Waybills can move to billing ready.');
-
-    expect(fn () => app(SubmitWaybillForVerificationAction::class)->execute($billingReady, $actor))
+    expect(fn () => app(SubmitWaybillForVerificationAction::class)->execute($verified, $actor))
         ->toThrow(BusinessException::class);
 });
 
@@ -378,12 +374,9 @@ test('job workspace reflects trucking waybill statuses correctly', function () {
 
     Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
         ->assertSee('Waybills')
-        ->assertSee('Prepare Waybill Billing')
+        ->assertSee('Awaiting Billing Batch Preparation')
         ->assertSee('Billing basis');
 
-    $billingReady = app(MarkWaybillBillingReadyAction::class)->execute($waybill, $actor);
-
-    Livewire::test(JobWorkspaceWidget::class, ['record' => $job->fresh()])
-        ->assertSee('View Billing Basis')
-        ->assertSee($billingReady->waybill_number);
+    expect(fn () => app(MarkWaybillBillingReadyAction::class)->execute($waybill, $actor))
+        ->toThrow(BusinessException::class, 'only when Finance prepares their Billing Batch');
 });

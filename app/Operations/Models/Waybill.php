@@ -9,10 +9,12 @@ use App\Core\Shared\Concerns\HasPublicUuid;
 use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Models\Client;
+use App\Finance\Models\BillingBatchLine;
 use App\Models\User;
 use App\Operations\Enums\WaybillStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
@@ -103,6 +105,12 @@ class Waybill extends Model implements HasMedia
     public function verifier(): BelongsTo
     {
         return $this->belongsTo(User::class, 'verified_by');
+    }
+
+    /** @return HasOne<BillingBatchLine, $this> */
+    public function billingBatchLine(): HasOne
+    {
+        return $this->hasOne(BillingBatchLine::class, 'source_id')->where('source_type', 'trucking_waybill');
     }
 
     public function getActivitylogOptions(): LogOptions

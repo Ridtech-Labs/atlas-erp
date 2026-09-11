@@ -8,14 +8,17 @@ use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResour
 use App\Core\Administration\Filament\Resources\BillingRecords\BillingRecordResource;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Finance\Actions\BillingBatches\AddJobCardsToBillingBatchAction;
+use App\Finance\Actions\BillingBatches\AddWaybillsToBillingBatchAction;
 use App\Finance\Actions\BillingBatches\PrepareBillingBatchAction;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Models\BillingBatch;
 use App\Finance\Models\BillingRecord;
 use App\Finance\Services\BillingBatchEligibilityService;
 use App\Finance\Services\RateResolverService;
+use App\Finance\Services\TruckingRateResolverService;
 use App\Models\User;
 use App\Operations\Models\JobCardWorkEntry;
+use App\Operations\Models\Waybill;
 use Carbon\CarbonImmutable;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -56,6 +59,11 @@ class ViewBillingBatch extends ViewRecord
                 ])
                 ->action(fn (array $data) => $this->addReviewedEvidence($data))
                 ->visible(fn (): bool => (string) $this->currentRecord()->getRawOriginal('status') === BillingBatchStatus::Draft->value),
+            Action::make('addVerifiedWaybills')
+                ->label('Add verified Waybills')
+                ->form([Select::make('waybill_ids')->label('Eligible Trucking Waybills')->options(fn (): array => $this->eligibleWaybillOptions())->multiple()->searchable()->required()])
+                ->action(fn (array $data) => $this->addVerifiedWaybills($data))
+                ->visible(fn (): bool => (string) $this->currentRecord()->getRawOriginal('status') === BillingBatchStatus::Draft->value),
             Action::make('prepareBatch')
                 ->label('Prepare Billing Batch')
                 ->requiresConfirmation()
@@ -88,6 +96,33 @@ class ViewBillingBatch extends ViewRecord
                 ->body($exception->getMessage())
                 ->send();
         }
+    }
+
+    /** @param array{waybill_ids?: array<int, int|string>} $data */
+    public function addVerifiedWaybills(array $data): void
+    {
+        try {
+            app(AddWaybillsToBillingBatchAction::class)->execute($this->currentRecord(), array_values(array_map('intval', $data['waybill_ids'] ?? [])), $this->authenticatedUser());
+        } catch (BusinessException $exception) {
+            Notification::make()->danger()->title('Waybill could not be added')->body($exception->getMessage())->send();
+        }
+    }
+
+    /** @return array<int, string> */
+    private function eligibleWaybillOptions(): array
+    {
+        $resolver = app(TruckingRateResolverService::class);
+
+        return app(BillingBatchEligibilityService::class)->eligibleWaybills($this->currentRecord())->mapWithKeys(function (Waybill $waybill) use ($resolver): array {
+            try {
+                $rate = $resolver->resolveForWaybill($waybill);
+                $amount = (float) $waybill->number_of_trips * (float) $rate['rate'];
+
+                return [$waybill->getKey() => sprintf('%s · %s → %s · %d trips · %s %s/trip = %s %s', $waybill->waybill_number, $waybill->pickup_point, $waybill->destination, $waybill->number_of_trips, $rate['currency'], number_format((float) $rate['rate'], 2), $rate['currency'], number_format($amount, 2))];
+            } catch (BusinessException $exception) {
+                return [$waybill->getKey() => sprintf('%s · Rate unavailable: %s', $waybill->waybill_number, $exception->getMessage())];
+            }
+        })->all();
     }
 
     /**

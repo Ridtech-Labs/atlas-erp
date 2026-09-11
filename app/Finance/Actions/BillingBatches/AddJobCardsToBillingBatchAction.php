@@ -9,6 +9,7 @@ use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Finance\Enums\BillingBatchStatus;
+use App\Finance\Enums\BillingSourceType;
 use App\Finance\Models\BillingBatch;
 use App\Finance\Services\RateResolverService;
 use App\Models\User;
@@ -82,6 +83,9 @@ class AddJobCardsToBillingBatchAction
                 $rate = round((float) $resolvedRate['rate'], 2);
 
                 $billingBatch->lines()->create([
+                    'source_type' => BillingSourceType::HeavyMachineryWorkEntry->value,
+                    'source_id' => $workEntry->getKey(),
+                    'source_reference' => $jobCard->card_number,
                     'work_entry_id' => $workEntry->getKey(),
                     'job_card_id' => $jobCard->getKey(),
                     'job_id' => $jobCard->job_id,
@@ -94,6 +98,8 @@ class AddJobCardsToBillingBatchAction
                     'equipment_reference' => $jobCard->equipment_reference,
                     'machine_number' => $jobCard->machine_number,
                     'hours' => $hours,
+                    'quantity' => $hours,
+                    'billing_unit' => 'hourly',
                     'resolved_rate' => $rate,
                     'currency' => $currency,
                     'line_amount' => round($hours * $rate, 2),

@@ -123,6 +123,20 @@ class BillingBatch extends Model
         return (int) $this->lines()->count();
     }
 
+    /**
+     * @return array<string, float>
+     */
+    public function subtotalQuantitiesByUnit(): array
+    {
+        return $this->lines()
+            ->whereNotNull('quantity')
+            ->selectRaw('billing_unit, SUM(quantity) as subtotal')
+            ->groupBy('billing_unit')
+            ->pluck('subtotal', 'billing_unit')
+            ->map(fn (mixed $subtotal): float => round((float) $subtotal, 2))
+            ->all();
+    }
+
     public function subtotalAmount(): float
     {
         return round((float) $this->lines()->sum('line_amount'), 2);

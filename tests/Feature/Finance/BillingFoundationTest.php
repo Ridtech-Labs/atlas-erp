@@ -750,6 +750,10 @@ test('finance manager can create a billing batch from verified evidence and snap
     $secondLine = $batch->lines()->orderByDesc('activity_date')->firstOrFail();
 
     expect((float) $firstLine->hours)->toBe(8.0)
+        ->and((float) $firstLine->quantity)->toBe(8.0)
+        ->and($firstLine->billing_unit)->toBe('hourly')
+        ->and($firstLine->source_type)->toBe('heavy_machinery_work_entry')
+        ->and($firstLine->source_id)->toBe($entryA->getKey())
         ->and((float) $firstLine->resolved_rate)->toBe(850.0)
         ->and((float) $firstLine->line_amount)->toBe(6800.0)
         ->and((float) $secondLine->hours)->toBe(6.5)

@@ -25,7 +25,7 @@ class BillingBatchInfolist
                     TextEntry::make('period_start')->date()->placeholder('Not derived yet'),
                     TextEntry::make('period_end')->date()->placeholder('Not derived yet'),
                     TextEntry::make('total_work_entries')
-                        ->label('Work entries')
+                        ->label('Billing lines')
                         ->state(fn (BillingBatch $record): int => $record->totalWorkEntries()),
                     TextEntry::make('created_at')->since()->label('Created'),
                     TextEntry::make('prepared_at')->since()->label('Prepared')->placeholder('Not prepared'),
@@ -34,9 +34,14 @@ class BillingBatchInfolist
                 ->columns(2),
             Section::make('Commercial totals')
                 ->schema([
-                    TextEntry::make('subtotal_hours')
-                        ->label('Subtotal hours')
-                        ->state(fn (BillingBatch $record): string => number_format($record->subtotalHours(), 2)),
+                    TextEntry::make('subtotal_quantities')
+                        ->label('Evidence totals')
+                        ->state(function (BillingBatch $record): string {
+                            $quantities = collect($record->subtotalQuantitiesByUnit())
+                                ->map(fn (float $quantity, string $unit): string => sprintf('%s %s', number_format($quantity, 2), $unit === 'trip' ? 'trips' : 'hours'));
+
+                            return $quantities->isEmpty() ? 'No evidence added' : $quantities->join(' • ');
+                        }),
                     TextEntry::make('subtotal_amounts')
                         ->label('Subtotal by currency')
                         ->state(function (BillingBatch $record): string {

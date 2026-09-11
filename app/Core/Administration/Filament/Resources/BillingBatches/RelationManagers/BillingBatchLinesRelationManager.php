@@ -25,16 +25,18 @@ class BillingBatchLinesRelationManager extends RelationManager
         return $table
             ->columns([
                 TextColumn::make('activity_date')->date()->sortable(),
-                TextColumn::make('from_time')->label('From')->time('H:i')->placeholder('No start'),
-                TextColumn::make('to_time')->label('To')->time('H:i')->placeholder('No end'),
-                TextColumn::make('jobCard.card_number')->label('Job Card')->searchable(),
+                TextColumn::make('source_reference')->label('Evidence')->searchable()->placeholder('No evidence reference'),
                 TextColumn::make('job_reference')->label('Job')->searchable()->placeholder('No job reference'),
                 TextColumn::make('vessel')->toggleable()->placeholder('No vessel'),
                 TextColumn::make('work_area')->label('Work area')->toggleable()->placeholder('No work area'),
-                TextColumn::make('equipment_reference')->label('Equipment')->placeholder('No equipment match'),
-                TextColumn::make('machine_number')->label('Machine')->placeholder('No machine override'),
-                TextColumn::make('hours')->numeric(decimalPlaces: 2)->label('Hours'),
-                TextColumn::make('resolved_rate')->numeric(decimalPlaces: 2)->label('Rate / hr'),
+                TextColumn::make('equipment_reference')->label('Equipment')->placeholder('Not applicable'),
+                TextColumn::make('machine_number')->label('Machine')->placeholder('Not applicable'),
+                TextColumn::make('pickup_point')->label('Pickup')->placeholder('Not applicable'),
+                TextColumn::make('destination')->label('Destination')->placeholder('Not applicable'),
+                TextColumn::make('quantity')
+                    ->label('Quantity')
+                    ->formatStateUsing(fn (mixed $state, BillingBatchLine $record): string => sprintf('%s %s', number_format((float) $state, 2), $record->billing_unit === 'trip' ? 'trips' : 'hours')),
+                TextColumn::make('resolved_rate')->numeric(decimalPlaces: 2)->label('Unit rate'),
                 TextColumn::make('currency')->badge(),
                 TextColumn::make('line_amount')->numeric(decimalPlaces: 2)->label('Amount'),
             ])
@@ -46,8 +48,8 @@ class BillingBatchLinesRelationManager extends RelationManager
                     ->action(fn (BillingBatchLine $record) => app(RemoveBillingBatchLineAction::class)->execute($record, $this->authenticatedUser())),
             ])
             ->defaultSort('activity_date')
-            ->emptyStateHeading('No work entries added yet')
-            ->emptyStateDescription('Add eligible Accounts-reviewed Work Entries to snapshot the authoritative billing rows into this batch.');
+            ->emptyStateHeading('No billing evidence added yet')
+            ->emptyStateDescription('Add eligible Accounts-reviewed Work Entries or verified Trucking Waybills to snapshot authoritative billing rows into this batch.');
     }
 
     private function ownerBatch(): BillingBatch

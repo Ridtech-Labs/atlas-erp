@@ -9,11 +9,14 @@ use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Finance\Enums\BillingBatchStatus;
+use App\Finance\Enums\BillingSourceType;
 use App\Finance\Models\BillingBatch;
 use App\Models\User;
 use App\Operations\Enums\JobCardApprovalStatus;
+use App\Operations\Enums\WaybillStatus;
 use App\Operations\Models\JobCard;
 use App\Operations\Models\JobCardWorkEntry;
+use App\Operations\Models\Waybill;
 use Illuminate\Support\Facades\DB;
 
 class PrepareBillingBatchAction
@@ -79,6 +82,11 @@ class PrepareBillingBatchAction
                         'billing_ready_at' => now(),
                         'updated_by' => $actor->getKey(),
                     ])->save();
+                });
+
+            Waybill::query()->whereIn('id', $billingBatch->lines()->where('source_type', BillingSourceType::TruckingWaybill->value)->pluck('source_id'))
+                ->where('status', WaybillStatus::Verified->value)->get()->each(function (Waybill $waybill) use ($actor): void {
+                    $waybill->forceFill(['status' => WaybillStatus::BillingReady->value, 'updated_by' => $actor->getKey()])->save();
                 });
 
             $logger->log('billing_batch.prepared', 'Billing Batch prepared', $actor, $billingBatch, [
