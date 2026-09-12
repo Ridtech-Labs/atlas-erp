@@ -9,6 +9,7 @@ use App\Administration\Services\AdministrationAccessService;
 use App\Core\Administration\Filament\Widgets\ApprovalQueueWidget;
 use App\Core\Administration\Filament\Widgets\AttentionRequiredWidget;
 use App\Core\Administration\Filament\Widgets\ExecutiveKpiOverviewWidget;
+use App\Core\Administration\Filament\Widgets\OperationsControlWidget;
 use App\Core\Administration\Filament\Widgets\QuickNavigationWidget;
 use App\Core\Administration\Filament\Widgets\RecentActivityWidget;
 use App\Core\Administration\Filament\Widgets\SystemAlertsWidget;
@@ -73,6 +74,7 @@ class Dashboard extends BaseDashboard
             'operations' => [
                 WelcomeHeroWidget::class,
                 ExecutiveKpiOverviewWidget::class,
+                OperationsControlWidget::class,
                 UpcomingWorkWidget::class,
                 AttentionRequiredWidget::class,
                 RecentActivityWidget::class,
@@ -82,6 +84,7 @@ class Dashboard extends BaseDashboard
             'company_admin' => [
                 WelcomeHeroWidget::class,
                 ExecutiveKpiOverviewWidget::class,
+                OperationsControlWidget::class,
                 UpcomingWorkWidget::class,
                 ApprovalQueueWidget::class,
                 RecentActivityWidget::class,
@@ -91,6 +94,7 @@ class Dashboard extends BaseDashboard
             default => [
                 WelcomeHeroWidget::class,
                 ExecutiveKpiOverviewWidget::class,
+                OperationsControlWidget::class,
                 UpcomingWorkWidget::class,
                 QuickNavigationWidget::class,
                 SystemAlertsWidget::class,

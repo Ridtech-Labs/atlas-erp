@@ -7,10 +7,14 @@ namespace App\Core\Administration\Filament\Resources\Jobs\Tables;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
 use App\Operations\Enums\JobPriority;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use Filament\Actions\ViewAction;
+use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class JobsTable
 {
@@ -39,10 +43,15 @@ class JobsTable
                     ->toggleable(),
             ])
             ->filters([
+                SelectFilter::make('client_id')->label('Client')->relationship('client', 'legal_name')->searchable(),
+                SelectFilter::make('job_type')->label('Operational type')->options(collect(JobType::cases())->mapWithKeys(fn (JobType $type): array => [$type->value => $type->label()])->all()),
                 SelectFilter::make('status')
                     ->options(collect(JobStatus::cases())->mapWithKeys(fn (JobStatus $status) => [$status->value => $status->label()])->all()),
                 SelectFilter::make('priority')
                     ->options(collect(JobPriority::cases())->mapWithKeys(fn (JobPriority $priority) => [$priority->value => $priority->label()])->all()),
+                Filter::make('planned_window')->schema([DatePicker::make('from')->label('Planned from'), DatePicker::make('until')->label('Planned until')])->query(function (Builder $query, array $data): Builder {
+                    return $query->when($data['from'] ?? null, fn (Builder $query, string $date): Builder => $query->whereDate('planned_start_date', '>=', $date))->when($data['until'] ?? null, fn (Builder $query, string $date): Builder => $query->whereDate('planned_start_date', '<=', $date));
+                }),
             ])
             ->defaultSort('planned_start_date', 'desc')
             ->searchPlaceholder('Search jobs by number, title, client, or site')
