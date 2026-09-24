@@ -54,13 +54,6 @@
                     </p>
                 </div>
 
-                <div class="rounded-2xl border border-dashed border-stone-300 bg-white p-5">
-                    <div class="text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-500">Coming soon</div>
-                    <div class="mt-2 text-lg font-semibold text-stone-950">Invoices and documents</div>
-                    <p class="mt-2 text-sm text-stone-600">
-                        This workspace is designed to expand naturally into billing, files, and commercial history.
-                    </p>
-                </div>
             </div>
         </div>
     </section>

@@ -2,6 +2,7 @@
 
 use App\Administration\Enums\RoleName;
 use App\Core\Administration\Filament\Pages\Dashboard;
+use App\Core\Administration\Filament\Resources\Jobs\JobResource;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Enums\BillingSourceType;
 use App\Finance\Models\BillingBatch;
@@ -63,6 +64,29 @@ test('operations control dashboard is available to operations managers but not d
     $clerk->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
     $this->actingAs($clerk)->get(Dashboard::getUrl())->assertOk()->assertDontSee('Operations Control');
+});
+
+test('operations control job drill-down links preserve the selected status and operational type', function () {
+    $this->seedAccessControl();
+    $tenant = $this->tenant();
+    $company = $this->company($tenant);
+    $operations = $this->tenantUser($tenant, [], [RoleName::OperationsManager->value]);
+    $operations->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $draft = Job::factory()->create(['tenant_id' => $tenant->getKey(), 'company_id' => $company->getKey(), 'status' => JobStatus::Draft, 'job_type' => JobType::Trucking, 'job_number' => 'JOB-DRILL-DRAFT']);
+    Job::factory()->create(['tenant_id' => $tenant->getKey(), 'company_id' => $company->getKey(), 'status' => JobStatus::InProgress, 'job_type' => JobType::HeavyMachinery, 'job_number' => 'JOB-DRILL-PROGRESS']);
+
+    $this->actingAs($operations)
+        ->get(Dashboard::getUrl())
+        ->assertOk()
+        ->assertSee(JobResource::getUrl('index', ['filters' => ['status' => ['value' => JobStatus::Draft->value]]]), false)
+        ->assertSee(JobResource::getUrl('index', ['filters' => ['job_type' => ['value' => JobType::Trucking->value]]]), false);
+
+    $this->get(JobResource::getUrl('index', ['filters' => ['status' => ['value' => JobStatus::Draft->value]]]))
+        ->assertOk()
+        ->assertSee($draft->job_number)
+        ->assertDontSee('JOB-DRILL-PROGRESS');
 });
 
 test('operations control excludes batched evidence and prepared batches with Billing Records', function () {

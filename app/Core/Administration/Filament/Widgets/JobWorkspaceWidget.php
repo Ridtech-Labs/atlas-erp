@@ -528,7 +528,7 @@ class JobWorkspaceWidget extends Widget
             JobStatus::Draft => $planningReady
                 ? 'Planning is complete and the machine is ready to be sent to the client-allocated work location.'
                 : 'Planning is still being prepared. You can continue editing this Job.',
-            JobStatus::PendingApproval => 'This Job is in a legacy approval step and remains readable without changing its identity.',
+            JobStatus::PendingApproval => 'This Job is awaiting operational approval.',
             JobStatus::Approved => 'Planning is complete and the machine is ready to be sent to the client-allocated work location.',
             JobStatus::Scheduled => 'Planning is complete and the machine is ready to be sent to the client-allocated work location.',
             JobStatus::InProgress => 'The machine has been deployed and operational work is underway.',
@@ -658,7 +658,7 @@ class JobWorkspaceWidget extends Widget
                 ? [
                     'label' => 'Approve Job',
                     'button_label' => 'Approve Job',
-                    'helper' => 'This legacy approval-state Job can be approved and moved back into the active workflow.',
+                    'helper' => 'Approve this Job to continue into operational planning and deployment.',
                     'url' => null,
                     'kind' => 'attention',
                     'trigger' => 'approve',
