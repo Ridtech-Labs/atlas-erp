@@ -84,15 +84,15 @@ class JobCardForm
                     Select::make('operator_source')
                         ->label('Operator type')
                         ->options([
-                            'company_personnel' => 'Company personnel',
+                            'personnel' => 'Personnel',
                             'external' => 'External / temporary operator',
                         ])
                         ->placeholder('Select operator type')
                         ->live()
                         ->dehydrated(false)
                         ->afterStateHydrated(function (Set $set, Get $get): void {
-                            if (filled($get('operator_id'))) {
-                                $set('operator_source', 'company_personnel');
+                            if (filled($get('operator_personnel_id'))) {
+                                $set('operator_source', 'personnel');
 
                                 return;
                             }
@@ -107,26 +107,26 @@ class JobCardForm
                             $set('operator_source', $default['source']);
                         })
                         ->afterStateUpdated(function (?string $state, Set $set): void {
-                            if ($state === 'company_personnel') {
+                            if ($state === 'personnel') {
                                 $set('operated_by', null);
 
                                 return;
                             }
 
                             if ($state === 'external') {
-                                $set('operator_id', null);
+                                $set('operator_personnel_id', null);
 
                                 return;
                             }
 
-                            $set('operator_id', null);
+                            $set('operator_personnel_id', null);
                             $set('operated_by', null);
                         }),
-                    Select::make('operator_id')
-                        ->label('Operator')
+                    Select::make('operator_personnel_id')
+                        ->label('Operator / Personnel')
                         ->searchable()
-                        ->visible(fn (Get $get): bool => $get('operator_source') === 'company_personnel')
-                        ->default(fn (Get $get): ?int => self::defaultOperatorAssignment((int) ($get('job_id') ?? request()->integer('job')))['operator_id'])
+                        ->visible(fn (Get $get): bool => $get('operator_source') === 'personnel')
+                        ->default(fn (Get $get): ?int => self::defaultOperatorAssignment((int) ($get('job_id') ?? request()->integer('job')))['personnel_id'])
                         ->options(function (): array {
                             $user = auth()->user();
                             $companyId = $user ? app(AdministrationAccessService::class)->activeCompanyId($user) : null;
@@ -146,8 +146,8 @@ class JobCardForm
                     Repeater::make('operators')
                         ->label('Recorded operators')
                         ->schema([
-                            Select::make('user_id')
-                                ->label('Company personnel')
+                            Select::make('personnel_id')
+                                ->label('Operator / Personnel')
                                 ->searchable()
                                 ->options(function (): array {
                                     $user = auth()->user();
@@ -259,13 +259,13 @@ class JobCardForm
     }
 
     /**
-     * @return array{operator_id:?int, external_name:?string, source:?string}
+     * @return array{personnel_id:?int, external_name:?string, source:?string}
      */
     private static function defaultOperatorAssignment(int $jobId): array
     {
         if ($jobId <= 0) {
             return [
-                'operator_id' => null,
+                'personnel_id' => null,
                 'external_name' => null,
                 'source' => null,
             ];
@@ -275,7 +275,7 @@ class JobCardForm
 
         if (! $job instanceof Job) {
             return [
-                'operator_id' => null,
+                'personnel_id' => null,
                 'external_name' => null,
                 'source' => null,
             ];

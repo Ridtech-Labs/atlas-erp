@@ -62,10 +62,11 @@ class UpdateJobAssetAssignmentAction
                 throw new BusinessException('This Fleet asset is already assigned during the selected planning window.', 422);
             }
 
-            $operator = $this->operators->resolveAssignment($data['operator_user_id'] ?? $assignment->operator_user_id, $data['operator_name'] ?? $assignment->operator_name, $assignment->tenant_id, $assignment->company_id);
+            $operator = $this->operators->resolveAssignment($data['personnel_id'] ?? $assignment->personnel_id, $data['operator_name'] ?? $assignment->operator_name, $assignment->tenant_id, $assignment->company_id);
             $assignment->forceFill([
                 'fleet_asset_id' => $asset->getKey(),
-                'operator_user_id' => $operator['operator']?->getKey(),
+                'personnel_id' => $operator['personnel']?->getKey(),
+                'operator_user_id' => null,
                 'operator_name' => $operator['external_name'],
                 'planned_start_at' => $window['start'], 'planned_end_at' => $window['end'],
                 'notes' => array_key_exists('notes', $data) ? (filled($data['notes']) ? trim((string) $data['notes']) : null) : $assignment->notes,

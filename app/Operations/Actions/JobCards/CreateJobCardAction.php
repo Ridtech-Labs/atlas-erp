@@ -86,7 +86,7 @@ class CreateJobCardAction
 
             $recordingData = Arr::except($data, self::PROTECTED_WORKFLOW_FIELDS);
             $assignment = $operators->resolveAssignment(
-                $recordingData['operator_id'] ?? null,
+                $recordingData['operator_personnel_id'] ?? null,
                 $recordingData['operated_by'] ?? null,
                 $job->tenant_id,
                 $job->company_id,
@@ -94,9 +94,9 @@ class CreateJobCardAction
             );
             $resolvedOperators = $operators->resolveOperatorEntries($recordingData['operators'] ?? [], $job->tenant_id, $job->company_id);
 
-            if ($resolvedOperators === [] && ($assignment['operator'] !== null || $assignment['external_name'] !== null)) {
+            if ($resolvedOperators === [] && ($assignment['personnel'] !== null || $assignment['external_name'] !== null)) {
                 $resolvedOperators = [[
-                    'user_id' => $assignment['operator']?->getKey(),
+                    'personnel_id' => $assignment['personnel']?->getKey(),
                     'operator_name' => $assignment['external_name'],
                 ]];
             }
@@ -109,7 +109,7 @@ class CreateJobCardAction
             $fleetPrefill = $this->fleetPrefill->selectedForJob($job, isset($recordingData['fleet_asset_id']) ? (int) $recordingData['fleet_asset_id'] : null);
 
             $jobCard = JobCard::query()->create([
-                ...Arr::except($recordingData, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'fleet_asset_id', 'operator_id', 'operators', 'attachments', 'source', 'from_time', 'to_time', 'header_hours', 'total_hours']),
+                ...Arr::except($recordingData, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'fleet_asset_id', 'operator_id', 'operator_personnel_id', 'operators', 'attachments', 'source', 'from_time', 'to_time', 'header_hours', 'total_hours']),
                 'card_number' => $recordingData['card_number'] ?? $this->generateCardNumber($job),
                 'uuid' => (string) Str::uuid(),
                 'tenant_id' => $job->tenant_id,
@@ -118,7 +118,8 @@ class CreateJobCardAction
                 'client_id' => $job->client_id,
                 'client_site_id' => $job->client_site_id,
                 'card_date' => $cardDate,
-                'operator_id' => $assignment['operator']?->getKey(),
+                'operator_id' => null,
+                'operator_personnel_id' => $assignment['personnel']?->getKey(),
                 'shift' => $recordingData['shift'] ?? $job->getRawOriginal('shift'),
                 'equipment_reference' => $recordingData['equipment_reference'] ?? $fleetPrefill['equipment_reference'] ?? $job->equipment_requirement,
                 'machine_number' => $fleetPrefill['machine_number'] ?? $recordingData['machine_number'] ?? null,

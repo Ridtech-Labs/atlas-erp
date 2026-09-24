@@ -25,6 +25,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/** @property int|null $operator_personnel_id */
 class JobCard extends Model implements HasMedia
 {
     use BelongsToTenant;
@@ -53,6 +54,7 @@ class JobCard extends Model implements HasMedia
         'from_time',
         'to_time',
         'operator_id',
+        'operator_personnel_id',
         'operated_by',
         'supervising_officer_name',
         'header_hours',
@@ -161,6 +163,12 @@ class JobCard extends Model implements HasMedia
         return $this->belongsTo(User::class, 'operator_id');
     }
 
+    /** @return BelongsTo<Personnel, $this> */
+    public function operatorPersonnel(): BelongsTo
+    {
+        return $this->belongsTo(Personnel::class, 'operator_personnel_id')->withTrashed();
+    }
+
     public function operatorDisplayName(): ?string
     {
         if ($this->relationLoaded('operators') ? $this->operators->isNotEmpty() : $this->operators()->exists()) {
@@ -170,7 +178,7 @@ class JobCard extends Model implements HasMedia
                 ->join(', ');
         }
 
-        return $this->operator->full_name ?? $this->operated_by;
+        return $this->operatorPersonnel?->full_name ?? $this->operator?->full_name ?? $this->operated_by;
     }
 
     /**

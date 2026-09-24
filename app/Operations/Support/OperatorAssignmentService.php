@@ -8,41 +8,34 @@ use App\Core\Shared\Exceptions\BusinessException;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
+use App\Operations\Models\Personnel;
 use Illuminate\Support\Str;
 
 class OperatorAssignmentService
 {
-    /**
-     * @return array<int, string>
-     */
+    /** @return array<int, string> */
     public function companyOperatorOptions(int $tenantId, int $companyId): array
     {
-        return User::query()
-            ->where('tenant_id', $tenantId)
-            ->whereHas('companies', fn ($query) => $query->whereKey($companyId))
-            ->orderBy('first_name')
-            ->orderBy('last_name')
-            ->get()
-            ->mapWithKeys(fn (User $operator) => [$operator->getKey() => $operator->full_name])
-            ->all();
+        return Personnel::query()->where(['tenant_id' => $tenantId, 'company_id' => $companyId, 'status' => 'active'])->where('can_operate_equipment', true)->orderBy('first_name')->orderBy('last_name')->get()->mapWithKeys(fn (Personnel $person): array => [$person->getKey() => $person->full_name])->all();
     }
 
-    public function resolveCompanyOperator(mixed $operatorId, int $tenantId, int $companyId): ?User
+    /** @return array<int, string> */
+    public function companyDriverOptions(int $tenantId, int $companyId): array
     {
-        if (! is_numeric($operatorId)) {
+        return Personnel::query()->where(['tenant_id' => $tenantId, 'company_id' => $companyId, 'status' => 'active'])->where('can_drive', true)->orderBy('first_name')->orderBy('last_name')->get()->mapWithKeys(fn (Personnel $person): array => [$person->getKey() => $person->full_name])->all();
+    }
+
+    public function resolvePersonnel(mixed $id, int $tenantId, int $companyId, bool $driver = false): ?Personnel
+    {
+        if (! is_numeric($id)) {
             return null;
         }
-
-        $operator = User::query()
-            ->whereKey((int) $operatorId)
-            ->where('tenant_id', $tenantId)
-            ->first();
-
-        if (! $operator instanceof User || ! $operator->companies()->whereKey($companyId)->exists()) {
-            throw new BusinessException('The selected operator is not authorized for the active company.', 422);
+        $person = Personnel::query()->whereKey((int) $id)->where(['tenant_id' => $tenantId, 'company_id' => $companyId, 'status' => 'active'])->when($driver, fn ($q) => $q->where('can_drive', true), fn ($q) => $q->where('can_operate_equipment', true))->first();
+        if (! $person instanceof Personnel) {
+            throw new BusinessException($driver ? 'The selected driver is not available for the active company.' : 'The selected operator is not available for the active company.', 422);
         }
 
-        return $operator;
+        return $person;
     }
 
     public function normalizeExternalName(mixed $name): ?string
@@ -50,142 +43,100 @@ class OperatorAssignmentService
         if (! is_string($name)) {
             return null;
         }
-
         $name = Str::squish($name);
 
         return $name === '' ? null : $name;
     }
 
     /**
-     * @return array{operator:?User, external_name:?string}
+     * Legacy User references remain readable during the Personnel migration.
+     * New Filament forms never submit this field.
      */
-    public function resolveAssignment(
-        mixed $operatorId,
-        mixed $externalName,
-        int $tenantId,
-        int $companyId,
-        bool $require = false,
-        string $requiredMessage = 'Assign an operator before continuing.',
-    ): array {
-        $operator = $this->resolveCompanyOperator($operatorId, $tenantId, $companyId);
-        $externalName = $this->normalizeExternalName($externalName);
-
-        if ($operator instanceof User && $externalName !== null) {
-            throw new BusinessException('Select a company operator or enter an external operator name, not both.', 422);
-        }
-
-        if ($require && ! $operator instanceof User && $externalName === null) {
-            throw new BusinessException($requiredMessage, 422);
-        }
-
-        return [
-            'operator' => $operator,
-            'external_name' => $externalName,
-        ];
-    }
-
-    public function displayName(?User $operator, ?string $externalName): ?string
+    public function resolveLegacyUser(mixed $id, int $tenantId, int $companyId): ?User
     {
-        return $operator->full_name ?? $this->normalizeExternalName($externalName);
+        if (! is_numeric($id)) {
+            return null;
+        }
+
+        $user = User::query()->whereKey((int) $id)->where('tenant_id', $tenantId)->first();
+        if (! $user instanceof User || ! $user->companies()->whereKey($companyId)->exists()) {
+            throw new BusinessException('The selected operator is not authorized for the active company.', 422);
+        }
+
+        return $user;
     }
 
-    /**
-     * @return array{operator_id:?int, external_name:?string, source:?string}
-     */
+    /** @return array{personnel:?Personnel,external_name:?string} */
+    public function resolveAssignment(mixed $id, mixed $name, int $tenantId, int $companyId, bool $require = false, string $message = 'Assign an operator before continuing.', bool $driver = false): array
+    {
+        $personnel = $this->resolvePersonnel($id, $tenantId, $companyId, $driver);
+        $externalName = $this->normalizeExternalName($name);
+        if ($personnel && $externalName) {
+            throw new BusinessException($driver ? 'Select Personnel or enter an external driver name, not both.' : 'Select Personnel or enter an external operator name, not both.', 422);
+        }
+        if ($require && ! $personnel && ! $externalName) {
+            throw new BusinessException($message, 422);
+        }
+
+        return ['personnel' => $personnel, 'external_name' => $externalName];
+    }
+
+    /** @return array{personnel:?Personnel,external_name:?string} */
+    public function resolveDriverAssignment(mixed $id, mixed $name, int $tenantId, int $companyId): array
+    {
+        $personnel = $this->resolvePersonnel($id, $tenantId, $companyId, true);
+        $externalName = $this->normalizeExternalName($name);
+        if ($personnel && $externalName) {
+            throw new BusinessException('Select Personnel or enter an external driver name, not both.', 422);
+        }
+        if (! $personnel && ! $externalName) {
+            throw new BusinessException('Record a driver before continuing.', 422);
+        }
+
+        return ['personnel' => $personnel, 'external_name' => $externalName];
+    }
+
+    /** @return array{personnel_id:?int,external_name:?string,source:?string} */
     public function defaultJobCardAssignment(Job $job): array
     {
-        $latestCard = $job->jobCards()->orderByDesc('card_date')->orderByDesc('id')->first();
+        $card = $job->jobCards()->orderByDesc('card_date')->orderByDesc('id')->first();
+        $id = $card instanceof JobCard ? $card->operator_personnel_id : $job->assigned_personnel_id;
+        $name = $this->normalizeExternalName($card instanceof JobCard ? $card->operated_by : $job->assigned_operator_name);
 
-        $operatorId = $latestCard instanceof JobCard ? $latestCard->operator_id : $job->assigned_operator_id;
-        $externalName = $this->normalizeExternalName($latestCard instanceof JobCard ? $latestCard->operated_by : $job->assigned_operator_name);
-
-        return [
-            'operator_id' => is_int($operatorId) ? $operatorId : null,
-            'external_name' => $externalName,
-            'source' => is_int($operatorId) ? 'company_personnel' : ($externalName !== null ? 'external' : null),
-        ];
+        return ['personnel_id' => is_int($id) ? $id : null, 'external_name' => $name, 'source' => is_int($id) ? 'personnel' : ($name ? 'external' : null)];
     }
 
-    /**
-     * @return array{operator_id:?int, external_name:?string, source:?string}
-     */
-    public function suspectedAutoAssignmentForJob(Job $job): array
-    {
-        return [
-            'operator_id' => $job->assigned_operator_id,
-            'external_name' => $job->assigned_operator_name,
-            'source' => $job->assigned_operator_id !== null ? 'company_personnel' : ($job->assigned_operator_name !== null ? 'external' : null),
-        ];
-    }
-
-    public function jobNeedsOperator(Job $job): bool
-    {
-        return $this->displayName($job->assignedOperator, $job->assigned_operator_name) !== null;
-    }
-
-    public function jobCardOperatorName(JobCard $jobCard): ?string
-    {
-        return $this->displayName($jobCard->operator, $jobCard->operated_by);
-    }
-
-    /**
-     * @return list<array{user_id:?int, operator_name:?string}>
-     */
+    /** @return list<array{personnel_id:?int,operator_name:?string}> */
     public function resolveOperatorEntries(mixed $operators, int $tenantId, int $companyId): array
     {
         if (! is_array($operators)) {
             return [];
         }
-
         $resolved = [];
-
-        foreach (array_values($operators) as $index => $operator) {
+        foreach ($operators as $operator) {
             if (! is_array($operator)) {
                 continue;
             }
-
-            $assignment = $this->resolveAssignment(
-                $operator['user_id'] ?? null,
-                $operator['operator_name'] ?? null,
-                $tenantId,
-                $companyId,
-            );
-
-            if ($assignment['operator'] === null && $assignment['external_name'] === null) {
-                continue;
+            $assignment = $this->resolveAssignment($operator['personnel_id'] ?? null, $operator['operator_name'] ?? null, $tenantId, $companyId);
+            if ($assignment['personnel'] || $assignment['external_name']) {
+                $resolved[] = ['personnel_id' => $assignment['personnel']?->getKey(), 'operator_name' => $assignment['external_name']];
             }
-
-            $resolved[] = [
-                'user_id' => $assignment['operator']?->getKey(),
-                'operator_name' => $assignment['external_name'],
-            ];
         }
 
         return $resolved;
     }
 
-    /**
-     * @param  list<array{user_id:?int, operator_name:?string}>  $operators
-     */
-    public function syncJobCardOperators(JobCard $jobCard, array $operators): void
+    /** @param list<array{personnel_id:?int,operator_name:?string}> $operators */
+    public function syncJobCardOperators(JobCard $card, array $operators): void
     {
-        $jobCard->operators()->delete();
-
+        $card->operators()->delete();
         foreach ($operators as $index => $operator) {
-            $jobCard->operators()->create([
-                'user_id' => $operator['user_id'],
-                'operator_name' => $operator['operator_name'],
-                'sort_order' => $index,
-            ]);
+            $card->operators()->create(['personnel_id' => $operator['personnel_id'], 'operator_name' => $operator['operator_name'], 'sort_order' => $index]);
         }
-
-        $primary = $jobCard->operators()->with('user')->orderBy('sort_order')->first();
-
-        $jobCard->forceFill([
-            'operator_id' => $primary?->user_id,
-            'operated_by' => $primary?->user_id === null ? $primary?->operator_name : null,
-        ])->saveQuietly();
-        $jobCard->unsetRelation('operator');
-        $jobCard->unsetRelation('operators');
+        $primary = $card->operators()->with('personnel')->orderBy('sort_order')->first();
+        $card->forceFill(['operator_personnel_id' => $primary?->personnel_id, 'operator_id' => null, 'operated_by' => $primary?->personnel_id === null ? $primary?->operator_name : null])->saveQuietly();
+        $card->unsetRelation('operatorPersonnel');
+        $card->unsetRelation('operator');
+        $card->unsetRelation('operators');
     }
 }

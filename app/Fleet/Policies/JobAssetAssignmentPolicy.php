@@ -6,6 +6,7 @@ namespace App\Fleet\Policies;
 
 use App\Administration\Enums\PermissionName;
 use App\Administration\Services\AdministrationAccessService;
+use App\Fleet\Enums\JobAssetAssignmentStatus;
 use App\Fleet\Models\JobAssetAssignment;
 use App\Models\User;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
@@ -37,6 +38,7 @@ class JobAssetAssignmentPolicy
     public function update(User $user, JobAssetAssignment $assignment): bool
     {
         return $this->hasPermission($user, PermissionName::FleetAssignmentsManage->value)
+            && (string) $assignment->getRawOriginal('status') === JobAssetAssignmentStatus::Assigned->value
             && $this->access->canAccessActiveOperationalCompany($user, $assignment->company_id, $assignment->tenant_id);
     }
 

@@ -87,7 +87,7 @@ class UpdateJobCardAction
 
             $previousOperatorName = $jobCard->operatorDisplayName();
             $assignment = $this->operators->resolveAssignment(
-                $sanitized['operator_id'] ?? $jobCard->operator_id,
+                $sanitized['operator_personnel_id'] ?? $jobCard->operator_personnel_id,
                 array_key_exists('operated_by', $sanitized) ? $sanitized['operated_by'] : $jobCard->operated_by,
                 $jobCard->tenant_id,
                 $jobCard->company_id,
@@ -95,9 +95,9 @@ class UpdateJobCardAction
             );
             $resolvedOperators = $this->operators->resolveOperatorEntries($sanitized['operators'] ?? [], $jobCard->tenant_id, $jobCard->company_id);
 
-            if ($resolvedOperators === [] && ($assignment['operator'] !== null || $assignment['external_name'] !== null)) {
+            if ($resolvedOperators === [] && ($assignment['personnel'] !== null || $assignment['external_name'] !== null)) {
                 $resolvedOperators = [[
-                    'user_id' => $assignment['operator']?->getKey(),
+                    'personnel_id' => $assignment['personnel']?->getKey(),
                     'operator_name' => $assignment['external_name'],
                 ]];
             }
@@ -107,7 +107,8 @@ class UpdateJobCardAction
             }
 
             $jobCard->fill(Arr::except($sanitized, ['tenant_id', 'company_id', 'job_id', 'client_id', 'client_site_id', 'operators', 'attachments', ...self::AUTHORITATIVE_WORK_ENTRY_FIELDS]));
-            $jobCard->operator_id = $assignment['operator']?->getKey();
+            $jobCard->operator_personnel_id = $assignment['personnel']?->getKey();
+            $jobCard->operator_id = null;
             $jobCard->operated_by = $assignment['external_name'];
             $jobCard->updated_by = $actor->getKey();
             $jobCard->save();

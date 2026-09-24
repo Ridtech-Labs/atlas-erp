@@ -34,6 +34,7 @@ use App\Operations\Models\JobCard;
 use App\Operations\Models\Waybill;
 use App\Operations\Services\JobWorkflowService;
 use App\Operations\Support\JobPlanningReadinessService;
+use App\Operations\Support\OperatorAssignmentService;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Filament\Notifications\Notification;
@@ -67,6 +68,7 @@ class JobWorkspaceWidget extends Widget
             'waybills',
             'completer',
             'assetAssignments.asset.type',
+            'assetAssignments.personnel',
             'assetAssignments.operatorUser',
         ]);
 
@@ -120,6 +122,9 @@ class JobWorkspaceWidget extends Widget
         $availableAssets = $canManageAssignments
             ? app(JobAssetAvailabilityService::class)->availableFor($job, $this->assignmentData)
             : collect();
+        $operatorOptions = $canManageAssignments && is_int($job->company_id)
+            ? app(OperatorAssignmentService::class)->companyOperatorOptions($job->tenant_id, $job->company_id)
+            : [];
         $operationalDocumentLabel = $job?->operationalDocumentLabel() ?? 'Operational Document';
         $operationalDocumentLabelPlural = $operationalDocumentLabel === 'Waybill' ? 'Waybills' : 'Client Job Cards';
         $pendingVerificationCards = $jobCards->filter(fn (JobCard $card): bool => in_array((string) $card->getRawOriginal('approval_status'), [JobCardApprovalStatus::PendingVerification->value, JobCardApprovalStatus::Submitted->value], true));
@@ -209,6 +214,7 @@ class JobWorkspaceWidget extends Widget
             'canViewAssignments' => $canViewAssignments,
             'canManageAssignments' => $canManageAssignments,
             'availableAssets' => $availableAssets,
+            'operatorOptions' => $operatorOptions,
             'latestCardOperatorName' => $latestCard?->operatorDisplayName(),
             'totalNormalHours' => round((float) $workEntries->sum('normal_hours'), 2),
             'totalOvertimeHours' => round((float) $workEntries->sum('overtime_hours'), 2),
@@ -288,7 +294,7 @@ class JobWorkspaceWidget extends Widget
         $this->editingAssignmentId = $assignment->getKey();
         $this->assignmentData = [
             'fleet_asset_id' => $assignment->fleet_asset_id,
-            'operator_user_id' => $assignment->operator_user_id,
+            'personnel_id' => $assignment->personnel_id,
             'operator_name' => $assignment->operator_name,
             'planned_start_at' => CarbonImmutable::parse((string) $assignment->getRawOriginal('planned_start_at'))->format('Y-m-d\\TH:i'),
             'planned_end_at' => CarbonImmutable::parse((string) $assignment->getRawOriginal('planned_end_at'))->format('Y-m-d\\TH:i'),
@@ -330,7 +336,11 @@ class JobWorkspaceWidget extends Widget
             $action($assignment, $user);
             $this->dispatch('$refresh');
         } catch (BusinessException $exception) {
-            Notification::make()->danger()->title($exception->getMessage())->send();
+            Notification::make()
+                ->danger()
+                ->title('Fleet assignment action could not be completed')
+                ->body($exception->getMessage())
+                ->send();
         }
     }
 
@@ -755,9 +765,9 @@ class JobWorkspaceWidget extends Widget
                         'trigger' => null,
                     ],
                     WaybillStatus::Verified->value => [
-                        'label' => 'Awaiting Billing Batch Preparation',
+                        'label' => 'Awaiting Finance processing',
                         'button_label' => null,
-                        'helper' => 'Finance will add this verified Waybill to a Billing Batch, resolve its commercial rate, and prepare it for billing.',
+                        'helper' => 'This verified Waybill is now waiting for Finance to complete the billing process.',
                         'url' => null,
                         'kind' => 'success',
                         'trigger' => null,
@@ -838,11 +848,11 @@ class JobWorkspaceWidget extends Widget
                     'trigger' => null,
                 ],
                 JobCardApprovalStatus::Verified->value => [
-                    'label' => $canBillJobCard ? 'Prepare Billing Batch' : 'Awaiting Billing Batch Preparation',
+                    'label' => $canBillJobCard ? 'Prepare Billing Batch' : 'Awaiting Finance processing',
                     'button_label' => $canBillJobCard ? 'Prepare Billing Batch' : null,
                     'helper' => $canBillJobCard
                         ? 'This Accounts-reviewed Client Job Card is ready to be added to a Billing Batch, where Atlas will resolve the rate agreement and snapshot the commercial basis.'
-                        : 'This Accounts-reviewed Client Job Card is waiting for Finance or an authorized administrator to prepare a Billing Batch.',
+                        : 'This Accounts-reviewed Client Job Card is waiting for Finance to complete the billing process.',
                     'url' => $canBillJobCard ? BillingBatchResource::getUrl('index') : JobCardResource::getUrl('view', ['record' => $activeCard]),
                     'kind' => 'success',
                     'trigger' => null,

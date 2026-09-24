@@ -17,6 +17,7 @@ enum WaybillStatus: string
         return match ($this) {
             self::PendingVerification => 'Pending Verification',
             self::BillingReady => 'Billing Ready',
+            self::Returned => 'Returned / Needs Correction',
             default => ucfirst(str_replace('_', ' ', $this->value)),
         };
     }

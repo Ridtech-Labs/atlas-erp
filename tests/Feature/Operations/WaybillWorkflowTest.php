@@ -1,6 +1,7 @@
 <?php
 
 use App\Administration\Enums\RoleName;
+use App\Core\Administration\Filament\Resources\Waybills\WaybillResource;
 use App\Core\Administration\Filament\Widgets\JobWorkspaceWidget;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\CRM\Models\Client;
@@ -339,6 +340,75 @@ test('returned waybill can be corrected and resubmitted but pending verification
     expect($resubmitted->status)->toBe(WaybillStatus::PendingVerification);
 });
 
+test('waybill edit routes redirect locked evidence to view while recorded and returned evidence remain editable', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $actor->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($actor);
+
+    $job = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'status' => JobStatus::InProgress,
+        'job_type' => JobType::Trucking,
+    ]);
+
+    $makeWaybill = function (WaybillStatus $status) use ($tenant, $company, $job, $actor): Waybill {
+        return Waybill::query()->create([
+            'uuid' => (string) Str::uuid(),
+            'tenant_id' => $tenant->getKey(),
+            'company_id' => $company->getKey(),
+            'job_id' => $job->getKey(),
+            'client_id' => $job->client_id,
+            'waybill_number' => 'WB-'.Str::upper(Str::random(8)),
+            'waybill_date' => '2026-09-07',
+            'driver_name' => 'QA Driver',
+            'truck_number' => 'GT-QA-001',
+            'number_of_trips' => 1,
+            'pickup_point' => 'Tema',
+            'destination' => 'Takoradi',
+            'signature_name' => 'QA Driver',
+            'status' => $status->value,
+            'created_by' => $actor->getKey(),
+            'updated_by' => $actor->getKey(),
+        ]);
+    };
+
+    foreach ([WaybillStatus::Recorded, WaybillStatus::Returned] as $status) {
+        $waybill = $makeWaybill($status);
+
+        $this->get(WaybillResource::getUrl('edit', ['record' => $waybill]))
+            ->assertOk()
+            ->assertSee('Save changes');
+    }
+
+    foreach ([WaybillStatus::PendingVerification, WaybillStatus::Verified, WaybillStatus::BillingReady] as $status) {
+        $waybill = $makeWaybill($status);
+
+        $this->get(WaybillResource::getUrl('edit', ['record' => $waybill]))
+            ->assertRedirect(WaybillResource::getUrl('view', ['record' => $waybill]));
+    }
+
+    $pending = $makeWaybill(WaybillStatus::PendingVerification);
+
+    $this->get(WaybillResource::getUrl('view', ['record' => $pending]))
+        ->assertOk()
+        ->assertSee('Verify Waybill')
+        ->assertSee('Return for correction')
+        ->assertDontSee('Edit Waybill');
+
+    foreach ([WaybillStatus::PendingVerification, WaybillStatus::Verified, WaybillStatus::BillingReady] as $status) {
+        $waybill = $makeWaybill($status);
+
+        expect(fn () => app(UpdateWaybillAction::class)->execute($waybill, ['driver_name' => 'Attempted update'], $actor))
+            ->toThrow(BusinessException::class, 'This Waybill must be returned for correction before it can be edited.');
+    }
+});
+
 test('job workspace reflects trucking waybill statuses correctly', function () {
     $this->seedAccessControl();
 
@@ -374,7 +444,7 @@ test('job workspace reflects trucking waybill statuses correctly', function () {
 
     Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
         ->assertSee('Waybills')
-        ->assertSee('Awaiting Billing Batch Preparation')
+        ->assertSee('Awaiting Finance processing')
         ->assertSee('Billing basis');
 
     expect(fn () => app(MarkWaybillBillingReadyAction::class)->execute($waybill, $actor))

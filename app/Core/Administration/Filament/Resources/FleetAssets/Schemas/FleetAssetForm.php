@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\FleetAssets\Schemas;
 
 use App\Administration\Services\AdministrationAccessService;
+use App\Administration\Support\ActiveCompanyOptionScope;
 use App\Core\Tenancy\Models\Company;
 use App\Fleet\Enums\FleetAssetCategory;
 use App\Fleet\Enums\FleetAssetOperationalStatus;
@@ -70,14 +71,11 @@ class FleetAssetForm
     private static function assetTypeOptions(): array
     {
         $user = auth()->user();
-        $companyId = $user ? app(AdministrationAccessService::class)->activeCompanyId($user) : null;
-
-        if (! is_int($companyId)) {
+        if ($user === null) {
             return [];
         }
 
-        return FleetAssetType::query()
-            ->where('company_id', $companyId)
+        return app(ActiveCompanyOptionScope::class)->apply(FleetAssetType::query(), $user)
             ->where('is_active', true)
             ->orderBy('name')
             ->get()

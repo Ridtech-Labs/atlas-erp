@@ -22,6 +22,7 @@ use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/** @property int|null $driver_personnel_id */
 class Waybill extends Model implements HasMedia
 {
     use BelongsToTenant;
@@ -40,6 +41,7 @@ class Waybill extends Model implements HasMedia
         'client_reference',
         'waybill_date',
         'driver_name',
+        'driver_personnel_id',
         'truck_number',
         'number_of_trips',
         'amount_paid',
@@ -107,10 +109,30 @@ class Waybill extends Model implements HasMedia
         return $this->belongsTo(User::class, 'verified_by');
     }
 
+    /** @return BelongsTo<Personnel, $this> */
+    public function driverPersonnel(): BelongsTo
+    {
+        return $this->belongsTo(Personnel::class, 'driver_personnel_id')->withTrashed();
+    }
+
+    public function driverDisplayName(): ?string
+    {
+        return $this->driverPersonnel?->full_name ?? $this->driver_name;
+    }
+
     /** @return HasOne<BillingBatchLine, $this> */
     public function billingBatchLine(): HasOne
     {
         return $this->hasOne(BillingBatchLine::class, 'source_id')->where('source_type', 'trucking_waybill');
+    }
+
+    public function evidenceIsLockedForEditing(): bool
+    {
+        return in_array((string) $this->getRawOriginal('status'), [
+            WaybillStatus::PendingVerification->value,
+            WaybillStatus::Verified->value,
+            WaybillStatus::BillingReady->value,
+        ], true);
     }
 
     public function getActivitylogOptions(): LogOptions

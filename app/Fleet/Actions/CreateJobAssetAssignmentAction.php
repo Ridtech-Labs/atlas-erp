@@ -60,7 +60,7 @@ class CreateJobAssetAssignmentAction
             }
 
             $operator = $this->operators->resolveAssignment(
-                $data['operator_user_id'] ?? null,
+                $data['personnel_id'] ?? null,
                 $data['operator_name'] ?? null,
                 $job->tenant_id,
                 $job->company_id,
@@ -73,7 +73,8 @@ class CreateJobAssetAssignmentAction
                 'company_id' => $job->company_id,
                 'job_id' => $job->getKey(),
                 'fleet_asset_id' => $asset->getKey(),
-                'operator_user_id' => $operator['operator']?->getKey(),
+                'personnel_id' => $operator['personnel']?->getKey(),
+                'operator_user_id' => null,
                 'operator_name' => $operator['external_name'],
                 'planned_start_at' => $window['start'],
                 'planned_end_at' => $window['end'],

@@ -7,7 +7,9 @@ use App\Fleet\Actions\CancelJobAssetAssignmentAction;
 use App\Fleet\Actions\CreateFleetAssetAction;
 use App\Fleet\Actions\CreateFleetAssetTypeAction;
 use App\Fleet\Actions\CreateJobAssetAssignmentAction;
+use App\Fleet\Actions\DispatchJobAssetAssignmentAction;
 use App\Fleet\Actions\ReleaseJobAssetAssignmentAction;
+use App\Fleet\Actions\ReturnJobAssetAssignmentAction;
 use App\Fleet\Actions\UpdateJobAssetAssignmentAction;
 use App\Fleet\Enums\FleetAssetCategory;
 use App\Fleet\Enums\JobAssetAssignmentStatus;
@@ -108,6 +110,25 @@ test('Operations Manager can create update release and cancel assignments while 
     expect(app(ReleaseJobAssetAssignmentAction::class)->execute($updated, $operations)->status)->toBe(JobAssetAssignmentStatus::Released);
     $second = app(CreateJobAssetAssignmentAction::class)->execute($job, ['fleet_asset_id' => $asset->getKey()], $operations);
     expect(app(CancelJobAssetAssignmentAction::class)->execute($second, $operations)->status)->toBe(JobAssetAssignmentStatus::Cancelled);
+});
+
+test('returned Fleet assignments are read only in policy and action layers', function () {
+    $this->seedAccessControl();
+    $tenant = $this->tenant();
+    $company = $this->company($tenant);
+    $clerk = $this->tenantUser($tenant, [], [RoleName::DataEntryClerk->value]);
+    $operations = $this->tenantUser($tenant, [], [RoleName::OperationsManager->value]);
+    assignmentContext($this, $clerk, $company);
+    $asset = assignmentAsset($clerk, 'RS-TERMINAL');
+    $job = assignmentJob($tenant, $company);
+    assignmentContext($this, $operations, $company);
+    $assignment = app(CreateJobAssetAssignmentAction::class)->execute($job, ['fleet_asset_id' => $asset->getKey()], $operations);
+    app(DispatchJobAssetAssignmentAction::class)->execute($assignment, $operations);
+    $returned = app(ReturnJobAssetAssignmentAction::class)->execute($assignment->fresh(), $operations);
+
+    expect(Gate::forUser($operations)->allows('update', $returned))->toBeFalse()
+        ->and(fn () => app(UpdateJobAssetAssignmentAction::class)->execute($returned, ['notes' => 'Forged terminal update'], $operations))
+        ->toThrow(BusinessException::class, 'Only an active Fleet assignment can be edited.');
 });
 
 test('Company Administrator retains assignment management while Finance and other companies remain denied', function () {

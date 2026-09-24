@@ -19,6 +19,7 @@ enum JobStatus: string
     {
         return match ($this) {
             self::PendingApproval => 'Pending Approval',
+            self::Approved => 'Approved / Ready',
             self::InProgress => 'In Progress',
             self::OnHold => 'On Hold',
             default => ucfirst(str_replace('_', ' ', $this->value)),

@@ -66,11 +66,18 @@ class CreateJobAction
             }
 
             $assignment = $this->operators->resolveAssignment(
-                $data['assigned_operator_id'] ?? null,
+                $data['assigned_personnel_id'] ?? null,
                 $data['assigned_operator_name'] ?? null,
                 $tenantId,
                 $company->getKey(),
+                driver: ($data['job_type'] ?? JobType::HeavyMachinery->value) === JobType::Trucking->value,
             );
+            if ($assignment['external_name'] !== null && filled($data['assigned_operator_id'] ?? null)) {
+                throw new BusinessException('Select a company operator or enter an external operator name, not both.', 422);
+            }
+            $legacyOperator = $assignment['personnel'] === null && $assignment['external_name'] === null
+                ? $this->operators->resolveLegacyUser($data['assigned_operator_id'] ?? null, $tenantId, $company->getKey())
+                : null;
             $this->validateDates($data);
 
             $attributes = $this->fieldMapper->canonicalAndLegacyAttributes($data, $company);
@@ -81,7 +88,8 @@ class CreateJobAction
             $job->company_id = $company->getKey();
             $job->client_id = $client->getKey();
             $job->client_site_id = $site?->getKey();
-            $job->assigned_operator_id = $assignment['operator']?->getKey();
+            $job->assigned_personnel_id = $assignment['personnel']?->getKey();
+            $job->assigned_operator_id = $legacyOperator?->getKey();
             $job->assigned_operator_name = $assignment['external_name'];
             $job->shift = $data['shift'] ?? JobShift::Custom->value;
             $job->job_type = $data['job_type'] ?? JobType::HeavyMachinery->value;

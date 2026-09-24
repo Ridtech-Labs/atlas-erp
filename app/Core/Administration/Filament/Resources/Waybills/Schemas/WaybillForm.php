@@ -7,10 +7,12 @@ namespace App\Core\Administration\Filament\Resources\Waybills\Schemas;
 use App\Administration\Services\AdministrationAccessService;
 use App\Core\Tenancy\Models\Company;
 use App\Operations\Enums\WaybillStatus;
+use App\Operations\Support\OperatorAssignmentService;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -34,13 +36,27 @@ class WaybillForm
                     TextInput::make('waybill_number')->label('Waybill number')->maxLength(255),
                     TextInput::make('client_reference')->label('Client-issued reference')->maxLength(255),
                     DatePicker::make('waybill_date')->required(),
-                    TextInput::make('driver_name')->required()->maxLength(255),
+                    Select::make('driver_personnel_id')->label('Driver / Personnel')->searchable()->options(function (): array {
+                        $user = auth()->user();
+                        $companyId = $user ? app(AdministrationAccessService::class)->activeCompanyId($user) : null;
+
+                        return $user && is_int($companyId) ? app(OperatorAssignmentService::class)->companyDriverOptions($user->tenant_id, $companyId) : [];
+                    }),
+                    TextInput::make('driver_name')->label('External driver')->maxLength(255),
                     TextInput::make('truck_number')->required()->maxLength(255),
                     TextInput::make('number_of_trips')->numeric()->default(1)->required(),
                     TextInput::make('pickup_point')->maxLength(255),
                     TextInput::make('destination')->maxLength(255),
-                    TextInput::make('amount_paid')->numeric()->step('0.01'),
-                    TextInput::make('amount_paid_to_driver')->numeric()->step('0.01'),
+                    TextInput::make('amount_paid')
+                        ->label('Operational amount paid')
+                        ->helperText('Internal operational payment information only. Client billing is determined from the applicable Finance Rate Agreement.')
+                        ->numeric()
+                        ->step('0.01'),
+                    TextInput::make('amount_paid_to_driver')
+                        ->label('Amount paid to driver')
+                        ->helperText('Driver payment tracking only. This does not determine the amount billed to the client.')
+                        ->numeric()
+                        ->step('0.01'),
                     TextInput::make('signature_name')->maxLength(255),
                     Placeholder::make('status_summary')
                         ->label('Workflow status')

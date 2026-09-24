@@ -16,6 +16,7 @@ use App\CRM\Services\CrmTenantGuard;
 use App\Models\User;
 use App\Operations\Enums\JobShift;
 use App\Operations\Enums\JobStatus;
+use App\Operations\Enums\JobType;
 use App\Operations\Models\Job;
 use App\Operations\Support\JobPlanningFieldMapper;
 use App\Operations\Support\OperatorAssignmentService;
@@ -70,16 +71,24 @@ class UpdateJobAction
 
             $previousOperatorName = $job->plannedOperatorName();
             $assignment = $this->operators->resolveAssignment(
-                $data['assigned_operator_id'] ?? $job->assigned_operator_id,
+                $data['assigned_personnel_id'] ?? $job->assigned_personnel_id,
                 array_key_exists('assigned_operator_name', $data) ? $data['assigned_operator_name'] : $job->assigned_operator_name,
                 $job->tenant_id,
                 $company->getKey(),
+                driver: ($data['job_type'] ?? $job->getRawOriginal('job_type')) === JobType::Trucking->value,
             );
+            if ($assignment['external_name'] !== null && filled($data['assigned_operator_id'] ?? null)) {
+                throw new BusinessException('Select a company operator or enter an external operator name, not both.', 422);
+            }
+            $legacyOperator = $assignment['personnel'] === null && $assignment['external_name'] === null
+                ? $this->operators->resolveLegacyUser($data['assigned_operator_id'] ?? $job->assigned_operator_id, $job->tenant_id, $company->getKey())
+                : null;
 
             $attributes = $this->fieldMapper->canonicalAndLegacyAttributes($data, $company, $job);
 
             $job->fill(collect($attributes)->except(['tenant_id', 'company_id', 'created_by', 'updated_by'])->all());
-            $job->assigned_operator_id = $assignment['operator']?->getKey();
+            $job->assigned_personnel_id = $assignment['personnel']?->getKey();
+            $job->assigned_operator_id = $legacyOperator?->getKey();
             $job->assigned_operator_name = $assignment['external_name'];
             $job->shift = $data['shift'] ?? $job->getRawOriginal('shift') ?? JobShift::Custom->value;
             $this->stampUpdateAudit($job, $actor);

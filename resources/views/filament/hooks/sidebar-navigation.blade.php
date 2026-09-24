@@ -12,6 +12,7 @@
     use App\Core\Administration\Filament\Resources\FleetAssets\FleetAssetResource;
     use App\Core\Administration\Filament\Resources\FleetAssetTypes\FleetAssetTypeResource;
     use App\Core\Administration\Filament\Resources\Jobs\JobResource;
+    use App\Core\Administration\Filament\Resources\Personnel\PersonnelResource;
     use App\Core\Administration\Filament\Resources\RateAgreements\RateAgreementResource;
     use App\Core\Administration\Filament\Resources\Roles\RoleResource;
     use App\Core\Administration\Filament\Resources\Tenants\TenantResource;
@@ -100,6 +101,13 @@
                     'active' => request()->routeIs('filament.admin.resources.jobs.*'),
                     'disabled' => ! JobResource::canViewAny(),
                     'icon' => 'jobs',
+                ],
+                [
+                    'label' => 'Personnel',
+                    'url' => PersonnelResource::canViewAny() ? PersonnelResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.personnel.*'),
+                    'disabled' => false,
+                    'icon' => 'crm',
                 ],
                 [
                     'label' => 'Fleet Assets',

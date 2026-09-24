@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Resources\JobCards\Tables;
 
+use App\Administration\Support\ActiveCompanyOptionScope;
+use App\CRM\Models\Client;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Models\JobCard;
 use Filament\Actions\EditAction;
@@ -42,9 +44,9 @@ class JobCardsTable
                 TextColumn::make('verified_at')->since()->label('Accounts Reviewed')->toggleable(),
             ])
             ->filters([
-                SelectFilter::make('client_id')->label('Client')->relationship('client', 'legal_name')->searchable(),
-                Filter::make('equipment_reference')->schema([Select::make('equipment_reference')->options(fn (): array => JobCard::query()->whereNotNull('equipment_reference')->distinct()->orderBy('equipment_reference')->pluck('equipment_reference', 'equipment_reference')->all())])->query(fn (Builder $query, array $data): Builder => $query->when($data['equipment_reference'] ?? null, fn (Builder $query, string $value): Builder => $query->where('equipment_reference', $value))),
-                Filter::make('machine_number')->schema([Select::make('machine_number')->options(fn (): array => JobCard::query()->whereNotNull('machine_number')->distinct()->orderBy('machine_number')->pluck('machine_number', 'machine_number')->all())])->query(fn (Builder $query, array $data): Builder => $query->when($data['machine_number'] ?? null, fn (Builder $query, string $value): Builder => $query->where('machine_number', $value))),
+                SelectFilter::make('client_id')->label('Client')->options(fn (): array => app(ActiveCompanyOptionScope::class)->apply(Client::query())->orderBy('legal_name')->pluck('legal_name', 'id')->all())->searchable(),
+                Filter::make('equipment_reference')->schema([Select::make('equipment_reference')->options(fn (): array => app(ActiveCompanyOptionScope::class)->apply(JobCard::query())->whereNotNull('equipment_reference')->distinct()->orderBy('equipment_reference')->pluck('equipment_reference', 'equipment_reference')->all())])->query(fn (Builder $query, array $data): Builder => $query->when($data['equipment_reference'] ?? null, fn (Builder $query, string $value): Builder => $query->where('equipment_reference', $value))),
+                Filter::make('machine_number')->schema([Select::make('machine_number')->options(fn (): array => app(ActiveCompanyOptionScope::class)->apply(JobCard::query())->whereNotNull('machine_number')->distinct()->orderBy('machine_number')->pluck('machine_number', 'machine_number')->all())])->query(fn (Builder $query, array $data): Builder => $query->when($data['machine_number'] ?? null, fn (Builder $query, string $value): Builder => $query->where('machine_number', $value))),
                 Filter::make('card_window')->schema([DatePicker::make('from')->label('From'), DatePicker::make('until')->label('Until')])->query(fn (Builder $query, array $data): Builder => $query->when($data['from'] ?? null, fn (Builder $query, string $date): Builder => $query->whereDate('card_date', '>=', $date))->when($data['until'] ?? null, fn (Builder $query, string $date): Builder => $query->whereDate('card_date', '<=', $date))),
                 SelectFilter::make('approval_status')->label('Evidence status')->options(collect(JobCardApprovalStatus::cases())->mapWithKeys(fn (JobCardApprovalStatus $status): array => [$status->value => $status->label()])->all()),
             ])

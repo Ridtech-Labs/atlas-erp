@@ -60,7 +60,7 @@ class JobCardsRelationManager extends RelationManager
                         Select::make('operator_source')
                             ->label('Operator type')
                             ->options([
-                                'company_personnel' => 'Company personnel',
+                                'personnel' => 'Personnel',
                                 'external' => 'External / temporary operator',
                             ])
                             ->placeholder('Select operator type')
@@ -68,26 +68,26 @@ class JobCardsRelationManager extends RelationManager
                             ->dehydrated(false)
                             ->default(fn (): ?string => $this->defaultOperatorAssignment()['source'])
                             ->afterStateUpdated(function (?string $state, callable $set): void {
-                                if ($state === 'company_personnel') {
+                                if ($state === 'personnel') {
                                     $set('operated_by', null);
 
                                     return;
                                 }
 
                                 if ($state === 'external') {
-                                    $set('operator_id', null);
+                                    $set('operator_personnel_id', null);
 
                                     return;
                                 }
 
-                                $set('operator_id', null);
+                                $set('operator_personnel_id', null);
                                 $set('operated_by', null);
                             }),
-                        Select::make('operator_id')
-                            ->label('Operator')
+                        Select::make('operator_personnel_id')
+                            ->label('Operator / Personnel')
                             ->searchable()
-                            ->visible(fn (callable $get): bool => $get('operator_source') === 'company_personnel')
-                            ->default(fn (): ?int => $this->defaultOperatorAssignment()['operator_id'])
+                            ->visible(fn (callable $get): bool => $get('operator_source') === 'personnel')
+                            ->default(fn (): ?int => $this->defaultOperatorAssignment()['personnel_id'])
                             ->options(fn () => $this->companyOperators()),
                         TextInput::make('operated_by')
                             ->label('External or temporary operator name')
@@ -181,7 +181,7 @@ class JobCardsRelationManager extends RelationManager
     }
 
     /**
-     * @return array{operator_id:?int, external_name:?string, source:?string}
+     * @return array{personnel_id:?int, external_name:?string, source:?string}
      */
     private function defaultOperatorAssignment(): array
     {

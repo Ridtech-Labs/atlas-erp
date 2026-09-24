@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\Waybills\Pages;
 
 use App\Core\Administration\Filament\Resources\Waybills\WaybillResource;
+use App\Models\User;
+use App\Operations\Actions\Waybills\ReturnWaybillForCorrectionAction;
+use App\Operations\Actions\Waybills\VerifyWaybillAction;
+use App\Operations\Enums\WaybillStatus;
 use App\Operations\Models\Waybill;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewWaybill extends ViewRecord
@@ -16,9 +22,27 @@ class ViewWaybill extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('verify')
+                ->label('Verify Waybill')
+                ->action(fn () => app(VerifyWaybillAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
+                ->visible(fn (): bool => $this->canReview()),
+            Action::make('return')
+                ->label('Return for correction')
+                ->color('danger')
+                ->form([
+                    Textarea::make('return_reason')->required(),
+                ])
+                ->action(fn (array $data) => app(ReturnWaybillForCorrectionAction::class)->execute($this->currentRecord(), $this->authenticatedUser(), (string) $data['return_reason']))
+                ->visible(fn (): bool => $this->canReview()),
             EditAction::make()
-                ->visible(fn (): bool => (string) $this->currentRecord()->getRawOriginal('status') !== 'billing_ready'),
+                ->visible(fn (): bool => ! $this->currentRecord()->evidenceIsLockedForEditing()),
         ];
+    }
+
+    private function canReview(): bool
+    {
+        return (string) $this->currentRecord()->getRawOriginal('status') === WaybillStatus::PendingVerification->value
+            && $this->authenticatedUser()->can('approve', $this->currentRecord());
     }
 
     private function currentRecord(): Waybill
@@ -28,5 +52,16 @@ class ViewWaybill extends ViewRecord
         }
 
         return $this->record;
+    }
+
+    private function authenticatedUser(): User
+    {
+        $user = auth()->user();
+
+        if (! $user instanceof User) {
+            abort(403);
+        }
+
+        return $user;
     }
 }

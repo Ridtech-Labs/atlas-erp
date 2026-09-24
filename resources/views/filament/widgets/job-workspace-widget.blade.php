@@ -591,12 +591,15 @@
                                     <option value="">Select available asset</option>
                                     @foreach ($availableAssets as $asset)<option value="{{ $asset->getKey() }}">{{ $asset->asset_number }} · {{ $asset->type?->name }}</option>@endforeach
                                 </select>
-                                <input wire:model="assignmentData.operator_user_id" type="number" min="1" placeholder="Internal operator user ID (optional)" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-950 focus:ring-stone-950">
+                                <select wire:model="assignmentData.personnel_id" aria-label="Operator or Personnel" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 focus:border-stone-950 focus:ring-stone-950">
+                                    <option value="">Select company operator (optional)</option>
+                                    @foreach ($operatorOptions as $operatorId => $operatorName)<option value="{{ $operatorId }}">{{ $operatorName }}</option>@endforeach
+                                </select>
                                 <input wire:model="assignmentData.operator_name" type="text" placeholder="Or external operator name" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 placeholder:text-stone-400 focus:border-stone-950 focus:ring-stone-950">
                                 <input wire:model.live.debounce.300ms="assignmentData.planned_start_at" type="datetime-local" aria-label="Planned assignment start" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 focus:border-stone-950 focus:ring-stone-950">
                                 <input wire:model.live.debounce.300ms="assignmentData.planned_end_at" type="datetime-local" aria-label="Planned assignment end" class="rounded-xl border-stone-300 bg-white text-sm text-stone-900 focus:border-stone-950 focus:ring-stone-950">
                                 <button type="submit" class="rounded-xl bg-stone-950 px-4 py-2 text-sm font-semibold text-white">{{ $editingAssignmentId ? 'Save assignment' : 'Assign asset' }}</button>
-                                <div class="md:col-span-2 xl:col-span-3 text-xs text-stone-500">Leave the planning window blank to reserve the Job's planned date range. Date-only Jobs reserve the full day.</div>
+                                <div class="md:col-span-2 xl:col-span-3 text-xs text-stone-500">Choose a company operator or enter an external operator name, not both. Leave the planning window blank to reserve the Job's planned date range. Date-only Jobs reserve the full day.</div>
                             </form>
                         @endif
                     </div>

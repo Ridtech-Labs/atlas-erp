@@ -9,8 +9,8 @@ use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Models\User;
-use App\Operations\Enums\WaybillStatus;
 use App\Operations\Models\Waybill;
+use App\Operations\Support\OperatorAssignmentService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +20,7 @@ class UpdateWaybillAction
     public function __construct(
         private readonly AdministrationAccessService $access,
         private readonly AdministrationActivityLogger $logger,
+        private readonly OperatorAssignmentService $personnel,
     ) {}
 
     /**
@@ -33,17 +34,16 @@ class UpdateWaybillAction
             throw new BusinessException('You are not allowed to update this Waybill.', 403);
         }
 
-        $status = (string) $waybill->getRawOriginal('status');
-
-        if ($status === WaybillStatus::BillingReady->value) {
-            throw new BusinessException('Billing-ready Waybills are read-only.', 422);
-        }
-
-        if (in_array($status, [WaybillStatus::PendingVerification->value, WaybillStatus::Verified->value], true)) {
+        if ($waybill->evidenceIsLockedForEditing()) {
             throw new BusinessException('This Waybill must be returned for correction before it can be edited.', 422);
         }
 
         return DB::transaction(function () use ($waybill, $data, $actor, $attachmentPaths): Waybill {
+            $driver = $this->personnel->resolveDriverAssignment($data['driver_personnel_id'] ?? $waybill->driver_personnel_id, $data['driver_name'] ?? $waybill->driver_name, $waybill->tenant_id, $waybill->company_id);
+            $driverName = $driver['personnel'] !== null ? $driver['personnel']->full_name : $driver['external_name'];
+            if ($driverName === null) {
+                throw new BusinessException('Record a driver before continuing.', 422);
+            }
             $waybill->fill(Arr::except($data, [
                 'tenant_id',
                 'company_id',
@@ -57,7 +57,10 @@ class UpdateWaybillAction
                 'verified_by',
                 'verified_at',
                 'attachments',
+                'driver_personnel_id',
             ]));
+            $waybill->driver_personnel_id = $driver['personnel']?->getKey();
+            $waybill->driver_name = $driverName;
             $waybill->updated_by = $actor->getKey();
             $waybill->save();
 

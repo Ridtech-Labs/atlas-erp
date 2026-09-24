@@ -11,6 +11,7 @@ use App\Core\Tenancy\Models\Tenant;
 use App\Fleet\Enums\JobAssetAssignmentStatus;
 use App\Models\User;
 use App\Operations\Models\Job;
+use App\Operations\Models\Personnel;
 use Database\Factories\JobAssetAssignmentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -20,6 +21,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/** @property int|null $personnel_id */
 class JobAssetAssignment extends Model
 {
     use BelongsToTenant;
@@ -32,7 +34,7 @@ class JobAssetAssignment extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'uuid', 'tenant_id', 'company_id', 'job_id', 'fleet_asset_id', 'operator_user_id', 'operator_name',
+        'uuid', 'tenant_id', 'company_id', 'job_id', 'fleet_asset_id', 'operator_user_id', 'personnel_id', 'operator_name',
         'planned_start_at', 'planned_end_at', 'assigned_at', 'assigned_by', 'status', 'released_at',
         'released_by', 'release_reason', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'notes',
         'dispatched_at', 'dispatched_by', 'dispatch_notes', 'returned_at', 'returned_by', 'return_notes',
@@ -87,6 +89,12 @@ class JobAssetAssignment extends Model
         return $this->belongsTo(User::class, 'operator_user_id');
     }
 
+    /** @return BelongsTo<Personnel, $this> */
+    public function personnel(): BelongsTo
+    {
+        return $this->belongsTo(Personnel::class)->withTrashed();
+    }
+
     /** @return BelongsTo<User, $this> */
     public function assigner(): BelongsTo
     {
@@ -95,15 +103,13 @@ class JobAssetAssignment extends Model
 
     public function operatorDisplayName(): ?string
     {
-        $operator = $this->operatorUser;
-
-        return $operator instanceof User ? $operator->full_name : $this->operator_name;
+        return $this->personnel->full_name ?? $this->operatorUser->full_name ?? $this->operator_name;
     }
 
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()->useLogName('job_asset_assignments')
-            ->logOnly(['tenant_id', 'company_id', 'job_id', 'fleet_asset_id', 'operator_user_id', 'operator_name', 'planned_start_at', 'planned_end_at', 'status', 'notes'])
+            ->logOnly(['tenant_id', 'company_id', 'job_id', 'fleet_asset_id', 'operator_user_id', 'personnel_id', 'operator_name', 'planned_start_at', 'planned_end_at', 'status', 'notes'])
             ->logOnlyDirty();
     }
 

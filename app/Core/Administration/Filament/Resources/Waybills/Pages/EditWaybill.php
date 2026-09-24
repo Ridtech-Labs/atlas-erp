@@ -6,20 +6,33 @@ namespace App\Core\Administration\Filament\Resources\Waybills\Pages;
 
 use App\Core\Administration\Filament\Resources\Waybills\WaybillResource;
 use App\Models\User;
-use App\Operations\Actions\Waybills\ReturnWaybillForCorrectionAction;
 use App\Operations\Actions\Waybills\SubmitWaybillForVerificationAction;
 use App\Operations\Actions\Waybills\UpdateWaybillAction;
-use App\Operations\Actions\Waybills\VerifyWaybillAction;
 use App\Operations\Enums\WaybillStatus;
 use App\Operations\Models\Waybill;
 use Filament\Actions\Action;
-use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
 class EditWaybill extends EditRecord
 {
     protected static string $resource = WaybillResource::class;
+
+    public function mount(int|string $record): void
+    {
+        $this->record = $this->resolveRecord($record);
+
+        if ($this->currentRecord()->evidenceIsLockedForEditing()) {
+            abort_unless(static::getResource()::canView($this->currentRecord()), 403);
+            $this->redirect(WaybillResource::getUrl('view', ['record' => $this->currentRecord()]));
+
+            return;
+        }
+
+        $this->authorizeAccess();
+        $this->fillForm();
+        $this->previousUrl = url()->previous();
+    }
 
     protected function getHeaderActions(): array
     {
@@ -28,18 +41,6 @@ class EditWaybill extends EditRecord
                 ->label('Send for verification')
                 ->action(fn () => app(SubmitWaybillForVerificationAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
                 ->visible(fn (): bool => $this->statusIsOneOf([WaybillStatus::Recorded, WaybillStatus::Returned])),
-            Action::make('verify')
-                ->label('Verify Waybill')
-                ->action(fn () => app(VerifyWaybillAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
-                ->visible(fn (): bool => $this->statusIs(WaybillStatus::PendingVerification)),
-            Action::make('return')
-                ->label('Return for correction')
-                ->color('danger')
-                ->form([
-                    Textarea::make('return_reason')->required(),
-                ])
-                ->action(fn (array $data) => app(ReturnWaybillForCorrectionAction::class)->execute($this->currentRecord(), $this->authenticatedUser(), (string) $data['return_reason']))
-                ->visible(fn (): bool => $this->statusIs(WaybillStatus::PendingVerification)),
         ];
     }
 
@@ -85,11 +86,6 @@ class EditWaybill extends EditRecord
         }
 
         return $user;
-    }
-
-    private function statusIs(WaybillStatus $status): bool
-    {
-        return (string) $this->currentRecord()->getRawOriginal('status') === $status->value;
     }
 
     /**

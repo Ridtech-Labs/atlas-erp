@@ -34,8 +34,10 @@ use App\Fleet\Policies\JobAssetAssignmentPolicy;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
+use App\Operations\Models\Waybill;
 use App\Operations\Policies\JobCardPolicy;
 use App\Operations\Policies\JobPolicy;
+use App\Operations\Policies\WaybillPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Spatie\Activitylog\Models\Activity;
@@ -62,6 +64,7 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(ClientSite::class, ClientSitePolicy::class);
         Gate::policy(Job::class, JobPolicy::class);
         Gate::policy(JobCard::class, JobCardPolicy::class);
+        Gate::policy(Waybill::class, WaybillPolicy::class);
         Gate::policy(RateAgreement::class, RateAgreementPolicy::class);
         Gate::policy(BillingBatch::class, BillingBatchPolicy::class);
         Gate::policy(BillingRecord::class, BillingRecordPolicy::class);

@@ -32,7 +32,7 @@ class VerifyWaybillAction
         }
 
         if (blank($waybill->waybill_date)
-            || blank($waybill->driver_name)
+            || ($waybill->driver_personnel_id === null && blank($waybill->driver_name))
             || blank($waybill->truck_number)
             || blank($waybill->pickup_point)
             || blank($waybill->destination)

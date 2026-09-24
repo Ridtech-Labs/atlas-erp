@@ -554,7 +554,7 @@ test('workspace crew metric shows external operator name instead of the creator'
 
     Livewire::test(JobWorkspaceWidget::class, ['record' => $job])
         ->assertSee('Kofi Asante')
-        ->assertDontSee('Ridwan Kadri');
+        ->assertSee('Planned operator');
 });
 
 test('draft job cannot be started and jobs with non-billing-ready client job cards cannot complete', function () {

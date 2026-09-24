@@ -14,6 +14,7 @@ use App\Operations\Enums\JobStatus;
 use App\Operations\Enums\WaybillStatus;
 use App\Operations\Models\Job;
 use App\Operations\Models\Waybill;
+use App\Operations\Support\OperatorAssignmentService;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,7 @@ class CreateWaybillAction
         private readonly AdministrationAccessService $access,
         private readonly AdministrationActivityLogger $logger,
         private readonly TenantSequenceService $sequences,
+        private readonly OperatorAssignmentService $personnel,
     ) {}
 
     /**
@@ -47,8 +49,16 @@ class CreateWaybillAction
         }
 
         return DB::transaction(function () use ($job, $data, $actor, $attachmentPaths): Waybill {
+            if (! is_int($job->company_id)) {
+                throw new BusinessException('The active Job is missing its company context.', 422);
+            }
+            $driver = $this->personnel->resolveDriverAssignment($data['driver_personnel_id'] ?? null, $data['driver_name'] ?? null, $job->tenant_id, $job->company_id);
+            $driverName = $driver['personnel'] !== null ? $driver['personnel']->full_name : $driver['external_name'];
+            if ($driverName === null) {
+                throw new BusinessException('Record a driver before continuing.', 422);
+            }
             $waybill = Waybill::query()->create([
-                ...Arr::except($data, ['tenant_id', 'company_id', 'job_id', 'client_id', 'created_by', 'updated_by', 'uuid', 'waybill_number', 'status', 'attachments']),
+                ...Arr::except($data, ['tenant_id', 'company_id', 'job_id', 'client_id', 'created_by', 'updated_by', 'uuid', 'waybill_number', 'status', 'attachments', 'driver_personnel_id']),
                 'uuid' => (string) Str::uuid(),
                 'tenant_id' => $job->tenant_id,
                 'company_id' => $job->company_id,
@@ -58,6 +68,8 @@ class CreateWaybillAction
                     ? (string) $data['waybill_number']
                     : $this->generateWaybillNumber($job),
                 'status' => WaybillStatus::Recorded->value,
+                'driver_personnel_id' => $driver['personnel']?->getKey(),
+                'driver_name' => $driverName,
                 'created_by' => $actor->getKey(),
                 'updated_by' => $actor->getKey(),
             ]);

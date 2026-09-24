@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\BillingRecords\Schemas;
 
 use App\Administration\Services\AdministrationAccessService;
+use App\Administration\Support\ActiveCompanyOptionScope;
 use App\Core\Tenancy\Models\Company;
+use App\CRM\Models\Client;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Enums\BillingRecordStatus;
 use App\Finance\Models\BillingBatch;
@@ -39,7 +41,13 @@ class BillingRecordForm
                         ->dehydrated(fn (?BillingRecord $record): bool => ! ($record instanceof BillingRecord)),
                     Placeholder::make('client_preview')
                         ->label('Client')
-                        ->content(fn (Get $get, ?BillingRecord $record): string => self::batchFor($get, $record)?->client?->display_name ?? 'Select a Billing Batch'),
+                        ->content(function (Get $get, ?BillingRecord $record): string {
+                            $batch = self::batchFor($get, $record);
+
+                            return $batch instanceof BillingBatch && $batch->client !== null
+                                ? $batch->client->display_name
+                                : 'Select a Billing Batch';
+                        }),
                     Placeholder::make('batch_amount_preview')
                         ->label('System batch amount')
                         ->content(function (Get $get, ?BillingRecord $record): string {
@@ -65,7 +73,7 @@ class BillingRecordForm
                     Placeholder::make('status_preview')
                         ->label('Status')
                         ->content(fn (?BillingRecord $record): string => $record instanceof BillingRecord
-                            ? $record->status->label()
+                            ? BillingRecordStatus::tryFrom((string) $record->getRawOriginal('status'))?->label() ?? BillingRecordStatus::Draft->label()
                             : BillingRecordStatus::Draft->label()),
                     Textarea::make('notes')
                         ->rows(4)
@@ -80,23 +88,21 @@ class BillingRecordForm
     private static function eligibleBatchOptions(): array
     {
         $user = auth()->user();
-        $companyId = $user ? app(AdministrationAccessService::class)->activeCompanyId($user) : null;
-
-        if (! is_int($companyId)) {
+        if ($user === null) {
             return [];
         }
 
-        return BillingBatch::query()
+        return app(ActiveCompanyOptionScope::class)->apply(BillingBatch::query(), $user)
             ->with(['client', 'lines'])
-            ->where('company_id', $companyId)
             ->where('status', BillingBatchStatus::Prepared->value)
             ->whereDoesntHave('billingRecord')
             ->get()
             ->filter(fn (BillingBatch $batch): bool => $batch->lines->isNotEmpty() && ! $batch->hasMixedCurrencies())
             ->mapWithKeys(function (BillingBatch $batch): array {
                 $currency = array_key_first($batch->subtotalAmountsByCurrency()) ?: '—';
+                $clientName = $batch->client instanceof Client ? $batch->client->display_name : 'Client unavailable';
 
-                return [$batch->getKey() => sprintf('%s · %s · %s %s', $batch->batch_number, $batch->client->display_name, $currency, number_format($batch->subtotalAmount(), 2))];
+                return [$batch->getKey() => sprintf('%s · %s · %s %s', $batch->batch_number, $clientName, $currency, number_format($batch->subtotalAmount(), 2))];
             })
             ->all();
     }
@@ -114,7 +120,7 @@ class BillingRecordForm
         $batchId = $get('billing_batch_id') ?? $record?->billing_batch_id;
 
         return is_numeric($batchId)
-            ? BillingBatch::query()->with(['client', 'lines'])->find((int) $batchId)
+            ? app(ActiveCompanyOptionScope::class)->apply(BillingBatch::query())->with(['client', 'lines'])->find((int) $batchId)
             : null;
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\Jobs\Schemas;
 
 use App\Administration\Services\AdministrationAccessService;
+use App\Administration\Support\ActiveCompanyOptionScope;
 use App\Core\Tenancy\Models\Company;
 use App\CRM\Enums\ClientSiteStatus;
 use App\CRM\Models\Client;
@@ -50,7 +51,8 @@ class JobForm
                         ->options(collect(JobType::cases())->mapWithKeys(fn (JobType $type) => [$type->value => $type->label()])->all())
                         ->default(JobType::HeavyMachinery->value)
                         ->required()
-                        ->live(),
+                        ->live()
+                        ->afterStateUpdated(fn (Set $set) => $set('assigned_personnel_id', null)),
                     TextInput::make('job_number')
                         ->label('Job number')
                         ->placeholder('Generated automatically after save')
@@ -65,14 +67,11 @@ class JobForm
                         ->required()
                         ->options(function (): array {
                             $user = auth()->user();
-                            $companyId = $user ? app(AdministrationAccessService::class)->activeCompanyId($user) : null;
-
-                            if (! is_int($companyId)) {
+                            if ($user === null) {
                                 return [];
                             }
 
-                            return Client::query()
-                                ->where('company_id', $companyId)
+                            return app(ActiveCompanyOptionScope::class)->apply(Client::query(), $user)
                                 ->orderBy('legal_name')
                                 ->limit(50)
                                 ->pluck('legal_name', 'id')
@@ -92,9 +91,8 @@ class JobForm
                                 return [];
                             }
 
-                            $client = Client::query()
+                            $client = app(ActiveCompanyOptionScope::class)->apply(Client::query(), $user)
                                 ->whereKey((int) $clientId)
-                                ->where('company_id', $companyId)
                                 ->first();
 
                             if (! $client instanceof Client) {
@@ -103,9 +101,8 @@ class JobForm
 
                             $selectedSiteId = $get('client_site_id');
 
-                            return ClientSite::query()
+                            return app(ActiveCompanyOptionScope::class)->apply(ClientSite::query(), $user)
                                 ->where('client_id', $client->getKey())
-                                ->where('company_id', $companyId)
                                 ->where(function ($query) use ($selectedSiteId): void {
                                     $query->where('status', ClientSiteStatus::Active->value);
 
@@ -128,17 +125,17 @@ class JobForm
                         ->maxLength(255)
                         ->placeholder(fn (Get $get): string => $get('job_type') === JobType::Trucking->value ? 'Truck 38 / Flatbed' : 'Forklift FL-12'),
                     Select::make('operator_source')
-                        ->label('Operator type')
+                        ->label(fn (Get $get): string => $get('job_type') === JobType::Trucking->value ? 'Driver type' : 'Operator type')
                         ->options([
-                            'company_personnel' => 'Company personnel',
-                            'external' => 'External / temporary operator',
+                            'personnel' => 'Personnel',
+                            'external' => 'External / temporary personnel',
                         ])
                         ->placeholder('Select operator type')
                         ->live()
                         ->dehydrated(false)
                         ->afterStateHydrated(function (Set $set, Get $get): void {
-                            if (filled($get('assigned_operator_id'))) {
-                                $set('operator_source', 'company_personnel');
+                            if (filled($get('assigned_personnel_id'))) {
+                                $set('operator_source', 'personnel');
 
                                 return;
                             }
@@ -148,27 +145,28 @@ class JobForm
                             }
                         })
                         ->afterStateUpdated(function (?string $state, Set $set): void {
-                            if ($state === 'company_personnel') {
+                            if ($state === 'personnel') {
                                 $set('assigned_operator_name', null);
 
                                 return;
                             }
 
                             if ($state === 'external') {
-                                $set('assigned_operator_id', null);
+                                $set('assigned_personnel_id', null);
 
                                 return;
                             }
 
-                            $set('assigned_operator_id', null);
+                            $set('assigned_personnel_id', null);
                             $set('assigned_operator_name', null);
                         }),
-                    Select::make('assigned_operator_id')
-                        ->label('Operator')
+                    Select::make('assigned_personnel_id')
+                        ->label(fn (Get $get): string => $get('job_type') === JobType::Trucking->value ? 'Driver / Personnel' : 'Operator / Personnel')
                         ->searchable()
-                        ->helperText('Planning-only assignment. The actual operator(s) will be recorded from the client Job Card or Waybill.')
-                        ->visible(fn (Get $get): bool => $get('operator_source') === 'company_personnel')
-                        ->options(function (): array {
+                        ->live()
+                        ->helperText(fn (Get $get): string => $get('job_type') === JobType::Trucking->value ? 'Planning-only assignment. The actual driver is recorded from the Waybill.' : 'Planning-only assignment. The actual operator(s) are recorded from the Client Job Card.')
+                        ->visible(fn (Get $get): bool => $get('operator_source') === 'personnel')
+                        ->options(function (Get $get): array {
                             $user = auth()->user();
                             $companyId = $user ? app(AdministrationAccessService::class)->activeCompanyId($user) : null;
 
@@ -176,11 +174,15 @@ class JobForm
                                 return [];
                             }
 
-                            return app(OperatorAssignmentService::class)->companyOperatorOptions($user->tenant_id, $companyId);
+                            $jobType = $get('job_type');
+
+                            return (is_string($jobType) ? $jobType : null) === JobType::Trucking->value
+                                ? app(OperatorAssignmentService::class)->companyDriverOptions($user->tenant_id, $companyId)
+                                : app(OperatorAssignmentService::class)->companyOperatorOptions($user->tenant_id, $companyId);
                         })
-                        ->placeholder('Select company personnel'),
+                        ->placeholder('Select Personnel'),
                     TextInput::make('assigned_operator_name')
-                        ->label('External or temporary operator name')
+                        ->label(fn (Get $get): string => $get('job_type') === JobType::Trucking->value ? 'External driver' : 'External operator')
                         ->visible(fn (Get $get): bool => $get('operator_source') === 'external')
                         ->maxLength(255)
                         ->placeholder('Kwame Mensah'),

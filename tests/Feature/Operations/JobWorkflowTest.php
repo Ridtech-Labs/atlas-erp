@@ -1,6 +1,7 @@
 <?php
 
 use App\Administration\Enums\RoleName;
+use App\Core\Administration\Filament\Resources\Jobs\Pages\EditJob;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\CRM\Enums\ClientSiteStatus;
 use App\CRM\Models\Client;
@@ -33,6 +34,7 @@ use App\Operations\Models\JobCard;
 use App\Operations\Support\JobPlanningReadinessService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
 
 test('job creation is tenant scoped and validates site ownership', function () {
     $this->seedAccessControl();
@@ -74,6 +76,45 @@ test('job creation is tenant scoped and validates site ownership', function () {
         'title' => 'Invalid site job',
         'priority' => 'normal',
     ], $actor))->toThrow(BusinessException::class);
+});
+
+test('draft job edit form renders and persists the contextual equipment requirement', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
+    $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $actor->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+    $this->actingAs($actor);
+
+    $truckingJob = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'job_type' => JobType::Trucking,
+        'status' => JobStatus::Draft,
+        'equipment_requirement' => null,
+    ]);
+
+    Livewire::test(EditJob::class, ['record' => $truckingJob->getKey()])
+        ->assertSee('Truck / asset requirement')
+        ->assertSeeHtml('id="form.equipment_requirement"')
+        ->fillForm(['equipment_requirement' => 'Flatbed truck with trailer'])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($truckingJob->fresh()->equipment_requirement)->toBe('Flatbed truck with trailer');
+
+    $heavyMachineryJob = Job::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'job_type' => JobType::HeavyMachinery,
+        'status' => JobStatus::Draft,
+    ]);
+
+    Livewire::test(EditJob::class, ['record' => $heavyMachineryJob->getKey()])
+        ->assertSee('Required equipment or asset')
+        ->assertSeeHtml('id="form.equipment_requirement"');
 });
 
 test('heavy machinery job workflow transitions through client job card verification and completion metadata', function () {

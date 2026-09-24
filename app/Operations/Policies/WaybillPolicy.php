@@ -37,12 +37,19 @@ class WaybillPolicy
     public function update(User $user, Waybill $waybill): bool
     {
         return $this->hasPermission($user, PermissionName::JobsUpdate->value)
+            && ! $waybill->evidenceIsLockedForEditing()
             && $this->access->canAccessActiveOperationalCompany($user, $waybill->company_id, $waybill->tenant_id);
     }
 
     public function delete(User $user, Waybill $waybill): bool
     {
         return $this->hasPermission($user, PermissionName::JobsDelete->value)
+            && $this->access->canAccessActiveOperationalCompany($user, $waybill->company_id, $waybill->tenant_id);
+    }
+
+    public function approve(User $user, Waybill $waybill): bool
+    {
+        return $this->hasPermission($user, PermissionName::JobsApprove->value)
             && $this->access->canAccessActiveOperationalCompany($user, $waybill->company_id, $waybill->tenant_id);
     }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\BillingBatches\Schemas;
 
 use App\Administration\Services\AdministrationAccessService;
+use App\Administration\Support\ActiveCompanyOptionScope;
 use App\Core\Tenancy\Models\Company;
 use App\CRM\Models\Client;
 use App\Finance\Enums\BillingBatchStatus;
@@ -63,14 +64,7 @@ class BillingBatchForm
             return [];
         }
 
-        $companyId = app(AdministrationAccessService::class)->activeCompanyId($user);
-
-        if (! is_int($companyId)) {
-            return [];
-        }
-
-        return Client::query()
-            ->where('company_id', $companyId)
+        return app(ActiveCompanyOptionScope::class)->apply(Client::query(), $user)
             ->orderBy('legal_name')
             ->get()
             ->mapWithKeys(fn (Client $client): array => [$client->getKey() => $client->display_name])

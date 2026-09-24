@@ -28,6 +28,7 @@ use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
 
+/** @property int|null $assigned_personnel_id */
 class Job extends Model
 {
     use BelongsToTenant;
@@ -69,6 +70,7 @@ class Job extends Model
         'equipment_requirement',
         'assigned_to',
         'assigned_operator_id',
+        'assigned_personnel_id',
         'assigned_operator_name',
         'shift',
         'actual_start_date',
@@ -154,9 +156,15 @@ class Job extends Model
         return $this->belongsTo(User::class, 'assigned_operator_id');
     }
 
+    /** @return BelongsTo<Personnel, $this> */
+    public function assignedPersonnel(): BelongsTo
+    {
+        return $this->belongsTo(Personnel::class, 'assigned_personnel_id')->withTrashed();
+    }
+
     public function plannedOperatorName(): ?string
     {
-        return $this->assignedOperator->full_name ?? $this->assigned_operator_name;
+        return $this->assignedPersonnel?->full_name ?? $this->assignedOperator?->full_name ?? $this->assigned_operator_name;
     }
 
     public function isHeavyMachinery(): bool
@@ -266,6 +274,7 @@ class Job extends Model
                 'equipment_requirement',
                 'assigned_to',
                 'assigned_operator_id',
+                'assigned_personnel_id',
                 'assigned_operator_name',
                 'shift',
                 'actual_start_date',

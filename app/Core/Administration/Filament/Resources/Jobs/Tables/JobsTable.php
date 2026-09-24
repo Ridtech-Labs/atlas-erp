@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Resources\Jobs\Tables;
 
+use App\Administration\Support\ActiveCompanyOptionScope;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
+use App\CRM\Models\Client;
 use App\Operations\Enums\JobPriority;
 use App\Operations\Enums\JobStatus;
 use App\Operations\Enums\JobType;
@@ -43,7 +45,7 @@ class JobsTable
                     ->toggleable(),
             ])
             ->filters([
-                SelectFilter::make('client_id')->label('Client')->relationship('client', 'legal_name')->searchable(),
+                SelectFilter::make('client_id')->label('Client')->options(fn (): array => app(ActiveCompanyOptionScope::class)->apply(Client::query())->orderBy('legal_name')->pluck('legal_name', 'id')->all())->searchable(),
                 SelectFilter::make('job_type')->label('Operational type')->options(collect(JobType::cases())->mapWithKeys(fn (JobType $type): array => [$type->value => $type->label()])->all()),
                 SelectFilter::make('status')
                     ->options(collect(JobStatus::cases())->mapWithKeys(fn (JobStatus $status) => [$status->value => $status->label()])->all()),

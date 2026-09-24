@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\RateAgreements\Schemas;
 
 use App\Administration\Services\AdministrationAccessService;
+use App\Administration\Support\ActiveCompanyOptionScope;
 use App\Core\Tenancy\Models\Company;
 use App\CRM\Models\Client;
 use App\Finance\Enums\BillingUnit;
@@ -67,7 +68,7 @@ class RateAgreementForm
                 ])
                 ->columns(2),
             Section::make('Rate lines')
-                ->description('Atlas resolves billing by matching client, activity date, and either an exact machine override or the operational equipment class/type. Leave line dates blank to inherit the agreement period.')
+                ->description('Choose the commercial context for each line. Hourly applies to Heavy Machinery equipment; Per Trip applies to a Trucking / Haulage route. Leave line dates blank to inherit the agreement period.')
                 ->schema([
                     Repeater::make('lines')
                         ->label('Agreement lines')
@@ -75,6 +76,11 @@ class RateAgreementForm
                         ->defaultItems(1)
                         ->reorderable(false)
                         ->schema([
+                            Placeholder::make('commercial_context')
+                                ->label('Rate applies to')
+                                ->content(fn (Get $get): string => $get('billing_unit') === BillingUnit::Trip->value
+                                    ? 'Trucking / Haulage - billing basis: Per Trip'
+                                    : 'Heavy Machinery - billing basis: Hourly'),
                             TextInput::make('equipment_reference')
                                 ->label('Equipment class / type')
                                 ->maxLength(255)
@@ -90,6 +96,8 @@ class RateAgreementForm
                                 ->helperText('Use this only when one specific machine has its own override rate.')
                                 ->visible(fn (Get $get): bool => $get('billing_unit') !== BillingUnit::Trip->value),
                             Select::make('billing_unit')
+                                ->label('Billing basis')
+                                ->helperText('Hourly is for Heavy Machinery equipment or a machine override. Per Trip is for a Trucking / Haulage route.')
                                 ->options(collect(BillingUnit::cases())->mapWithKeys(fn (BillingUnit $unit) => [$unit->value => $unit->label()])->all())
                                 ->default(BillingUnit::Hourly->value)
                                 ->live()
@@ -137,14 +145,7 @@ class RateAgreementForm
             return [];
         }
 
-        $companyId = app(AdministrationAccessService::class)->activeCompanyId($user);
-
-        if (! is_int($companyId)) {
-            return [];
-        }
-
-        return Client::query()
-            ->where('company_id', $companyId)
+        return app(ActiveCompanyOptionScope::class)->apply(Client::query(), $user)
             ->orderBy('legal_name')
             ->get()
             ->mapWithKeys(fn (Client $client): array => [$client->getKey() => $client->display_name])

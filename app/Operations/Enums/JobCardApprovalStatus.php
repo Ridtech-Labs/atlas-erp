@@ -21,7 +21,7 @@ enum JobCardApprovalStatus: string
             self::PendingVerification => 'Awaiting Accounts Review',
             self::Verified => 'Accounts Reviewed',
             self::BillingReady => 'Billing Ready',
-            self::Returned => 'Returned to Operations',
+            self::Returned => 'Returned / Needs Correction',
             self::Submitted => 'Submitted',
             self::Approved => 'Approved',
             default => ucfirst(str_replace('_', ' ', $this->value)),
