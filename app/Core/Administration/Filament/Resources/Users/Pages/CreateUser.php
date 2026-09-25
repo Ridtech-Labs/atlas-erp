@@ -7,12 +7,26 @@ namespace App\Core\Administration\Filament\Resources\Users\Pages;
 use App\Administration\Actions\Users\CreateUserAction;
 use App\Core\Administration\Filament\Resources\Users\UserResource;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
 class CreateUser extends CreateRecord
 {
     protected static string $resource = UserResource::class;
+
+    protected static bool $canCreateAnother = false;
+
+    protected function getCreateFormAction(): Action
+    {
+        return parent::getCreateFormAction()
+            ->label('Send invitation');
+    }
+
+    protected function getCreatedNotificationTitle(): ?string
+    {
+        return 'Invitation sent';
+    }
 
     protected function handleRecordCreation(array $data): Model
     {

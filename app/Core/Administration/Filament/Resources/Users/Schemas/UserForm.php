@@ -28,10 +28,10 @@ class UserForm
         return $schema
             ->components([
                 Section::make('User account')
-                    ->description('Create an internal user with the right company access, role, and workspace identity.')
+                    ->description('Invite an internal user with the right company access, role, and workspace identity. They will set their own password from an email link.')
                     ->schema([
                         Placeholder::make('company_context')
-                            ->label(fn (string $operation): string => $operation === 'create' ? 'User will be created under' : 'Company')
+                            ->label(fn (string $operation): string => $operation === 'create' ? 'User will be invited under' : 'Company')
                             ->content(fn (Get $get, ?User $record, string $operation): string => self::resolveCompanyContextLabel($access, $get, $record, $operation))
                             ->columnSpanFull(),
                         Select::make('tenant_id')
@@ -55,7 +55,8 @@ class UserForm
                         FileUpload::make('avatar_path')->directory('user-avatars')->image(),
                         Select::make('status')
                             ->options(collect(UserStatus::cases())->mapWithKeys(fn (UserStatus $status) => [$status->value => $status->label()])->all())
-                            ->required(),
+                            ->required()
+                            ->visible(fn (string $operation): bool => $operation !== 'create'),
                         Select::make('roles')
                             ->multiple()
                             ->options(function () {
@@ -68,16 +69,6 @@ class UserForm
                             })
                             ->helperText('Available roles are limited by your own administrative authority.')
                             ->required(),
-                        TextInput::make('password')
-                            ->password()
-                            ->placeholder(fn (string $operation): string => $operation === 'create' ? 'Set a secure password' : 'Leave blank to keep the current password')
-                            ->dehydrated(fn (?string $state): bool => filled($state))
-                            ->required(fn (string $operation): bool => $operation === 'create')
-                            ->minLength(8),
-                        TextInput::make('password_confirmation')
-                            ->password()
-                            ->same('password')
-                            ->required(fn (Get $get): bool => filled($get('password'))),
                     ])
                     ->columns(2),
             ]);

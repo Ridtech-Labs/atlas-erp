@@ -19,6 +19,12 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
+        if (app()->environment('production')) {
+            throw new \LogicException(
+                'DatabaseSeeder creates local demonstration data and must not run in production. Use atlas:bootstrap-production instead.',
+            );
+        }
+
         $this->call(RoleAndPermissionSeeder::class);
 
         DB::transaction(function (): void {

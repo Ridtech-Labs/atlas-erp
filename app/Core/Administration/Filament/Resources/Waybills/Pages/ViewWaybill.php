@@ -22,6 +22,15 @@ class ViewWaybill extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('viewEvidence')
+                ->label('View Evidence')
+                ->url(fn (): ?string => $this->evidenceUrl())
+                ->openUrlInNewTab()
+                ->visible(fn (): bool => $this->currentRecord()->getMedia('waybill-documents')->isNotEmpty()),
+            Action::make('downloadEvidence')
+                ->label('Download Evidence')
+                ->url(fn (): ?string => $this->evidenceUrl(true))
+                ->visible(fn (): bool => $this->currentRecord()->getMedia('waybill-documents')->isNotEmpty()),
             Action::make('verify')
                 ->label('Verify Waybill')
                 ->action(fn () => app(VerifyWaybillAction::class)->execute($this->currentRecord(), $this->authenticatedUser()))
@@ -43,6 +52,17 @@ class ViewWaybill extends ViewRecord
     {
         return (string) $this->currentRecord()->getRawOriginal('status') === WaybillStatus::PendingVerification->value
             && $this->authenticatedUser()->can('approve', $this->currentRecord());
+    }
+
+    private function evidenceUrl(bool $download = false): ?string
+    {
+        $media = $this->currentRecord()->getFirstMedia('waybill-documents');
+
+        return $media === null ? null : route('atlas.waybills.evidence.show', [
+            'waybill' => $this->currentRecord(),
+            'media' => $media,
+            'download' => $download ? 1 : null,
+        ]);
     }
 
     private function currentRecord(): Waybill

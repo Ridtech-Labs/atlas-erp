@@ -609,6 +609,84 @@
         backdrop-filter: blur(12px);
     }
 
+    .fi-simple-layout .fi-simple-main {
+        width: min(calc(100% - 2rem), 28rem);
+        margin-block: 2rem;
+        border: 1px solid var(--atlas-color-border-default);
+        border-radius: var(--atlas-radius-2xl);
+        background: rgba(255, 255, 255, 0.96);
+        padding: 2rem;
+        box-shadow: var(--atlas-shadow-md);
+    }
+
+    .fi-simple-layout .fi-simple-page {
+        display: grid;
+        gap: 1.75rem;
+    }
+
+    .fi-simple-layout .fi-simple-header {
+        align-items: flex-start;
+    }
+
+    .fi-simple-layout .fi-simple-header .fi-logo {
+        margin-bottom: 0.75rem;
+    }
+
+    .fi-simple-layout .fi-simple-header-heading,
+    .fi-simple-layout .fi-simple-header-subheading {
+        text-align: left;
+    }
+
+    .fi-simple-layout .fi-simple-header-heading {
+        color: var(--atlas-color-text-primary);
+        font-size: 1.5rem;
+        font-weight: var(--atlas-weight-bold);
+        letter-spacing: -0.03em;
+    }
+
+    .fi-simple-layout .fi-simple-header-subheading {
+        margin-top: 0.375rem;
+        color: var(--atlas-color-text-muted);
+        line-height: var(--atlas-line-relaxed);
+    }
+
+    .fi-simple-layout .fi-fo-field-wrp-label,
+    .fi-simple-layout .fi-fo-field-wrp-hint {
+        color: var(--atlas-color-text-secondary);
+    }
+
+    .fi-simple-layout .fi-btn-color-primary {
+        min-height: 2.875rem;
+        border-radius: var(--atlas-radius-md);
+        background: var(--atlas-color-action-primary);
+        color: var(--atlas-color-text-on-dark);
+        box-shadow: none;
+    }
+
+    .fi-simple-layout .fi-btn-color-primary:hover {
+        background: var(--atlas-color-action-primary-hover);
+    }
+
+    .atlas-login-security-footer {
+        margin: 0.25rem 0 0;
+        text-align: center;
+        color: var(--atlas-color-text-muted);
+        font-size: var(--atlas-text-xs);
+        line-height: var(--atlas-line-normal);
+    }
+
+    @media (max-width: 640px) {
+        .fi-simple-layout .fi-simple-main {
+            width: min(calc(100% - 1.5rem), 28rem);
+            margin-block: 1rem;
+            padding: 1.5rem;
+        }
+
+        .fi-simple-layout .fi-simple-page {
+            gap: 1.5rem;
+        }
+    }
+
     .fi-topbar .fi-logo,
     .fi-topbar-open-sidebar-btn,
     .fi-topbar-close-sidebar-btn,

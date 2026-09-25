@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Administration\Notifications\AtlasAccountSetupNotification;
 use App\Core\Shared\Concerns\HasPublicUuid;
 use App\Core\Shared\Enums\UserStatus;
 use App\Core\Tenancy\Models\Company;
@@ -14,6 +15,7 @@ use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasName;
 use Filament\Panel;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -116,6 +118,17 @@ class User extends Authenticatable implements FilamentUser, HasMedia, HasName, M
             && $this->tenant->isActive()
             && ! $this->isInactive()
             && ! $this->isSuspended();
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        if ($this->getRawOriginal('status') === UserStatus::Invited->value) {
+            $this->notify(new AtlasAccountSetupNotification($token));
+
+            return;
+        }
+
+        $this->notify(new ResetPassword($token));
     }
 
     public function getFullNameAttribute(): string

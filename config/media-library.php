@@ -33,7 +33,7 @@ return [
      * The disk on which to store added files and derived images by default. Choose
      * one or more of the disks you've configured in config/filesystems.php.
      */
-    'disk_name' => env('MEDIA_DISK', 'public'),
+    'disk_name' => env('MEDIA_DISK', 'private'),
 
     /*
      * The disk on which to store conversions (thumbnails, etc.) and responsive images
@@ -353,7 +353,7 @@ return [
      * You can specify a prefix for that is used for storing all media.
      * If you set this to `/my-subdir`, all your media will be stored in a `/my-subdir` directory.
      */
-    'prefix' => env('MEDIA_PREFIX', ''),
+    'prefix' => (string) env('MEDIA_PREFIX', ''),
 
     /*
      * When forcing lazy loading, media will be loaded even if you don't eager load media and you have

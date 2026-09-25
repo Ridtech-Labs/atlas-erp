@@ -37,6 +37,15 @@ class ViewJobCard extends ViewRecord
             Action::make('viewJob')
                 ->label('View Job')
                 ->url(fn (): string => JobResource::getUrl('view', ['record' => $this->currentRecord()->job_id])),
+            Action::make('viewEvidence')
+                ->label('View Evidence')
+                ->url(fn (): ?string => $this->evidenceUrl())
+                ->openUrlInNewTab()
+                ->visible(fn (): bool => $this->currentRecord()->getMedia('job-card-documents')->isNotEmpty()),
+            Action::make('downloadEvidence')
+                ->label('Download Evidence')
+                ->url(fn (): ?string => $this->evidenceUrl(true))
+                ->visible(fn (): bool => $this->currentRecord()->getMedia('job-card-documents')->isNotEmpty()),
             Action::make('approve')
                 ->label('Review for Billing')
                 ->form([
@@ -63,6 +72,17 @@ class ViewJobCard extends ViewRecord
     {
         return (string) $this->currentRecord()->getRawOriginal('approval_status') === JobCardApprovalStatus::PendingVerification->value
             && $this->authenticatedUser()->can('approve', $this->currentRecord());
+    }
+
+    private function evidenceUrl(bool $download = false): ?string
+    {
+        $media = $this->currentRecord()->getFirstMedia('job-card-documents');
+
+        return $media === null ? null : route('atlas.job-cards.evidence.show', [
+            'jobCard' => $this->currentRecord(),
+            'media' => $media,
+            'download' => $download ? 1 : null,
+        ]);
     }
 
     private function currentRecord(): JobCard

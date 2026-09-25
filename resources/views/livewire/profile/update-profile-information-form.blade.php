@@ -17,9 +17,11 @@ new class extends Component
      */
     public function mount(): void
     {
-        $this->first_name = Auth::user()->first_name;
-        $this->last_name = Auth::user()->last_name;
-        $this->email = Auth::user()->email;
+        $user = $this->authenticatedUser();
+
+        $this->first_name = $user->first_name;
+        $this->last_name = $user->last_name;
+        $this->email = $user->email;
     }
 
     /**
@@ -27,7 +29,7 @@ new class extends Component
      */
     public function updateProfileInformation(): void
     {
-        $user = Auth::user();
+        $user = $this->authenticatedUser();
 
         $validated = $this->validate([
             'first_name' => ['required', 'string', 'max:255'],
@@ -51,10 +53,10 @@ new class extends Component
      */
     public function sendVerification(): void
     {
-        $user = Auth::user();
+        $user = $this->authenticatedUser();
 
         if ($user->hasVerifiedEmail()) {
-            $this->redirectIntended(default: route('dashboard', absolute: false));
+            $this->redirectIntended(default: '/admin');
 
             return;
         }
@@ -62,6 +64,15 @@ new class extends Component
         $user->sendEmailVerificationNotification();
 
         Session::flash('status', 'verification-link-sent');
+    }
+
+    private function authenticatedUser(): User
+    {
+        $user = Auth::user();
+
+        abort_unless($user instanceof User, 403);
+
+        return $user;
     }
 }; ?>
 

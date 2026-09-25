@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Core\Administration\Filament\Pages\Auth\Login;
 use App\Core\Administration\Filament\Pages\Dashboard;
 use App\Core\Administration\Filament\Pages\ManageSettings;
 use App\Core\Administration\Filament\Pages\SystemHealth;
@@ -33,13 +34,13 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(Login::class)
             ->profile(isSimple: false)
             ->passwordReset()
             ->emailVerification()
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::hex('#2b4eff'),
             ])
             ->defaultThemeMode(ThemeMode::Light)
             ->brandLogo(fn () => new HtmlString(view('filament.brand.logo')->render()))
@@ -61,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(PanelsRenderHook::SIDEBAR_NAV_START, fn () => view('filament.hooks.sidebar-navigation'))
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER, fn () => view('filament.hooks.topbar-quick-create'))
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER, fn () => view('filament.hooks.topbar-activity-trigger'))
+            ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER, fn () => view('filament.auth.login-security-footer'))
             ->discoverResources(in: app_path('Core/Administration/Filament/Resources'), for: 'App\Core\Administration\Filament\Resources')
             ->discoverPages(in: app_path('Core/Administration/Filament/Pages'), for: 'App\Core\Administration\Filament\Pages')
             ->pages([

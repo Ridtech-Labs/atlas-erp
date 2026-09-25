@@ -10,7 +10,6 @@ use App\Administration\Services\AdministrationAccessService;
 use App\Core\Administration\Filament\Resources\Users\UserResource;
 use App\Core\Shared\Enums\UserStatus;
 use App\Core\Shared\Exceptions\BusinessException;
-use App\Core\Tenancy\Support\ActiveCompanyResolver;
 use App\CRM\Models\Client;
 use App\Models\User;
 use Livewire\Volt\Volt;
@@ -159,7 +158,7 @@ test('data entry clerk role exists and can be assigned by a company administrato
         ->assertDontSee(RoleName::SuperAdministrator->value);
 });
 
-test('administrator created operations manager can log in immediately with scoped permissions', function () {
+test('administrator created operations manager remains unable to log in until account setup is complete', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
@@ -174,12 +173,10 @@ test('administrator created operations manager can log in immediately with scope
         'first_name' => 'Eben',
         'last_name' => 'Amponsah',
         'email' => 'eben@kadmay.test',
-        'password' => 'password',
-        'status' => UserStatus::Active->value,
     ], [RoleName::OperationsManager->value], $actor);
 
-    expect($operationsManager->status)->toBe(UserStatus::Active)
-        ->and($operationsManager->email_verified_at)->not->toBeNull()
+    expect($operationsManager->status)->toBe(UserStatus::Invited)
+        ->and($operationsManager->email_verified_at)->toBeNull()
         ->and($operationsManager->hasRole(RoleName::OperationsManager->value))->toBeTrue()
         ->and($operationsManager->hasRole(RoleName::CompanyAdministrator->value))->toBeFalse()
         ->and($operationsManager->companies()->pluck('companies.id')->all())->toBe([$company->getKey()]);
@@ -202,33 +199,17 @@ test('administrator created operations manager can log in immediately with scope
     $component->call('login');
 
     $component
-        ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertHasErrors(['form.email'])
+        ->assertNoRedirect();
 
-    $this->assertAuthenticatedAs($operationsManager->fresh());
-
-    expect(app(ActiveCompanyResolver::class)->resolveFor($operationsManager->fresh())?->getKey())
-        ->toBe($company->getKey());
+    $this->assertGuest();
 
     $this->actingAs($operationsManager->fresh());
-
-    $this->get('/admin')
-        ->assertOk()
-        ->assertSee($company->name)
-        ->assertDontSee('Company Selection Required')
-        ->assertDontSee('Choose an authorized company before viewing operational data.');
-
-    expect(session('active_company_id'))->toBe($company->getKey());
-
-    $this->get('/dashboard')->assertOk();
+    session(['active_company_id' => $company->getKey()]);
 
     expect($operationsManager->fresh()->can('users.create'))->toBeFalse()
         ->and($operationsManager->fresh()->can('users.update'))->toBeFalse()
         ->and($operationsManager->fresh()->can('jobs.create'))->toBeTrue();
-
-    $this->post(route('atlas.company-context.switch'), [
-        'company_id' => $otherCompany->getKey(),
-    ])->assertForbidden();
 
     $otherClient = Client::factory()->create([
         'tenant_id' => $tenant->getKey(),
@@ -238,7 +219,7 @@ test('administrator created operations manager can log in immediately with scope
     expect($operationsManager->fresh()->can('view', $otherClient))->toBeFalse();
 });
 
-test('create user form displays the active company and does not expose an editable company field for company administrators', function () {
+test('company administrator sees the invitation UI with active-company scoped fields', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant(['name' => 'Kadmay Holdings']);
@@ -247,11 +228,22 @@ test('create user form displays the active company and does not expose an editab
     $actor->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
 
+    $this->get(UserResource::getUrl('index'))
+        ->assertOk()
+        ->assertSee('Invite user')
+        ->assertDontSee('New user');
+
     $this->get(UserResource::getUrl('create'))
         ->assertOk()
-        ->assertSee('User will be created under')
+        ->assertSee('Send invitation')
+        ->assertSee('User will be invited under')
         ->assertSee('Kadmay')
-        ->assertDontSee('name="company_id"', false);
+        ->assertSee(RoleName::DataEntryClerk->value)
+        ->assertDontSee('name="company_id"', false)
+        ->assertDontSee('name="tenant_id"', false)
+        ->assertDontSee('name="password"', false)
+        ->assertDontSee('name="password_confirmation"', false)
+        ->assertDontSee(RoleName::SuperAdministrator->value);
 });
 
 test('company administrator can not create user for another company', function () {

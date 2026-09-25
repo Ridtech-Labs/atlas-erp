@@ -69,6 +69,12 @@ class Waybill extends Model implements HasMedia
         ];
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('waybill-documents')
+            ->useDisk((string) config('media-library.disk_name'));
+    }
+
     /**
      * @return BelongsTo<Tenant, $this>
      */
@@ -117,7 +123,9 @@ class Waybill extends Model implements HasMedia
 
     public function driverDisplayName(): ?string
     {
-        return $this->driverPersonnel?->full_name ?? $this->driver_name;
+        $personnel = $this->driverPersonnel;
+
+        return ($personnel instanceof Personnel ? $personnel->full_name : null) ?? $this->driver_name;
     }
 
     /** @return HasOne<BillingBatchLine, $this> */

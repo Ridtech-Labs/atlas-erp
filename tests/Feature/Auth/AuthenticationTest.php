@@ -24,7 +24,7 @@ test('users can authenticate using the login screen', function () {
 
     $component
         ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertRedirect('/admin');
 
     $this->assertAuthenticated();
     expect($user->refresh()->last_login_at)->not->toBeNull()
@@ -104,16 +104,14 @@ test('users can not authenticate when their company is suspended', function () {
     $this->assertGuest();
 });
 
-test('navigation menu can be rendered', function () {
+test('legacy dashboard URL redirects to the Filament workspace', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user);
 
     $response = $this->get('/dashboard');
 
-    $response
-        ->assertOk()
-        ->assertSeeVolt('layout.navigation');
+    $response->assertRedirect('/admin');
 });
 
 test('users can logout', function () {

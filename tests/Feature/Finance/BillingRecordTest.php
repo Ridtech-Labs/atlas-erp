@@ -207,7 +207,8 @@ test('issuance requires an exact VAT receipt amount and never permits a pricing 
     expect($issued->status)->toBe(BillingRecordStatus::Issued)
         ->and($issued->receiptAmountMatchesBatch())->toBeTrue()
         ->and((float) $issued->receipt_amount)->toBe(4000.0)
-        ->and($issued->getMedia('vat-receipt'))->toHaveCount(1);
+        ->and($issued->getMedia('vat-receipt'))->toHaveCount(1)
+        ->and($issued->getFirstMedia('vat-receipt')?->disk)->toBe('private');
 });
 
 test('payment and closure require the approved forward lifecycle and financial history remains immutable', function () {

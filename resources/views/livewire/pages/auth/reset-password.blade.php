@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\Hash;
+use App\Administration\Actions\Users\CompleteInvitedUserSetupAction;
+use App\Core\Shared\Enums\UserStatus;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
@@ -42,15 +44,22 @@ new #[Layout('layouts.guest')] class extends Component
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
+        $enterWorkspace = false;
+
         $status = Password::reset(
             $this->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) {
-                $user->forceFill([
-                    'password' => Hash::make($this->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
+            function ($user) use (&$enterWorkspace) {
+                $wasInvited = $user instanceof User
+                    && $user->getRawOriginal('status') === UserStatus::Invited->value;
+
+                app(CompleteInvitedUserSetupAction::class)->execute($user, $this->password);
 
                 event(new PasswordReset($user));
+
+                if ($wasInvited) {
+                    Auth::login($user);
+                    $enterWorkspace = true;
+                }
             }
         );
 
@@ -64,6 +73,14 @@ new #[Layout('layouts.guest')] class extends Component
         }
 
         Session::flash('status', __($status));
+
+        if ($enterWorkspace) {
+            Session::regenerate();
+
+            $this->redirect('/admin', navigate: true);
+
+            return;
+        }
 
         $this->redirectRoute('login', navigate: true);
     }

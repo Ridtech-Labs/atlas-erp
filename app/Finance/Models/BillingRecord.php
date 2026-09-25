@@ -69,6 +69,12 @@ class BillingRecord extends Model implements HasMedia
         return BillingRecordFactory::new();
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('vat-receipt')
+            ->useDisk((string) config('media-library.disk_name'));
+    }
+
     /** @return BelongsTo<Tenant, $this> */
     public function tenant(): BelongsTo
     {

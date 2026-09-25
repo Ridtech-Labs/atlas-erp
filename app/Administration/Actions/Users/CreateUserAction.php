@@ -20,6 +20,7 @@ class CreateUserAction
     public function __construct(
         private readonly AdministrationAccessService $access,
         private readonly AdministrationActivityLogger $logger,
+        private readonly SendUserInvitationAction $invitations,
     ) {}
 
     /**
@@ -41,7 +42,7 @@ class CreateUserAction
             }
         }
 
-        return DB::transaction(function () use ($data, $roleNames, $actor, $tenantId, $company): User {
+        $user = DB::transaction(function () use ($data, $roleNames, $actor, $tenantId, $company): User {
             $user = User::query()->create([
                 'tenant_id' => $tenantId,
                 'first_name' => (string) $data['first_name'],
@@ -49,15 +50,14 @@ class CreateUserAction
                 'email' => (string) $data['email'],
                 'phone' => $data['phone'] ?? null,
                 'avatar_path' => $data['avatar_path'] ?? null,
-                'status' => $data['status'] ?? UserStatus::Active->value,
-                'email_verified_at' => now(),
-                'password' => Hash::make((string) $data['password']),
+                'status' => UserStatus::Invited->value,
+                'password' => Hash::make(bin2hex(random_bytes(32))),
             ]);
 
             $user->companies()->sync([$company->getKey()]);
             $user->syncRoles($roleNames);
 
-            $this->logger->log('user.created', 'User created', $actor, $user, [
+            $this->logger->log('user.invited', 'User invited', $actor, $user, [
                 'tenant_id' => $user->tenant_id,
                 'company_id' => $company->getKey(),
                 'roles' => $roleNames,
@@ -76,6 +76,10 @@ class CreateUserAction
 
             return $user->refresh();
         });
+
+        $this->invitations->execute($user, $actor);
+
+        return $user;
     }
 
     /**

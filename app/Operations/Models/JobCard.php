@@ -115,6 +115,12 @@ class JobCard extends Model implements HasMedia
         return JobCardFactory::new();
     }
 
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('job-card-documents')
+            ->useDisk((string) config('media-library.disk_name'));
+    }
+
     /**
      * @return BelongsTo<Tenant, $this>
      */
@@ -178,7 +184,10 @@ class JobCard extends Model implements HasMedia
                 ->join(', ');
         }
 
-        return $this->operatorPersonnel?->full_name ?? $this->operator?->full_name ?? $this->operated_by;
+        $personnel = $this->operatorPersonnel;
+        $operator = $this->operator;
+
+        return ($personnel instanceof Personnel ? $personnel->full_name : null) ?? ($operator instanceof User ? $operator->full_name : null) ?? $this->operated_by;
     }
 
     /**

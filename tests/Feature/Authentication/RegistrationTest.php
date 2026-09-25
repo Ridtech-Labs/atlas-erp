@@ -3,30 +3,21 @@
 namespace Tests\Feature\Auth;
 
 use App\Core\Tenancy\Models\Tenant;
-use Livewire\Volt\Volt;
+use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
-test('registration screen can be rendered', function () {
-    $response = $this->get('/register');
-
-    $response
-        ->assertOk()
-        ->assertSeeVolt('pages.auth.register');
-});
-
-test('new users can register', function () {
+test('public registration is unavailable and cannot create a user', function () {
     Tenant::factory()->create();
 
-    $component = Volt::test('pages.auth.register')
-        ->set('first_name', 'Test')
-        ->set('last_name', 'User')
-        ->set('email', 'test@example.com')
-        ->set('password', 'password')
-        ->set('password_confirmation', 'password');
+    $this->get('/register')->assertNotFound();
+    $this->post('/register', [
+        'first_name' => 'Test',
+        'last_name' => 'User',
+        'email' => 'test@example.com',
+        'password' => 'password',
+        'password_confirmation' => 'password',
+    ])->assertNotFound();
 
-    $component->call('register');
-
-    $component->assertRedirect(route('dashboard', absolute: false));
-
-    $this->assertAuthenticated();
-    $this->assertSame('Test', auth()->user()->first_name);
+    expect(Route::has('register'))->toBeFalse()
+        ->and(User::query()->where('email', 'test@example.com')->exists())->toBeFalse();
 });

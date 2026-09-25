@@ -14,6 +14,18 @@ test('login screen can be rendered', function () {
         ->assertSeeVolt('pages.auth.login');
 });
 
+test('admin login presents Atlas identity without pre-auth tenant context', function () {
+    $this->get('/admin/login')
+        ->assertOk()
+        ->assertSee('Atlas ERP')
+        ->assertSee('Operations &amp; Commercial Management', false)
+        ->assertSee('Welcome back')
+        ->assertSee('Sign in to continue to your workspace.')
+        ->assertSee('Secure access for authorized users only.')
+        ->assertDontSee('Tenant workspace')
+        ->assertDontSee('Select a company');
+});
+
 test('users can authenticate using the login screen', function () {
     $user = User::factory()->create();
 
@@ -25,7 +37,7 @@ test('users can authenticate using the login screen', function () {
 
     $component
         ->assertHasNoErrors()
-        ->assertRedirect(route('dashboard', absolute: false));
+        ->assertRedirect('/admin');
 
     $this->assertAuthenticated();
     expect($user->refresh()->last_login_at)->not->toBeNull()
@@ -107,16 +119,14 @@ test('inactive users can not access the Filament admin panel', function () {
     expect($user->canAccessPanel($panel))->toBeFalse();
 });
 
-test('navigation menu can be rendered', function () {
+test('legacy dashboard URL redirects to the Filament workspace', function () {
     $user = User::factory()->create();
 
     $this->actingAs($user);
 
     $response = $this->get('/dashboard');
 
-    $response
-        ->assertOk()
-        ->assertSeeVolt('layout.navigation');
+    $response->assertRedirect('/admin');
 });
 
 test('users can logout', function () {
