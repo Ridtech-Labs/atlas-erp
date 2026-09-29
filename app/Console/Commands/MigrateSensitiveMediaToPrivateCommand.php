@@ -5,70 +5,179 @@ declare(strict_types=1);
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Filesystem\FilesystemAdapter;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Throwable;
 
 class MigrateSensitiveMediaToPrivateCommand extends Command
 {
-    protected $signature = 'atlas:migrate-sensitive-media-to-private {--execute : Move existing sensitive media after reviewing the dry run}';
+    protected $signature = 'atlas:migrate-sensitive-media-to-private
+        {--dry-run : Report the migration without changing files or metadata}
+        {--execute : Copy verified files and switch Media Library metadata to the private disk}';
 
-    protected $description = 'Dry-run or move public operational evidence and VAT receipts to the configured private media disk';
+    protected $description = 'Safely copy referenced operational evidence and VAT receipts from public to private storage';
+
+    /** @var array<string, string> */
+    private const COLLECTIONS = [
+        'job_card' => 'job-card-documents',
+        'waybill' => 'waybill-documents',
+        'billing_record' => 'vat-receipt',
+    ];
 
     public function handle(): int
     {
         $targetDisk = (string) config('media-library.disk_name');
-        $media = Media::query()
-            ->where('disk', 'public')
-            ->where(function ($query): void {
-                $query->where(fn ($nested) => $nested->where('model_type', 'job_card')->where('collection_name', 'job-card-documents'))
-                    ->orWhere(fn ($nested) => $nested->where('model_type', 'waybill')->where('collection_name', 'waybill-documents'))
-                    ->orWhere(fn ($nested) => $nested->where('model_type', 'billing_record')->where('collection_name', 'vat-receipt'));
-            })
-            ->orderBy('id')
-            ->get();
+        $dryRun = (bool) $this->option('dry-run') || ! (bool) $this->option('execute');
 
-        if (! $this->option('execute')) {
-            $this->table(['ID', 'Type', 'Collection', 'File'], $media->map(fn (Media $item): array => [
-                $item->getKey(), $item->model_type, $item->collection_name, $item->file_name,
-            ])->all());
-            $this->warn(sprintf('Dry run only: %d file(s) would move to the %s disk. Re-run with --execute after backup verification.', $media->count(), $targetDisk));
-
-            return self::SUCCESS;
-        }
-
-        if ($targetDisk === 'public') {
-            $this->error('MEDIA_DISK must be a private disk before migration can run.');
+        if (! $dryRun && $targetDisk === 'public') {
+            $this->error('MEDIA_DISK must reference a private disk before migration can run.');
 
             return self::FAILURE;
         }
 
-        foreach ($media as $item) {
-            $model = $item->model;
+        $publicMedia = Media::query()->where('disk', 'public')->orderBy('id')->get();
+        $sensitiveMedia = Media::query()
+            ->where(function ($query): void {
+                foreach (self::COLLECTIONS as $modelType => $collection) {
+                    $query->orWhere(fn ($nested) => $nested
+                        ->where('model_type', $modelType)
+                        ->where('collection_name', $collection));
+                }
+            })
+            ->orderBy('id')
+            ->get();
 
-            if (! $model instanceof HasMedia) {
-                $this->error(sprintf('Media %d has no movable model. No files were moved.', $item->getKey()));
+        $counts = [
+            'scanned' => $sensitiveMedia->count(),
+            'eligible' => 0,
+            'migrated' => 0,
+            'already_private' => 0,
+            'skipped' => 0,
+            'failed' => 0,
+            'missing_source' => 0,
+            'ignored_unrelated' => $publicMedia->count() - $publicMedia->filter(fn (Media $media): bool => $this->isSensitive($media))->count(),
+        ];
+        $rows = [];
 
-                return self::FAILURE;
+        foreach ($sensitiveMedia as $media) {
+            if ($media->disk === $targetDisk) {
+                $counts['already_private']++;
+                $rows[] = [$media->getKey(), $media->model_type, $media->collection_name, 'already private'];
+
+                continue;
+            }
+
+            if ($media->disk !== 'public') {
+                $counts['skipped']++;
+                $rows[] = [$media->getKey(), $media->model_type, $media->collection_name, 'unsupported source disk'];
+
+                continue;
+            }
+
+            $counts['eligible']++;
+
+            if (! $this->sourceExists($media)) {
+                $counts['failed']++;
+                $counts['missing_source']++;
+                $rows[] = [$media->getKey(), $media->model_type, $media->collection_name, 'missing source'];
+
+                continue;
+            }
+
+            if ($dryRun) {
+                $rows[] = [$media->getKey(), $media->model_type, $media->collection_name, 'would migrate'];
+
+                continue;
+            }
+
+            try {
+                $this->copyAndVerify($media, $targetDisk);
+                $media->forceFill(['disk' => $targetDisk, 'conversions_disk' => $targetDisk])->save();
+
+                $counts['migrated']++;
+                $rows[] = [$media->getKey(), $media->model_type, $media->collection_name, 'migrated'];
+            } catch (Throwable $exception) {
+                report($exception);
+                $counts['failed']++;
+                $rows[] = [$media->getKey(), $media->model_type, $media->collection_name, 'copy or verification failed'];
             }
         }
 
-        foreach ($media as $item) {
-            $this->move($item, $targetDisk);
+        $this->table(['Media ID', 'Model', 'Collection', 'Result'], $rows);
+        $this->newLine();
+        $this->line(sprintf('scanned=%d eligible=%d migrated=%d already_private=%d skipped=%d failed=%d missing_source=%d ignored_unrelated=%d', ...array_values($counts)));
+
+        if ($dryRun) {
+            $this->warn('Dry run only: no files or Media Library metadata were changed.');
+        } else {
+            $this->info('Public source files were retained for rollback and later verified cleanup.');
         }
 
-        $this->info(sprintf('Moved %d sensitive media file(s) to the %s disk.', $media->count(), $targetDisk));
-
-        return self::SUCCESS;
+        return $counts['failed'] === 0 ? self::SUCCESS : self::FAILURE;
     }
 
-    private function move(Media $item, string $targetDisk): void
+    private function isSensitive(Media $media): bool
     {
-        $model = $item->model;
+        return (self::COLLECTIONS[$media->model_type] ?? null) === $media->collection_name;
+    }
 
-        if (! $model instanceof HasMedia) {
-            throw new \LogicException(sprintf('Media %d has no movable model.', $item->getKey()));
+    private function sourceExists(Media $media): bool
+    {
+        return Storage::disk('public')->exists($media->getPathRelativeToRoot());
+    }
+
+    private function copyAndVerify(Media $media, string $targetDisk): void
+    {
+        $source = Storage::disk('public');
+        $destination = Storage::disk($targetDisk);
+        $directory = dirname($media->getPathRelativeToRoot());
+        $files = $source->allFiles($directory);
+
+        if ($files === [] || ! in_array($media->getPathRelativeToRoot(), $files, true)) {
+            throw new \RuntimeException('The original evidence file is missing from its Media Library directory.');
         }
 
-        $item->move($model, $item->collection_name, $targetDisk);
+        foreach ($files as $path) {
+            if (! $this->filesMatch($source, $destination, $path)) {
+                $stream = $source->readStream($path);
+
+                if (! is_resource($stream)) {
+                    throw new \RuntimeException('The source evidence file could not be read.');
+                }
+
+                try {
+                    if (! $destination->writeStream($path, $stream)) {
+                        throw new \RuntimeException('The private evidence file could not be written.');
+                    }
+                } finally {
+                    fclose($stream);
+                }
+            }
+
+            if (! $this->filesMatch($source, $destination, $path)) {
+                throw new \RuntimeException('The copied evidence file did not pass integrity verification.');
+            }
+        }
+    }
+
+    private function filesMatch(FilesystemAdapter $source, FilesystemAdapter $destination, string $path): bool
+    {
+        if (! $destination->exists($path)) {
+            return false;
+        }
+
+        try {
+            $sourceChecksum = $source->checksum($path);
+            $destinationChecksum = $destination->checksum($path);
+
+            if (is_string($sourceChecksum) && is_string($destinationChecksum)) {
+                return hash_equals($sourceChecksum, $destinationChecksum);
+            }
+        } catch (Throwable) {
+            // Some adapters cannot provide checksums; compare reliable metadata instead.
+        }
+
+        return $source->size($path) === $destination->size($path);
     }
 }

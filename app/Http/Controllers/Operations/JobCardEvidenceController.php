@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Operations;
 
 use App\Operations\Models\JobCard;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -20,6 +21,8 @@ class JobCardEvidenceController
             && $media->collection_name === 'job-card-documents',
             404,
         );
+
+        abort_unless(Storage::disk($media->disk)->exists($media->getPathRelativeToRoot()), 404);
 
         return $request->boolean('download')
             ? response()->download($media->getPath(), $media->file_name)

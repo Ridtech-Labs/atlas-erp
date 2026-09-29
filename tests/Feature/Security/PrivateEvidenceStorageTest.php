@@ -4,6 +4,8 @@ use App\Administration\Enums\RoleName;
 use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\CRM\Models\Client;
+use App\Finance\Models\BillingBatch;
+use App\Finance\Models\BillingRecord;
 use App\Models\User;
 use App\Operations\Enums\WaybillStatus;
 use App\Operations\Models\Job;
@@ -49,7 +51,15 @@ test('new job card and waybill evidence use the private media disk', function ()
     $waybill->addMediaFromString('waybill')->usingFileName('waybill.txt')->toMediaCollection('waybill-documents');
 
     expect($card->getFirstMedia('job-card-documents')?->disk)->toBe('private')
-        ->and($waybill->getFirstMedia('waybill-documents')?->disk)->toBe('private');
+        ->and($waybill->getFirstMedia('waybill-documents')?->disk)->toBe('private')
+        ->and($card->getFirstMedia('job-card-documents')?->getUrl())->toBe(route('atlas.job-cards.evidence.show', [
+            'jobCard' => $card,
+            'media' => $card->getFirstMedia('job-card-documents'),
+        ]))
+        ->and($waybill->getFirstMedia('waybill-documents')?->getUrl())->toBe(route('atlas.waybills.evidence.show', [
+            'waybill' => $waybill,
+            'media' => $waybill->getFirstMedia('waybill-documents'),
+        ]));
 });
 
 test('operational evidence routes reject guests and foreign-company users', function () {
@@ -111,4 +121,94 @@ test('evidence routes reject media that does not belong to the requested record'
         'jobCard' => $first,
         'media' => $second->getFirstMedia('job-card-documents'),
     ]))->assertNotFound();
+});
+
+test('new VAT receipts use private storage and wrong-company users cannot retrieve sensitive evidence', function () {
+    [$tenant, $company, $client, $actor] = evidenceContext($this);
+    $job = Job::factory()->for($tenant)->for($company)->for($client)->create();
+    $card = JobCard::factory()->for($tenant)->for($company)->for($client)->for($job)->create();
+    $card->addMediaFromString('job-card')->usingFileName('card.txt')->toMediaCollection('job-card-documents');
+    $waybill = Waybill::query()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'job_id' => $job->getKey(),
+        'client_id' => $client->getKey(),
+        'waybill_number' => 'WB-PRIVATE-COMPANY-001',
+        'waybill_date' => now()->toDateString(),
+        'driver_name' => 'Private Evidence Driver',
+        'truck_number' => 'PRIVATE-COMPANY-001',
+        'number_of_trips' => 1,
+        'status' => WaybillStatus::Recorded->value,
+    ]);
+    $waybill->addMediaFromString('waybill')->usingFileName('waybill.txt')->toMediaCollection('waybill-documents');
+    $batch = BillingBatch::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+    ]);
+    $billingRecord = BillingRecord::query()->create([
+        'uuid' => (string) str()->uuid(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'client_id' => $client->getKey(),
+        'billing_batch_id' => $batch->getKey(),
+        'record_number' => 'BR-PRIVATE-COMPANY-'.fake()->unique()->numerify('####'),
+        'status' => 'draft',
+        'batch_amount' => 100.00,
+        'currency' => 'GHS',
+    ]);
+    $billingRecord->addMediaFromString('receipt')->usingFileName('receipt.txt')->toMediaCollection('vat-receipt');
+
+    expect($billingRecord->getFirstMedia('vat-receipt')?->disk)->toBe('private')
+        ->and($billingRecord->getFirstMedia('vat-receipt')?->getUrl())->toBe(route('atlas.billing-records.receipts.show', [
+            'billingRecord' => $billingRecord,
+            'media' => $billingRecord->getFirstMedia('vat-receipt'),
+        ]));
+
+    $finance = User::factory()->for($tenant)->create();
+    $finance->companies()->sync([$company->getKey()]);
+    $finance->assignRole(RoleName::FinanceManager->value);
+    $this->actingAs($finance)->withSession(['active_company_id' => $company->getKey()])
+        ->get(route('atlas.billing-records.receipts.show', [
+            'billingRecord' => $billingRecord,
+            'media' => $billingRecord->getFirstMedia('vat-receipt'),
+        ]))
+        ->assertOk();
+
+    $otherCompany = Company::factory()->for($tenant)->create();
+    $otherOperations = User::factory()->for($tenant)->create();
+    $otherOperations->companies()->sync([$otherCompany->getKey()]);
+    $otherOperations->assignRole(RoleName::OperationsManager->value);
+    $this->actingAs($otherOperations)->withSession(['active_company_id' => $otherCompany->getKey()])
+        ->get(route('atlas.job-cards.evidence.show', ['jobCard' => $card, 'media' => $card->getFirstMedia('job-card-documents')]))
+        ->assertForbidden();
+
+    $this->actingAs($otherOperations)->withSession(['active_company_id' => $otherCompany->getKey()])
+        ->get(route('atlas.waybills.evidence.show', ['waybill' => $waybill, 'media' => $waybill->getFirstMedia('waybill-documents')]))
+        ->assertForbidden();
+
+    $otherFinance = User::factory()->for($tenant)->create();
+    $otherFinance->companies()->sync([$otherCompany->getKey()]);
+    $otherFinance->assignRole(RoleName::FinanceManager->value);
+    $this->actingAs($otherFinance)->withSession(['active_company_id' => $otherCompany->getKey()])
+        ->get(route('atlas.billing-records.receipts.show', [
+            'billingRecord' => $billingRecord,
+            'media' => $billingRecord->getFirstMedia('vat-receipt'),
+        ]))
+        ->assertForbidden();
+
+    expect($actor->can('view', $card))->toBeTrue();
+});
+
+test('authorized evidence request returns not found when the private file is missing', function () {
+    [$tenant, $company, $client, $actor] = evidenceContext($this);
+    $job = Job::factory()->for($tenant)->for($company)->for($client)->create();
+    $card = JobCard::factory()->for($tenant)->for($company)->for($client)->for($job)->create();
+    $card->addMediaFromString('job-card')->usingFileName('missing.txt')->toMediaCollection('job-card-documents');
+    $media = $card->getFirstMedia('job-card-documents');
+    Storage::disk('private')->delete($media->getPathRelativeToRoot());
+
+    $this->actingAs($actor)->withSession(['active_company_id' => $company->getKey()])
+        ->get(route('atlas.job-cards.evidence.show', ['jobCard' => $card, 'media' => $media]))
+        ->assertNotFound();
 });

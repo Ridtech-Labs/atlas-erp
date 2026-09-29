@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Operations;
 
 use App\Operations\Models\Waybill;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -20,6 +21,8 @@ class WaybillEvidenceController
             && $media->collection_name === 'waybill-documents',
             404,
         );
+
+        abort_unless(Storage::disk($media->disk)->exists($media->getPathRelativeToRoot()), 404);
 
         return $request->boolean('download')
             ? response()->download($media->getPath(), $media->file_name)
