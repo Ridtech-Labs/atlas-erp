@@ -164,7 +164,12 @@ class Job extends Model
 
     public function plannedOperatorName(): ?string
     {
-        return $this->assignedPersonnel?->full_name ?? $this->assignedOperator?->full_name ?? $this->assigned_operator_name;
+        $personnel = $this->assigned_personnel_id === null ? null : $this->assignedPersonnel;
+        $operator = $this->assigned_operator_id === null ? null : $this->assignedOperator;
+
+        return ($personnel instanceof Personnel ? $personnel->full_name : null)
+            ?? ($operator instanceof User ? $operator->full_name : null)
+            ?? $this->assigned_operator_name;
     }
 
     public function isHeavyMachinery(): bool

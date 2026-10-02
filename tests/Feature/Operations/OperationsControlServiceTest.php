@@ -2,6 +2,7 @@
 
 use App\Administration\Enums\RoleName;
 use App\Core\Administration\Filament\Pages\Dashboard;
+use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Enums\BillingSourceType;
@@ -64,6 +65,31 @@ test('operations control dashboard is available to operations managers but not d
     $clerk->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
     $this->actingAs($clerk)->get(Dashboard::getUrl())->assertOk()->assertDontSee('Operations Control');
+});
+
+test('operations control only links Billing Batches for users authorized to view them', function () {
+    $this->seedAccessControl();
+    $tenant = $this->tenant();
+    $company = $this->company($tenant);
+    $operations = $this->tenantUser($tenant, [], [RoleName::OperationsManager->value]);
+    $administrator = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $operations->companies()->sync([$company->getKey()]);
+    $administrator->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $billingBatchesUrl = BillingBatchResource::getUrl('index', ['filters' => ['status' => ['value' => BillingBatchStatus::Draft->value]]]);
+
+    $this->actingAs($operations)
+        ->get(Dashboard::getUrl())
+        ->assertOk()
+        ->assertSee('Draft Billing Batches')
+        ->assertDontSee($billingBatchesUrl, false);
+
+    $this->actingAs($administrator)
+        ->get(Dashboard::getUrl())
+        ->assertOk()
+        ->assertSee('Draft Billing Batches')
+        ->assertSee($billingBatchesUrl, false);
 });
 
 test('operations control job drill-down links preserve the selected status and operational type', function () {

@@ -39,8 +39,10 @@ use App\Operations\Enums\JobStatus;
 use App\Operations\Enums\JobType;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
+use App\Operations\Models\Personnel;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Spatie\Activitylog\Models\Activity;
 
@@ -1152,24 +1154,39 @@ test('start job no longer requires an operator assignment', function () {
         ->and($started->actual_start_date)->not->toBeNull();
 });
 
-test('draft job card operator can differ from the planned operator and the change is logged', function () {
+test('draft job card Personnel operator can differ from the planned operator and the change is logged', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
     $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
     $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
-    $plannedOperator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
-    $actualOperator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
+    $plannedOperator = Personnel::query()->create([
+        'uuid' => (string) Str::uuid(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'first_name' => 'Planned',
+        'last_name' => 'Operator',
+        'status' => 'active',
+        'can_operate_equipment' => true,
+    ]);
+    $actualOperator = Personnel::query()->create([
+        'uuid' => (string) Str::uuid(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'first_name' => 'Actual',
+        'last_name' => 'Operator',
+        'status' => 'active',
+        'can_operate_equipment' => true,
+    ]);
     $actor->companies()->sync([$company->getKey()]);
-    $plannedOperator->companies()->sync([$company->getKey()]);
-    $actualOperator->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
 
     $job = Job::factory()->create([
         'tenant_id' => $tenant->getKey(),
         'company_id' => $company->getKey(),
         'status' => JobStatus::InProgress,
-        'assigned_operator_id' => $plannedOperator->getKey(),
+        'assigned_personnel_id' => $plannedOperator->getKey(),
+        'assigned_operator_id' => null,
         'assigned_operator_name' => null,
     ]);
 
@@ -1177,13 +1194,15 @@ test('draft job card operator can differ from the planned operator and the chang
         'job_id' => $job->getKey(),
         'tenant_id' => $tenant->getKey(),
         'company_id' => $company->getKey(),
-        'operator_id' => $plannedOperator->getKey(),
+        'operator_personnel_id' => $plannedOperator->getKey(),
+        'operator_id' => null,
         'operated_by' => null,
         'approval_status' => JobCardApprovalStatus::Recorded,
     ]);
 
     $updated = app(UpdateJobCardAction::class)->execute($jobCard, [
-        'operator_id' => $actualOperator->getKey(),
+        'operator_personnel_id' => $actualOperator->getKey(),
+        'operators' => [['personnel_id' => $actualOperator->getKey()]],
         'operated_by' => null,
     ], $actor);
 
@@ -1193,20 +1212,29 @@ test('draft job card operator can differ from the planned operator and the chang
         ->latest()
         ->first();
 
-    expect($updated->operator_id)->toBe($actualOperator->getKey())
+    expect($updated->operator_personnel_id)->toBe($actualOperator->getKey())
+        ->and($updated->operator_id)->toBeNull()
         ->and($updated->operatorDisplayName())->toBe($actualOperator->full_name)
+        ->and($updated->operators()->pluck('personnel_id')->all())->toBe([$actualOperator->getKey()])
         ->and($activity?->description)->toBe(sprintf('Operator changed from %s to %s', $plannedOperator->full_name, $actualOperator->full_name));
 });
 
-test('job card operator fields cannot conflict', function () {
+test('job card Personnel and external operator fields cannot conflict', function () {
     $this->seedAccessControl();
 
     $tenant = $this->tenant();
     $company = $this->company($tenant, ['name' => 'Kadmay Logistics']);
     $actor = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
-    $operator = User::factory()->create(['tenant_id' => $tenant->getKey()]);
+    $operator = Personnel::query()->create([
+        'uuid' => (string) Str::uuid(),
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+        'first_name' => 'Company',
+        'last_name' => 'Operator',
+        'status' => 'active',
+        'can_operate_equipment' => true,
+    ]);
     $actor->companies()->sync([$company->getKey()]);
-    $operator->companies()->sync([$company->getKey()]);
     session(['active_company_id' => $company->getKey()]);
 
     $job = Job::factory()->create([
@@ -1218,9 +1246,9 @@ test('job card operator fields cannot conflict', function () {
     expect(fn () => app(CreateJobCardAction::class)->execute($job, [
         'card_date' => '2026-07-23',
         'shift' => JobShift::Night->value,
-        'operator_id' => $operator->getKey(),
+        'operator_personnel_id' => $operator->getKey(),
         'operated_by' => 'Kofi Asante',
-    ], $actor))->toThrow(BusinessException::class, 'Select a company operator or enter an external operator name, not both.');
+    ], $actor))->toThrow(BusinessException::class, 'Select Personnel or enter an external operator name, not both.');
 });
 
 test('job card verification is recorded without hourly rate and verified work entries move to billing ready through billing batches', function () {

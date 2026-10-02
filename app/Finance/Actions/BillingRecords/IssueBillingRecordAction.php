@@ -9,6 +9,7 @@ use App\Administration\Services\AdministrationAccessService;
 use App\Administration\Services\AdministrationActivityLogger;
 use App\Core\Shared\Exceptions\BusinessException;
 use App\Finance\Enums\BillingRecordStatus;
+use App\Finance\Models\BillingBatch;
 use App\Finance\Models\BillingRecord;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -35,6 +36,12 @@ class IssueBillingRecordAction
 
         if ((string) $record->getRawOriginal('status') !== BillingRecordStatus::Draft->value) {
             throw new BusinessException('Only draft Billing Records can be issued.', 422);
+        }
+
+        $billingBatch = $record->billingBatch;
+
+        if (! $billingBatch instanceof BillingBatch) {
+            throw new BusinessException('This Billing Record is missing its prepared Billing Batch.', 422);
         }
 
         $reference = trim((string) ($data['external_receipt_reference'] ?? ''));
@@ -74,7 +81,7 @@ class IssueBillingRecordAction
             throw new BusinessException('Attach the external VAT receipt before issuing this Billing Record.', 422);
         }
 
-        return DB::transaction(function () use ($record, $actor, $attachmentPaths, $reference, $issuedAt, $amount, $notes): BillingRecord {
+        return DB::transaction(function () use ($record, $billingBatch, $actor, $attachmentPaths, $reference, $issuedAt, $amount, $notes): BillingRecord {
             foreach ($attachmentPaths as $path) {
                 if ($path !== '') {
                     $record->addMedia(Storage::disk('local')->path($path))
@@ -98,7 +105,7 @@ class IssueBillingRecordAction
                 'company_id' => $record->company_id,
                 'client_id' => $record->client_id,
                 'billing_record_number' => $record->record_number,
-                'billing_batch_number' => $record->billingBatch->batch_number,
+                'billing_batch_number' => $billingBatch->batch_number,
                 'external_receipt_reference' => $record->external_receipt_reference,
                 'batch_amount' => $record->batch_amount,
                 'receipt_amount' => $record->receipt_amount,

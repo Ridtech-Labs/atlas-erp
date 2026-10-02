@@ -19,6 +19,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
+/**
+ * @property BillingRecordStatus $status
+ */
 class BillingRecord extends Model implements HasMedia
 {
     use BelongsToTenant;

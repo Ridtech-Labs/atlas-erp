@@ -211,6 +211,15 @@ test('issuance requires an exact VAT receipt amount and never permits a pricing 
         ->and($issued->getFirstMedia('vat-receipt')?->disk)->toBe('private');
 });
 
+test('issuance fails safely when a malformed Billing Record has no Billing Batch', function () {
+    [, , $finance, $client] = financeActorForBillingRecord();
+    $record = app(CreateBillingRecordAction::class)->execute(['billing_batch_id' => preparedBillingBatchForBillingRecord($client, $finance)->getKey()], $finance);
+    $record->forceFill(['billing_batch_id' => 999999])->unsetRelation('billingBatch');
+
+    expect(fn () => app(IssueBillingRecordAction::class)->execute($record, [], $finance, []))
+        ->toThrow(BusinessException::class, 'missing its prepared Billing Batch');
+});
+
 test('payment and closure require the approved forward lifecycle and financial history remains immutable', function () {
     [, , $finance, $client] = financeActorForBillingRecord();
     $record = app(CreateBillingRecordAction::class)->execute(['billing_batch_id' => preparedBillingBatchForBillingRecord($client, $finance)->getKey()], $finance);

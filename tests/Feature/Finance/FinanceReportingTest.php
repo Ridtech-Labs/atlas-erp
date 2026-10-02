@@ -7,6 +7,15 @@ use App\Finance\Enums\BillingRecordStatus;
 use App\Finance\Models\BillingBatch;
 use App\Finance\Models\BillingRecord;
 use App\Finance\Services\FinanceReportingService;
+use Carbon\CarbonImmutable;
+
+beforeEach(function () {
+    CarbonImmutable::setTestNow('2026-09-15 09:00:00');
+});
+
+afterEach(function () {
+    CarbonImmutable::setTestNow();
+});
 
 function financeReportingActor(): array
 {

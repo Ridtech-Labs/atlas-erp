@@ -43,6 +43,11 @@ class JobCardOperator extends Model
 
     public function displayName(): ?string
     {
-        return $this->personnel?->full_name ?? $this->user?->full_name ?? $this->operator_name;
+        $personnel = $this->personnel_id === null ? null : $this->personnel;
+        $user = $this->user_id === null ? null : $this->user;
+
+        return ($personnel instanceof Personnel ? $personnel->full_name : null)
+            ?? ($user instanceof User ? $user->full_name : null)
+            ?? $this->operator_name;
     }
 }

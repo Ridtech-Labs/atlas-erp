@@ -24,7 +24,7 @@ function truckingRateLine(Client $client, array $overrides = []): RateAgreementL
 {
     $agreement = RateAgreement::factory()->create(['tenant_id' => $client->tenant_id, 'company_id' => $client->company_id, 'client_id' => $client->getKey(), 'status' => RateAgreementStatus::Active, 'effective_from' => '2026-09-01', 'effective_to' => '2026-09-30']);
 
-    return RateAgreementLine::factory()->create(['rate_agreement_id' => $agreement->getKey(), 'billing_unit' => BillingUnit::Trip, 'pickup_point' => 'Tema', 'destination' => 'Takoradi', 'rate' => 2500, 'currency' => 'GHS', 'equipment_reference' => null, 'machine_number' => null, ...$overrides]);
+    return RateAgreementLine::factory()->create(['rate_agreement_id' => $agreement->getKey(), 'billing_unit' => BillingUnit::Trip, 'pickup_point' => 'Tema', 'destination' => 'Takoradi', 'rate' => 2500, 'currency' => 'GHS', 'equipment_reference' => null, 'machine_number' => null, 'effective_from' => null, 'effective_to' => null, ...$overrides]);
 }
 
 test('trucking route rates resolve directionally with normalized route evidence', function () {

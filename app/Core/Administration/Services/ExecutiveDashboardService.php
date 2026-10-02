@@ -1084,10 +1084,6 @@ class ExecutiveDashboardService
 
         $tenantId = $this->tenantContext->id() ?? $user->tenant_id;
 
-        if (! is_int($tenantId)) {
-            return '—';
-        }
-
         $totals = app(FinanceReportingService::class)->revenueMtd($tenantId, $companyId);
 
         if ($totals === []) {
