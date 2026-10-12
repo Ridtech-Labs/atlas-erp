@@ -12,6 +12,7 @@
     use App\Core\Administration\Filament\Resources\FleetAssets\FleetAssetResource;
     use App\Core\Administration\Filament\Resources\FleetAssetTypes\FleetAssetTypeResource;
     use App\Core\Administration\Filament\Resources\Jobs\JobResource;
+    use App\Core\Administration\Filament\Resources\InventoryItems\InventoryItemResource;
     use App\Core\Administration\Filament\Resources\Personnel\PersonnelResource;
     use App\Core\Administration\Filament\Resources\RateAgreements\RateAgreementResource;
     use App\Core\Administration\Filament\Resources\Roles\RoleResource;
@@ -130,7 +131,13 @@
                     'disabled' => ! FleetUtilization::canAccess(),
                     'icon' => 'reports',
                 ],
-                ['label' => 'Inventory', 'url' => null, 'active' => false, 'disabled' => true, 'icon' => 'inventory'],
+                [
+                    'label' => 'Inventory',
+                    'url' => InventoryItemResource::canViewAny() ? InventoryItemResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.inventory-items.*'),
+                    'disabled' => false,
+                    'icon' => 'inventory',
+                ],
             ],
         ], [
             'label' => 'FINANCE',
