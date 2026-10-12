@@ -9,6 +9,7 @@ use App\Core\Administration\Filament\Resources\InventoryItems\Pages\CreateInvent
 use App\Core\Administration\Filament\Resources\InventoryItems\Pages\EditInventoryItem;
 use App\Core\Administration\Filament\Resources\InventoryItems\Pages\ListInventoryItems;
 use App\Core\Administration\Filament\Resources\InventoryItems\Pages\ViewInventoryItem;
+use App\Core\Administration\Filament\Resources\InventoryItems\RelationManagers\StockMovementsRelationManager;
 use App\Core\Administration\Filament\Resources\InventoryItems\Schemas\InventoryItemForm;
 use App\Core\Administration\Filament\Resources\InventoryItems\Schemas\InventoryItemInfolist;
 use App\Core\Administration\Filament\Resources\InventoryItems\Tables\InventoryItemsTable;
@@ -59,6 +60,13 @@ class InventoryItemResource extends Resource
             'create' => CreateInventoryItem::route('/create'),
             'view' => ViewInventoryItem::route('/{record}'),
             'edit' => EditInventoryItem::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            StockMovementsRelationManager::class,
         ];
     }
 

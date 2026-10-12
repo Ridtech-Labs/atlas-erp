@@ -64,6 +64,9 @@ enum PermissionName: string
     case FleetAssetsManage = 'fleet_assets.manage';
     case InventoryItemsView = 'inventory_items.view';
     case InventoryItemsManage = 'inventory_items.manage';
+    case StockMovementsView = 'stock_movements.view';
+    case StockMovementsManage = 'stock_movements.manage';
+    case StockMovementsAdjust = 'stock_movements.adjust';
     case FleetAssignmentsView = 'fleet_assignments.view';
     case FleetAssignmentsManage = 'fleet_assignments.manage';
     case FleetDispatchDispatch = 'fleet_dispatch.dispatch';

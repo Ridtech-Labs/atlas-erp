@@ -17,7 +17,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use LogicException;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Models\Activity;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -63,6 +65,15 @@ class InventoryItem extends Model
         return InventoryItemFactory::new();
     }
 
+    protected static function booted(): void
+    {
+        static::updating(static function (self $item): void {
+            if ($item->isDirty('quantity_on_hand')) {
+                throw new LogicException('Quantity on hand is maintained only through the stock movement ledger.');
+            }
+        });
+    }
+
     /** @return BelongsTo<Tenant, $this> */
     public function tenant(): BelongsTo
     {
@@ -85,6 +96,12 @@ class InventoryItem extends Model
     public function updater(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /** @return HasMany<StockMovement, $this> */
+    public function stockMovements(): HasMany
+    {
+        return $this->hasMany(StockMovement::class);
     }
 
     public function stockStatus(): InventoryStockStatus
