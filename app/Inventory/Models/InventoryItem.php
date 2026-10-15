@@ -149,6 +149,23 @@ class InventoryItem extends Model
      * @param  Builder<InventoryItem>  $query
      * @return Builder<InventoryItem>
      */
+    public function scopeRequiringStockAttention(Builder $query): Builder
+    {
+        return $query->where(static function (Builder $query): void {
+            $query
+                ->where('quantity_on_hand', '<=', 0)
+                ->orWhere(static function (Builder $query): void {
+                    $query
+                        ->where('quantity_on_hand', '>', 0)
+                        ->whereColumn('quantity_on_hand', '<=', 'minimum_stock_level');
+                });
+        });
+    }
+
+    /**
+     * @param  Builder<InventoryItem>  $query
+     * @return Builder<InventoryItem>
+     */
     public static function applyStockStatus(Builder $query, InventoryStockStatus $status): Builder
     {
         return match ($status) {

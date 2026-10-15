@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Core\Administration\Filament\Resources\InventoryItems\Pages;
 
 use App\Core\Administration\Filament\Resources\InventoryItems\InventoryItemResource;
+use App\Core\Administration\Filament\Widgets\InventoryOverviewWidget;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -19,5 +20,12 @@ class ListInventoryItems extends ListRecords
     protected function getHeaderActions(): array
     {
         return [CreateAction::make()->label('New Inventory item')];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            InventoryOverviewWidget::class,
+        ];
     }
 }
