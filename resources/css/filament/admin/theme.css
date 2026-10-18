@@ -1091,6 +1091,42 @@
         white-space: nowrap;
     }
 
+    .atlas-topbar-workspace-exit {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin: 0;
+    }
+
+    .atlas-topbar-workspace-context {
+        color: var(--atlas-color-text-muted);
+        font-size: 0.75rem;
+        font-weight: 700;
+        white-space: nowrap;
+    }
+
+    .atlas-topbar-workspace-exit-button {
+        min-height: 2.25rem;
+        border: 1px solid var(--atlas-color-border-default);
+        border-radius: 0.625rem;
+        background: rgba(255, 255, 255, 0.96);
+        color: var(--atlas-color-text-primary);
+        padding: 0.4rem 0.75rem;
+        font-size: 0.75rem;
+        font-weight: 700;
+        transition: background-color var(--atlas-transition), border-color var(--atlas-transition);
+    }
+
+    .atlas-topbar-workspace-exit-button:hover {
+        border-color: var(--atlas-color-action-primary);
+        background: var(--atlas-color-background-muted);
+    }
+
+    .atlas-topbar-workspace-exit-button:focus-visible {
+        outline: 2px solid var(--atlas-color-action-primary);
+        outline-offset: 2px;
+    }
+
     .atlas-kpi-card {
         min-height: 12.5rem;
     }
@@ -1161,6 +1197,10 @@
 
     .atlas-company-switcher-value {
         max-width: min(8rem, calc(100vw - 17rem));
+    }
+
+    .atlas-topbar-workspace-context {
+        display: none;
     }
 }
 

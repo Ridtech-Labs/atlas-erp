@@ -58,6 +58,7 @@ class AdminPanelProvider extends PanelProvider
             ->maxContentWidth(Width::Full)
             ->renderHook(PanelsRenderHook::TOPBAR_START, fn () => view('filament.hooks.topbar-sidebar-toggle'))
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_BEFORE, fn () => view('filament.hooks.topbar-company-switcher'))
+            ->renderHook(PanelsRenderHook::TOPBAR_END, fn () => view('filament.hooks.topbar-workspace-context'))
             ->renderHook(PanelsRenderHook::SIDEBAR_FOOTER, fn () => view('filament.hooks.sidebar-footer-profile'))
             ->renderHook(PanelsRenderHook::SIDEBAR_NAV_START, fn () => view('filament.hooks.sidebar-navigation'))
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER, fn () => view('filament.hooks.topbar-quick-create'))

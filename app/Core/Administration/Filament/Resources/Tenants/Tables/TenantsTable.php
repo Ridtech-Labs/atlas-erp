@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Core\Administration\Filament\Resources\Tenants\Tables;
 
+use App\Core\Administration\Filament\Pages\Dashboard;
 use App\Core\Shared\Enums\TenantStatus;
+use App\Core\Tenancy\Models\Tenant;
+use App\Core\Tenancy\Services\SupportTenantWorkspaceService;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -46,6 +51,17 @@ class TenantsTable
             ->emptyStateHeading('No tenants yet')
             ->emptyStateDescription('Add a tenant account to onboard a customer workspace into Atlas ERP.')
             ->recordActions([
+                Action::make('enterWorkspace')
+                    ->label('Enter Workspace')
+                    ->icon('heroicon-o-arrow-right-start-on-rectangle')
+                    ->visible(fn (Tenant $record): bool => self::canEnterWorkspace($record))
+                    ->action(function (Tenant $record): mixed {
+                        $actor = self::authenticatedUser();
+
+                        app(SupportTenantWorkspaceService::class)->enter($actor, $record);
+
+                        return redirect(Dashboard::getUrl());
+                    }),
                 ViewAction::make(),
                 EditAction::make(),
             ])
@@ -57,5 +73,24 @@ class TenantsTable
                 ]),
             ])
             ->paginated([10, 25, 50]);
+    }
+
+    private static function canEnterWorkspace(Tenant $record): bool
+    {
+        $actor = auth()->user();
+
+        return $actor instanceof User
+            && app(SupportTenantWorkspaceService::class)->canEnter($actor, $record);
+    }
+
+    private static function authenticatedUser(): User
+    {
+        $user = auth()->user();
+
+        if (! $user instanceof User) {
+            abort(403);
+        }
+
+        return $user;
     }
 }

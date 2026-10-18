@@ -1,5 +1,7 @@
 <?php
 
+use App\Core\Tenancy\Http\Controllers\EnterSupportTenantWorkspaceController;
+use App\Core\Tenancy\Http\Controllers\ExitSupportTenantWorkspaceController;
 use App\Core\Tenancy\Http\Controllers\SwitchActiveCompanyController;
 use App\Core\Tenancy\Support\TenantContext;
 use App\Http\Controllers\Finance\BillingRecordReceiptController;
@@ -28,6 +30,14 @@ Route::get('health', function (TenantContext $tenantContext) {
 Route::post('admin/company-context', SwitchActiveCompanyController::class)
     ->middleware(['auth', 'verified'])
     ->name('atlas.company-context.switch');
+
+Route::post('admin/tenants/{tenant}/workspace', EnterSupportTenantWorkspaceController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('atlas.support-workspace.enter');
+
+Route::post('admin/workspace/exit', ExitSupportTenantWorkspaceController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('atlas.support-workspace.exit');
 
 Route::get('admin/billing-records/{billingRecord}/receipts/{media}', BillingRecordReceiptController::class)
     ->middleware(['auth', 'verified'])
