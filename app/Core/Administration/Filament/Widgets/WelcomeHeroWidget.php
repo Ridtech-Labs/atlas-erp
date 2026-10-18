@@ -12,7 +12,9 @@ class WelcomeHeroWidget extends Widget
 {
     protected string $view = 'filament.widgets.welcome-hero-widget';
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+    ];
 
     protected static bool $isLazy = false;
 

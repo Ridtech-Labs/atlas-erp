@@ -12,7 +12,9 @@ class ExecutiveKpiOverviewWidget extends Widget
 {
     protected string $view = 'filament.widgets.executive-kpi-overview-widget';
 
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = [
+        'default' => 'full',
+    ];
 
     protected static bool $isLazy = false;
 

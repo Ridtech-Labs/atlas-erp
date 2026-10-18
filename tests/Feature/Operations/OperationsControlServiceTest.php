@@ -4,6 +4,9 @@ use App\Administration\Enums\RoleName;
 use App\Core\Administration\Filament\Pages\Dashboard;
 use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
+use App\Core\Administration\Filament\Widgets\ExecutiveKpiOverviewWidget;
+use App\Core\Administration\Filament\Widgets\OperationsControlWidget;
+use App\Core\Administration\Filament\Widgets\WelcomeHeroWidget;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Enums\BillingSourceType;
 use App\Finance\Models\BillingBatch;
@@ -24,6 +27,17 @@ use App\Operations\Models\JobCardWorkEntry;
 use App\Operations\Models\Waybill;
 use App\Operations\Services\OperationsControlService;
 use Illuminate\Support\Str;
+
+test('dashboard base grid matches the full-width default spans used by its widgets', function () {
+    expect(app(Dashboard::class)->getColumns())->toBe([
+        'default' => 12,
+        'md' => 12,
+        'xl' => 12,
+    ])
+        ->and(app(WelcomeHeroWidget::class)->getColumnSpan())->toBe(['default' => 'full'])
+        ->and(app(ExecutiveKpiOverviewWidget::class)->getColumnSpan())->toBe(['default' => 'full'])
+        ->and(app(OperationsControlWidget::class)->getColumnSpan())->toBe(['default' => 'full']);
+});
 
 test('operations control returns company-scoped job type and fleet counts', function () {
     $this->seedAccessControl();

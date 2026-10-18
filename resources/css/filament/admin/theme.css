@@ -848,9 +848,8 @@
             padding-left: 1.25rem;
         }
     }
+
     .fi-topbar .fi-logo,
-    .fi-topbar-open-sidebar-btn,
-    .fi-topbar-close-sidebar-btn,
     .fi-topbar-open-collapse-sidebar-btn,
     .fi-topbar-close-collapse-sidebar-btn,
     .fi-topbar .fi-topbar-collapse-sidebar-btn-ctn {
@@ -1106,6 +1105,24 @@
 }
 
 @media (max-width: 63.999rem) {
+    .fi-topbar {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding-block: 0.5rem;
+    }
+
+    .fi-topbar-end {
+        min-width: 0;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .fi-global-search-ctn {
+        flex: 1 0 100%;
+        order: 10;
+    }
+
     .fi-sidebar {
         width: min(19rem, calc(100vw - 1rem));
     }
@@ -1135,5 +1152,34 @@
 
     .fi-global-search-ctn {
         width: 100%;
+    }
+
+    .atlas-company-switcher--select {
+        min-width: 0;
+        max-width: min(12rem, calc(100vw - 15rem));
+    }
+
+    .atlas-company-switcher-value {
+        max-width: min(8rem, calc(100vw - 17rem));
+    }
+}
+
+@media (max-width: 39.999rem) {
+    .fi-topbar {
+        padding-inline: 1rem;
+    }
+
+    .atlas-company-switcher--static {
+        gap: 0.35rem;
+        padding-inline: 0.65rem;
+    }
+
+    .atlas-company-switcher-label {
+        display: none;
+    }
+
+    .atlas-topbar-quick-create {
+        padding-inline: 0.75rem;
+        font-size: 0.78rem;
     }
 }
