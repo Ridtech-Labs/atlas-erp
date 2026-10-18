@@ -594,77 +594,116 @@
         border-radius: 0;
     }
 
-    .fi-simple-layout {
-        background:
-            radial-gradient(circle at top left, rgba(232, 237, 255, 0.95), transparent 28rem),
-            radial-gradient(circle at bottom right, rgba(224, 242, 254, 0.85), transparent 24rem),
-            var(--atlas-color-background-page);
+    /* The hero hook is scoped to Filament's login page, leaving other simple pages unchanged. */
+    .fi-simple-layout:has(.atlas-login-hero) {
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(25rem, 0.9fr);
+        width: min(94vw, 90rem);
+        min-height: min(90vh, 54rem);
+        margin: 5vh auto;
+        overflow: hidden;
+        border: 1px solid rgba(170, 193, 220, 0.7);
+        border-radius: 1.75rem;
+        background: #ffffff;
+        box-shadow: 0 24px 68px rgba(40, 76, 124, 0.16), 0 2px 8px rgba(40, 76, 124, 0.06);
     }
 
-    .fi-simple-layout-content {
-        border-radius: var(--atlas-radius-2xl);
-        border: 1px solid var(--atlas-color-border-default);
-        background: rgba(255, 255, 255, 0.94);
-        box-shadow: var(--atlas-shadow-lg);
-        backdrop-filter: blur(12px);
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-main-ctn {
+        display: flex;
+        grid-column: 2;
+        align-items: center;
+        justify-content: center;
+        padding: clamp(2rem, 5vw, 5rem);
+        background: #ffffff;
     }
 
-    .fi-simple-layout .fi-simple-main {
-        width: min(calc(100% - 2rem), 28rem);
-        margin-block: 2rem;
-        border: 1px solid var(--atlas-color-border-default);
-        border-radius: var(--atlas-radius-2xl);
-        background: rgba(255, 255, 255, 0.96);
-        padding: 2rem;
-        box-shadow: var(--atlas-shadow-md);
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-main {
+        width: min(100%, 27rem);
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        padding: 0;
+        box-shadow: none;
     }
 
-    .fi-simple-layout .fi-simple-page {
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-page {
         display: grid;
         gap: 1.75rem;
     }
 
-    .fi-simple-layout .fi-simple-header {
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header {
         align-items: flex-start;
     }
 
-    .fi-simple-layout .fi-simple-header .fi-logo {
-        margin-bottom: 0.75rem;
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header .fi-logo {
+        margin-bottom: 1.25rem;
+        transform: scale(1.06);
+        transform-origin: left center;
     }
 
-    .fi-simple-layout .fi-simple-header-heading,
-    .fi-simple-layout .fi-simple-header-subheading {
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header-heading,
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header-subheading {
         text-align: left;
     }
 
-    .fi-simple-layout .fi-simple-header-heading {
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header-heading {
         color: var(--atlas-color-text-primary);
-        font-size: 1.5rem;
+        font-size: clamp(1.8rem, 2.3vw, 2.2rem);
         font-weight: var(--atlas-weight-bold);
-        letter-spacing: -0.03em;
+        letter-spacing: -0.04em;
     }
 
-    .fi-simple-layout .fi-simple-header-subheading {
-        margin-top: 0.375rem;
+    .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header-subheading {
+        margin-top: 0.5rem;
         color: var(--atlas-color-text-muted);
         line-height: var(--atlas-line-relaxed);
     }
 
-    .fi-simple-layout .fi-fo-field-wrp-label,
-    .fi-simple-layout .fi-fo-field-wrp-hint {
+    .fi-simple-layout:has(.atlas-login-hero) .fi-fo-field-wrp-label,
+    .fi-simple-layout:has(.atlas-login-hero) .fi-fo-field-wrp-hint {
         color: var(--atlas-color-text-secondary);
     }
 
-    .fi-simple-layout .fi-btn-color-primary {
-        min-height: 2.875rem;
-        border-radius: var(--atlas-radius-md);
-        background: var(--atlas-color-action-primary);
-        color: var(--atlas-color-text-on-dark);
+    .fi-simple-layout:has(.atlas-login-hero) .fi-input-wrp {
+        min-height: 3.25rem;
+        border-radius: 0.75rem;
+        border-color: var(--atlas-color-border-default);
+        background: #ffffff;
+    }
+
+    .fi-simple-layout:has(.atlas-login-hero) .fi-input-wrp:focus-within {
+        border-color: var(--atlas-color-action-primary);
+        box-shadow: 0 0 0 3px rgba(43, 78, 255, 0.16);
+    }
+
+    /* Filament's login action is a plain fi-ac-btn-action, not a colored button. */
+    .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action {
+        width: 100%;
+        min-height: 2.75rem;
+        border-radius: 0.5rem;
+        background-color: #3548ff;
+        color: #ffffff;
+        font-weight: 600;
         box-shadow: none;
     }
 
-    .fi-simple-layout .fi-btn-color-primary:hover {
-        background: var(--atlas-color-action-primary-hover);
+    @media (hover: hover) {
+        .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action:not(:disabled):hover {
+            background-color: #2939d9;
+            color: #ffffff;
+        }
+    }
+
+    .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action:focus-visible {
+        outline: 3px solid rgba(43, 78, 255, 0.3);
+        outline-offset: 3px;
+    }
+
+    .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action:disabled {
+        background-color: #3548ff;
+        color: #ffffff;
+        opacity: 0.62;
     }
 
     .atlas-login-security-footer {
@@ -675,18 +714,140 @@
         line-height: var(--atlas-line-normal);
     }
 
-    @media (max-width: 640px) {
-        .fi-simple-layout .fi-simple-main {
-            width: min(calc(100% - 1.5rem), 28rem);
-            margin-block: 1rem;
-            padding: 1.5rem;
+    .atlas-login-hero {
+        position: relative;
+        grid-column: 1;
+        grid-row: 1;
+        min-height: 100%;
+        overflow: hidden;
+        color: #ffffff;
+        isolation: isolate;
+    }
+
+    .atlas-login-hero-image {
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .atlas-login-hero::after {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(145deg, rgba(8, 47, 102, 0.72) 0%, rgba(8, 47, 102, 0.36) 34%, transparent 62%);
+        content: '';
+        pointer-events: none;
+    }
+
+    .atlas-login-hero-copy {
+        position: relative;
+        max-width: 28rem;
+        padding: clamp(2.5rem, 6vw, 5rem);
+        isolation: isolate;
+    }
+
+    .atlas-login-hero-copy::before {
+        position: absolute;
+        inset: 1.75rem 0 1.5rem -2rem;
+        z-index: -1;
+        background: linear-gradient(90deg, rgba(5, 40, 91, 0.44) 0%, rgba(5, 40, 91, 0.18) 62%, transparent 100%);
+        content: '';
+        filter: blur(14px);
+        pointer-events: none;
+    }
+
+    .atlas-login-hero-kicker {
+        margin: 0;
+        color: rgba(255, 255, 255, 0.86);
+        font-size: 0.7rem;
+        font-weight: var(--atlas-weight-bold);
+        letter-spacing: 0.2em;
+    }
+
+    .atlas-login-hero-heading {
+        max-width: 21rem;
+        margin: 1rem 0 0;
+        color: #ffffff;
+        font-size: clamp(2rem, 3.4vw, 3.1rem);
+        font-weight: var(--atlas-weight-bold);
+        letter-spacing: -0.06em;
+        line-height: 1.02;
+    }
+
+    .atlas-login-hero-description {
+        max-width: 22rem;
+        margin: 1.25rem 0 0;
+        color: rgba(255, 255, 255, 0.96);
+        font-size: 0.95rem;
+        line-height: 1.65;
+        text-shadow: 0 1px 14px rgba(5, 39, 90, 0.56);
+    }
+
+    @media (max-width: 900px) {
+        .fi-simple-layout:has(.atlas-login-hero) {
+            grid-template-columns: minmax(0, 0.9fr) minmax(23rem, 1.1fr);
+            width: min(96vw, 72rem);
         }
 
-        .fi-simple-layout .fi-simple-page {
-            gap: 1.5rem;
+        .atlas-login-hero-copy {
+            padding: 2.5rem;
+        }
+
+        .atlas-login-hero-heading {
+            font-size: 2.2rem;
         }
     }
 
+    @media (max-width: 700px) {
+        .fi-simple-layout:has(.atlas-login-hero) {
+            display: block;
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            border: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .atlas-login-hero {
+            display: none;
+        }
+
+        .fi-simple-layout:has(.atlas-login-hero) .fi-simple-main-ctn {
+            min-height: 100vh;
+            align-items: flex-start;
+            padding: clamp(2.5rem, 10vh, 4.5rem) 1.5rem 2rem;
+        }
+
+        .fi-simple-layout:has(.atlas-login-hero) .fi-simple-main {
+            width: min(100%, 28rem);
+        }
+
+        .fi-simple-layout:has(.atlas-login-hero) .fi-simple-page {
+            width: 100%;
+            gap: 1.5rem;
+        }
+
+        .fi-simple-layout:has(.atlas-login-hero) .fi-input-wrp,
+        .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action {
+            width: 100%;
+        }
+
+        .fi-simple-layout:has(.atlas-login-hero) .fi-input-wrp {
+            min-height: 3.25rem;
+        }
+    }
+
+    @media (max-width: 390px) {
+        .fi-simple-layout:has(.atlas-login-hero) .fi-simple-main-ctn {
+            padding-right: 1.25rem;
+            padding-left: 1.25rem;
+        }
+    }
     .fi-topbar .fi-logo,
     .fi-topbar-open-sidebar-btn,
     .fi-topbar-close-sidebar-btn,

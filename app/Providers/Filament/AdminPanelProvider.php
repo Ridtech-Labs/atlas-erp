@@ -63,6 +63,7 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER, fn () => view('filament.hooks.topbar-quick-create'))
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER, fn () => view('filament.hooks.topbar-activity-trigger'))
             ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER, fn () => view('filament.auth.login-security-footer'))
+            ->renderHook(PanelsRenderHook::SIMPLE_LAYOUT_END, fn () => view('filament.auth.login-hero'), Login::class)
             ->discoverResources(in: app_path('Core/Administration/Filament/Resources'), for: 'App\Core\Administration\Filament\Resources')
             ->discoverPages(in: app_path('Core/Administration/Filament/Pages'), for: 'App\Core\Administration\Filament\Pages')
             ->pages([

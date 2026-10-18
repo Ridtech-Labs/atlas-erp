@@ -1,9 +1,11 @@
 <?php
 
+use App\Core\Administration\Filament\Pages\Auth\Login as AdminLogin;
 use App\Core\Shared\Enums\TenantStatus;
 use App\Core\Shared\Enums\UserStatus;
 use App\Models\User;
 use Filament\PanelRegistry;
+use Livewire\Livewire;
 use Livewire\Volt\Volt;
 
 test('login screen can be rendered', function () {
@@ -21,7 +23,13 @@ test('admin login presents Atlas identity without pre-auth tenant context', func
         ->assertSee('Operations &amp; Commercial Management', false)
         ->assertSee('Welcome back')
         ->assertSee('Sign in to continue to your workspace.')
+        ->assertSee('Run your operations')
+        ->assertSee('from one place.')
+        ->assertSee('Jobs, fleet, personnel and commercial workflows connected in one workspace.')
+        ->assertSee('images/auth/atlas-hero.png')
+        ->assertSee('fi-ac-btn-action')
         ->assertSee('Secure access for authorized users only.')
+        ->assertDontSee('Kadmay')
         ->assertDontSee('Tenant workspace')
         ->assertDontSee('Select a company');
 });
@@ -42,6 +50,21 @@ test('users can authenticate using the login screen', function () {
     $this->assertAuthenticated();
     expect($user->refresh()->last_login_at)->not->toBeNull()
         ->and($user->last_login_ip)->toBe('127.0.0.1');
+});
+
+test('users can authenticate through the Atlas admin login page', function () {
+    $user = User::factory()->create();
+
+    Livewire::test(AdminLogin::class)
+        ->fillForm([
+            'email' => $user->email,
+            'password' => 'password',
+        ])
+        ->call('authenticate')
+        ->assertHasNoFormErrors()
+        ->assertRedirect('/admin');
+
+    $this->assertAuthenticatedAs($user);
 });
 
 test('users can not authenticate with invalid password', function () {
