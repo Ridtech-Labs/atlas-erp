@@ -34,9 +34,9 @@ test('dashboard base grid matches the full-width default spans used by its widge
         'md' => 12,
         'xl' => 12,
     ])
-        ->and(app(WelcomeHeroWidget::class)->getColumnSpan())->toBe(['default' => 'full'])
-        ->and(app(ExecutiveKpiOverviewWidget::class)->getColumnSpan())->toBe(['default' => 'full'])
-        ->and(app(OperationsControlWidget::class)->getColumnSpan())->toBe(['default' => 'full']);
+        ->and(app(WelcomeHeroWidget::class)->getColumnSpan())->toBe(['default' => 12])
+        ->and(app(ExecutiveKpiOverviewWidget::class)->getColumnSpan())->toBe(['default' => 12])
+        ->and(app(OperationsControlWidget::class)->getColumnSpan())->toBe(['default' => 12]);
 });
 
 test('operations control returns company-scoped job type and fleet counts', function () {
