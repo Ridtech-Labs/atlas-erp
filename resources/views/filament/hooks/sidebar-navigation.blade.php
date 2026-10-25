@@ -18,6 +18,7 @@
     use App\Core\Administration\Filament\Resources\Roles\RoleResource;
     use App\Core\Administration\Filament\Resources\Tenants\TenantResource;
     use App\Core\Administration\Filament\Resources\Users\UserResource;
+    use App\Core\Tenancy\Services\TenantBrandingService;
 
     $adminUrl = null;
 
@@ -33,6 +34,7 @@
 
     $access = app(AdministrationAccessService::class);
     $isPlatformSession = $access->isPlatformSession(auth()->user());
+    $tenantBranding = $isPlatformSession ? null : app(TenantBrandingService::class)->forActiveUser(auth()->user());
 
     $groups = [
         [
@@ -206,6 +208,20 @@
 @endphp
 
 <div class="atlas-sidebar-nav">
+    @if ($tenantBranding?->logoUrl)
+        <div
+            class="atlas-sidebar-navigation-tenant-identity"
+            x-bind:class="{ 'atlas-sidebar-navigation-tenant-identity--collapsed': ! $store.sidebar.isOpen }"
+        >
+            <img
+                class="atlas-sidebar-navigation-tenant-logo"
+                src="{{ $tenantBranding->logoUrl }}"
+                alt="{{ $tenantBranding->displayName }} logo"
+            >
+            <div class="atlas-sidebar-navigation-tenant-name">{{ $tenantBranding->displayName }}</div>
+        </div>
+    @endif
+
     @foreach ($groups as $group)
         @php
             $visibleItems = collect($group['items'])->filter(fn (array $item): bool => ! blank($item['url']) || $item['disabled']);

@@ -6,6 +6,7 @@ use App\Core\Administration\Filament\Pages\Auth\Login;
 use App\Core\Administration\Filament\Pages\Dashboard;
 use App\Core\Administration\Filament\Pages\ManageSettings;
 use App\Core\Administration\Filament\Pages\SystemHealth;
+use App\Core\Tenancy\Http\Middleware\CaptureTenantLogoutRedirect;
 use App\Core\Tenancy\Http\Middleware\ResolveTenant;
 use Filament\Enums\ThemeMode;
 use Filament\Enums\UserMenuPosition;
@@ -65,6 +66,7 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_AFTER, fn () => view('filament.hooks.topbar-activity-trigger'))
             ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER, fn () => view('filament.auth.login-security-footer'))
             ->renderHook(PanelsRenderHook::SIMPLE_LAYOUT_END, fn () => view('filament.auth.login-hero'), Login::class)
+            ->renderHook(PanelsRenderHook::HEAD_END, fn () => view('filament.hooks.tenant-branding-variables'))
             ->discoverResources(in: app_path('Core/Administration/Filament/Resources'), for: 'App\Core\Administration\Filament\Resources')
             ->discoverPages(in: app_path('Core/Administration/Filament/Pages'), for: 'App\Core\Administration\Filament\Pages')
             ->pages([
@@ -82,6 +84,7 @@ class AdminPanelProvider extends PanelProvider
                 VerifyCsrfToken::class,
                 SubstituteBindings::class,
                 ResolveTenant::class,
+                CaptureTenantLogoutRedirect::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])

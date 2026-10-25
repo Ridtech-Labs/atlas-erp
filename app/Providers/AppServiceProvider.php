@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Core\Settings\Models\Setting;
+use App\Core\Tenancy\Http\Responses\TenantAwareLogoutResponse;
 use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use App\Core\Tenancy\Support\CompanyContext;
@@ -26,6 +27,7 @@ use App\Operations\Models\JobCard;
 use App\Operations\Models\JobCardWorkEntry;
 use App\Operations\Models\Personnel;
 use App\Operations\Models\Waybill;
+use Filament\Auth\Http\Responses\Contracts\LogoutResponse as LogoutResponseContract;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->scoped(TenantContext::class, fn (): TenantContext => new TenantContext);
         $this->app->scoped(CompanyContext::class, fn (): CompanyContext => new CompanyContext);
+        $this->app->bind(LogoutResponseContract::class, TenantAwareLogoutResponse::class);
     }
 
     /**

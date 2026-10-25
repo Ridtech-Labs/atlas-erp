@@ -12,10 +12,7 @@ class UpcomingWorkWidget extends Widget
 {
     protected string $view = 'filament.widgets.upcoming-work-widget';
 
-    protected int|string|array $columnSpan = [
-        'default' => 12,
-        'xl' => 8,
-    ];
+    protected int|string|array $columnSpan = 'full';
 
     protected static bool $isLazy = false;
 

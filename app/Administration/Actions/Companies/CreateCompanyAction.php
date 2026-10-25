@@ -12,6 +12,7 @@ use App\Core\Tenancy\Models\Tenant;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class CreateCompanyAction
@@ -65,10 +66,28 @@ class CreateCompanyAction
      */
     private function tenantAttributes(array $data): array
     {
-        return Arr::only($data, [
-            'uuid',
-            'name',
-        ]);
+        return [
+            ...Arr::only($data, [
+                'uuid',
+                'name',
+            ]),
+            ...$this->brandingAttributes($data),
+        ];
+    }
+
+    /** @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function brandingAttributes(array $data): array
+    {
+        return Validator::make(Arr::only($data, [
+            'brand_display_name', 'brand_logo_path', 'brand_primary_color', 'brand_login_hero_path',
+        ]), [
+            'brand_display_name' => ['nullable', 'string', 'max:255'],
+            'brand_primary_color' => ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'brand_logo_path' => ['nullable', 'string', 'max:255', 'regex:/^tenant-branding\\/[a-z0-9-]+\\/logos\\/.+$/'],
+            'brand_login_hero_path' => ['nullable', 'string', 'max:255', 'regex:/^tenant-branding\\/[a-z0-9-]+\\/hero\\/.+$/'],
+        ])->validate();
     }
 
     /**

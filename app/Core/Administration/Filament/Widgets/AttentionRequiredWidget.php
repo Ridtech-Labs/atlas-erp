@@ -12,10 +12,7 @@ class AttentionRequiredWidget extends Widget
 {
     protected string $view = 'filament.widgets.attention-required-widget';
 
-    protected int|string|array $columnSpan = [
-        'default' => 12,
-        'xl' => 4,
-    ];
+    protected int|string|array $columnSpan = 'full';
 
     protected static bool $isLazy = false;
 

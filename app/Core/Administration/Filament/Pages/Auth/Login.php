@@ -2,6 +2,8 @@
 
 namespace App\Core\Administration\Filament\Pages\Auth;
 
+use App\Core\Tenancy\Services\TenantBrandingService;
+use App\Core\Tenancy\Support\TenantBranding;
 use Filament\Auth\Pages\Login as BaseLogin;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -13,7 +15,11 @@ class Login extends BaseLogin
             return parent::getHeading();
         }
 
-        return 'Welcome back';
+        $branding = $this->branding();
+
+        return $branding instanceof TenantBranding
+            ? 'Welcome to '.$branding->displayName
+            : 'Welcome back';
     }
 
     public function getSubheading(): string|Htmlable|null
@@ -23,5 +29,10 @@ class Login extends BaseLogin
         }
 
         return 'Sign in to continue to your workspace.';
+    }
+
+    private function branding(): ?TenantBranding
+    {
+        return app(TenantBrandingService::class)->forLoginRequest(request());
     }
 }

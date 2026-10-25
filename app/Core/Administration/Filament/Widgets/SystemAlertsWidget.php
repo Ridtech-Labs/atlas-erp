@@ -12,10 +12,7 @@ class SystemAlertsWidget extends Widget
 {
     protected string $view = 'filament.widgets.system-alerts-widget';
 
-    protected int|string|array $columnSpan = [
-        'default' => 12,
-        'xl' => 4,
-    ];
+    protected int|string|array $columnSpan = 'full';
 
     protected static bool $isLazy = false;
 

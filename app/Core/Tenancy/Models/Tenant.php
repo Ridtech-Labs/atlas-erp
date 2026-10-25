@@ -43,6 +43,10 @@ class Tenant extends Model implements HasMedia
         'currency',
         'status',
         'logo_path',
+        'brand_display_name',
+        'brand_logo_path',
+        'brand_primary_color',
+        'brand_login_hero_path',
         'address',
         'city',
         'country',
@@ -125,7 +129,7 @@ class Tenant extends Model implements HasMedia
     {
         return LogOptions::defaults()
             ->useLogName('tenants')
-            ->logOnly(['name', 'slug', 'email', 'phone', 'address', 'city', 'country', 'timezone', 'currency', 'status'])
+            ->logOnly(['name', 'slug', 'email', 'phone', 'address', 'city', 'country', 'timezone', 'currency', 'status', 'brand_display_name', 'brand_logo_path', 'brand_primary_color', 'brand_login_hero_path'])
             ->logOnlyDirty();
     }
 

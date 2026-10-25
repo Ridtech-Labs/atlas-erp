@@ -3,6 +3,8 @@
 use App\Core\Tenancy\Http\Controllers\EnterSupportTenantWorkspaceController;
 use App\Core\Tenancy\Http\Controllers\ExitSupportTenantWorkspaceController;
 use App\Core\Tenancy\Http\Controllers\SwitchActiveCompanyController;
+use App\Core\Tenancy\Http\Controllers\TenantLoginEntryController;
+use App\Core\Tenancy\Http\Controllers\TenantWorkspaceEntryController;
 use App\Core\Tenancy\Support\TenantContext;
 use App\Http\Controllers\Finance\BillingRecordReceiptController;
 use App\Http\Controllers\Operations\JobCardEvidenceController;
@@ -10,6 +12,17 @@ use App\Http\Controllers\Operations\WaybillEvidenceController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
+
+// Public branding only. The tenant identifier never establishes authenticated access.
+Route::get('login/{tenant:slug}', TenantLoginEntryController::class)
+    ->where('tenant', '[a-z0-9]+(?:-[a-z0-9]+)*')
+    ->middleware('guest')
+    ->name('atlas.tenant-login');
+
+Route::get('workspace/{tenant:slug}', TenantWorkspaceEntryController::class)
+    ->where('tenant', '[a-z0-9]+(?:-[a-z0-9]+)*')
+    ->middleware(['auth', 'verified'])
+    ->name('atlas.tenant-workspace');
 
 // Retain old bookmarks without exposing the obsolete Sprint 0 dashboard.
 Route::redirect('dashboard', '/admin')

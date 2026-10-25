@@ -642,6 +642,22 @@
         transform-origin: left center;
     }
 
+    .fi-simple-layout:has(.atlas-login-hero) .atlas-login-tenant-brand {
+        display: block;
+    }
+
+    .fi-simple-layout:has(.atlas-login-hero) .fi-logo:has(.atlas-login-tenant-brand) {
+        transform: none;
+    }
+
+    .fi-simple-layout:has(.atlas-login-hero) .atlas-login-tenant-brand-logo {
+        display: block;
+        width: 5.3125rem;
+        height: auto;
+        max-height: 6rem;
+        object-fit: contain;
+    }
+
     .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header-heading,
     .fi-simple-layout:has(.atlas-login-hero) .fi-simple-header-subheading {
         text-align: left;
@@ -669,12 +685,32 @@
         min-height: 3.25rem;
         border-radius: 0.75rem;
         border-color: var(--atlas-color-border-default);
-        background: #ffffff;
+        background: var(--atlas-color-background-surface);
+    }
+
+    /* Filament keeps the input at its intrinsic height inside our taller login wrapper. */
+    .fi-simple-layout:has(.atlas-login-hero) .fi-input-wrp-content-ctn {
+        display: flex;
+        align-items: center;
     }
 
     .fi-simple-layout:has(.atlas-login-hero) .fi-input-wrp:focus-within {
         border-color: var(--atlas-color-action-primary);
-        box-shadow: 0 0 0 3px rgba(43, 78, 255, 0.16);
+        box-shadow: var(--atlas-focus-ring);
+    }
+
+    /* Keep browser-saved credentials on the same input surface as the wrapper. */
+    .fi-simple-layout:has(.atlas-login-hero) .fi-input-wrp:has(input:-webkit-autofill) {
+        background: var(--atlas-color-background-surface);
+    }
+
+    .fi-simple-layout:has(.atlas-login-hero) .fi-input:-webkit-autofill,
+    .fi-simple-layout:has(.atlas-login-hero) .fi-input:-webkit-autofill:hover,
+    .fi-simple-layout:has(.atlas-login-hero) .fi-input:-webkit-autofill:focus {
+        -webkit-text-fill-color: var(--atlas-color-text-primary);
+        caret-color: var(--atlas-color-text-primary);
+        -webkit-box-shadow: 0 0 0 1000px var(--atlas-color-background-surface) inset;
+        box-shadow: 0 0 0 1000px var(--atlas-color-background-surface) inset;
     }
 
     /* Filament's login action is a plain fi-ac-btn-action, not a colored button. */
@@ -682,7 +718,7 @@
         width: 100%;
         min-height: 2.75rem;
         border-radius: 0.5rem;
-        background-color: #3548ff;
+        background-color: var(--atlas-login-button-background, #3548ff);
         color: #ffffff;
         font-weight: 600;
         box-shadow: none;
@@ -690,18 +726,18 @@
 
     @media (hover: hover) {
         .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action:not(:disabled):hover {
-            background-color: #2939d9;
+            background-color: var(--atlas-login-button-hover, #2939d9);
             color: #ffffff;
         }
     }
 
     .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action:focus-visible {
-        outline: 3px solid rgba(43, 78, 255, 0.3);
-        outline-offset: 3px;
+        outline: none;
+        box-shadow: var(--atlas-focus-ring);
     }
 
     .fi-simple-layout:has(.atlas-login-hero) button.fi-ac-btn-action:disabled {
-        background-color: #3548ff;
+        background-color: var(--atlas-login-button-background, #3548ff);
         color: #ffffff;
         opacity: 0.62;
     }
@@ -750,6 +786,17 @@
         isolation: isolate;
     }
 
+    .atlas-login-hero[data-tenant-branding]::after {
+        background: linear-gradient(145deg, rgba(var(--atlas-tenant-brand-rgb), 0.78) 0%, rgba(var(--atlas-tenant-brand-rgb), 0.34) 34%, transparent 62%);
+    }
+
+    .atlas-login-hero-logo {
+        display: block;
+        width: min(8.125rem, 100%);
+        height: auto;
+        object-fit: contain;
+    }
+
     .atlas-login-hero-copy::before {
         position: absolute;
         inset: 1.75rem 0 1.5rem -2rem;
@@ -785,6 +832,15 @@
         font-size: 0.95rem;
         line-height: 1.65;
         text-shadow: 0 1px 14px rgba(5, 39, 90, 0.56);
+    }
+
+    .atlas-login-hero-attribution {
+        margin: 1.5rem 0 0;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 0.72rem;
+        font-weight: var(--atlas-weight-semibold);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
     }
 
     @media (max-width: 900px) {
@@ -825,6 +881,11 @@
 
         .fi-simple-layout:has(.atlas-login-hero) .fi-simple-main {
             width: min(100%, 28rem);
+        }
+
+        .fi-simple-layout:has(.atlas-login-hero) .atlas-login-tenant-brand-logo {
+            width: 6.25rem;
+            max-height: none;
         }
 
         .fi-simple-layout:has(.atlas-login-hero) .fi-simple-page {
@@ -940,6 +1001,54 @@
         padding: 0.875rem 0.125rem 0;
     }
 
+    /* The navigation identity replaces Filament's mobile-only sidebar header. */
+    .fi-sidebar:has(.atlas-sidebar-navigation-tenant-identity) .fi-sidebar-header-ctn {
+        display: none;
+    }
+
+    .atlas-sidebar-navigation-tenant-identity {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        padding: 0 0.8rem 0.4rem;
+    }
+
+    .atlas-sidebar-navigation-tenant-logo {
+        display: block;
+        width: min(100%, 11rem);
+        height: auto;
+        max-height: 5rem;
+        object-fit: contain;
+        object-position: left center;
+    }
+
+    .atlas-sidebar-navigation-tenant-name {
+        max-width: 100%;
+        overflow: hidden;
+        color: var(--atlas-color-text-on-dark);
+        font-size: var(--atlas-text-sm);
+        font-weight: var(--atlas-weight-bold);
+        letter-spacing: -0.01em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .atlas-sidebar-navigation-tenant-identity--collapsed {
+        align-items: center;
+        gap: 0;
+        padding-inline: 0;
+    }
+
+    .atlas-sidebar-navigation-tenant-identity--collapsed .atlas-sidebar-navigation-tenant-logo {
+        width: 2rem;
+        max-height: 2rem;
+    }
+
+    .atlas-sidebar-navigation-tenant-identity--collapsed .atlas-sidebar-navigation-tenant-name {
+        display: none;
+    }
+
     .atlas-sidebar-group {
         display: flex;
         flex-direction: column;
@@ -978,7 +1087,7 @@
     }
 
     .atlas-sidebar-item.is-active {
-        background: var(--atlas-color-background-sidebar-active);
+        background: var(--atlas-color-action-primary);
         color: #fff;
         box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
     }

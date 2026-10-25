@@ -4,8 +4,14 @@ use App\Administration\Enums\RoleName;
 use App\Core\Administration\Filament\Pages\Dashboard;
 use App\Core\Administration\Filament\Resources\BillingBatches\BillingBatchResource;
 use App\Core\Administration\Filament\Resources\Jobs\JobResource;
+use App\Core\Administration\Filament\Widgets\ApprovalQueueWidget;
+use App\Core\Administration\Filament\Widgets\AttentionRequiredWidget;
 use App\Core\Administration\Filament\Widgets\ExecutiveKpiOverviewWidget;
 use App\Core\Administration\Filament\Widgets\OperationsControlWidget;
+use App\Core\Administration\Filament\Widgets\QuickNavigationWidget;
+use App\Core\Administration\Filament\Widgets\RecentActivityWidget;
+use App\Core\Administration\Filament\Widgets\SystemAlertsWidget;
+use App\Core\Administration\Filament\Widgets\UpcomingWorkWidget;
 use App\Core\Administration\Filament\Widgets\WelcomeHeroWidget;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Enums\BillingSourceType;
@@ -28,7 +34,7 @@ use App\Operations\Models\Waybill;
 use App\Operations\Services\OperationsControlService;
 use Illuminate\Support\Str;
 
-test('dashboard base grid matches the full-width default spans used by its widgets', function () {
+test('dashboard uses full-span widgets inside responsive independent stacks', function () {
     expect(app(Dashboard::class)->getColumns())->toBe([
         'default' => 12,
         'md' => 12,
@@ -36,7 +42,13 @@ test('dashboard base grid matches the full-width default spans used by its widge
     ])
         ->and(app(WelcomeHeroWidget::class)->getColumnSpan())->toBe(['default' => 12])
         ->and(app(ExecutiveKpiOverviewWidget::class)->getColumnSpan())->toBe(['default' => 12])
-        ->and(app(OperationsControlWidget::class)->getColumnSpan())->toBe(['default' => 12]);
+        ->and(app(OperationsControlWidget::class)->getColumnSpan())->toBe(['default' => 12])
+        ->and(app(UpcomingWorkWidget::class)->getColumnSpan())->toBe('full')
+        ->and(app(RecentActivityWidget::class)->getColumnSpan())->toBe('full')
+        ->and(app(AttentionRequiredWidget::class)->getColumnSpan())->toBe('full')
+        ->and(app(ApprovalQueueWidget::class)->getColumnSpan())->toBe('full')
+        ->and(app(QuickNavigationWidget::class)->getColumnSpan())->toBe('full')
+        ->and(app(SystemAlertsWidget::class)->getColumnSpan())->toBe('full');
 });
 
 test('operations control returns company-scoped job type and fleet counts', function () {

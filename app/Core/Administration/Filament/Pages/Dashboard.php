@@ -18,6 +18,10 @@ use App\Core\Administration\Filament\Widgets\WelcomeHeroWidget;
 use App\Core\Administration\Services\ExecutiveDashboardService;
 use App\Models\User;
 use Filament\Pages\Dashboard as BaseDashboard;
+use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Grid;
+use Filament\Widgets\Widget;
+use Filament\Widgets\WidgetConfiguration;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use UnitEnum;
 
@@ -119,6 +123,110 @@ class Dashboard extends BaseDashboard
             'md' => 12,
             'xl' => 12,
         ];
+    }
+
+    public function getWidgetsContentComponent(): Component
+    {
+        $widgets = $this->getWidgets();
+        $topWidgets = $this->widgetsIn($widgets, [
+            WelcomeHeroWidget::class,
+            ExecutiveKpiOverviewWidget::class,
+            OperationsControlWidget::class,
+        ]);
+        $primaryWidgets = $this->widgetsIn($widgets, [
+            UpcomingWorkWidget::class,
+            RecentActivityWidget::class,
+            QuickNavigationWidget::class,
+            SystemAlertsWidget::class,
+        ]);
+        $supportingWidgets = $this->widgetsIn($widgets, [
+            AttentionRequiredWidget::class,
+            ApprovalQueueWidget::class,
+        ]);
+        $remainingWidgets = $this->widgetsExcept($widgets, [
+            WelcomeHeroWidget::class,
+            ExecutiveKpiOverviewWidget::class,
+            OperationsControlWidget::class,
+            UpcomingWorkWidget::class,
+            RecentActivityWidget::class,
+            AttentionRequiredWidget::class,
+            ApprovalQueueWidget::class,
+            QuickNavigationWidget::class,
+            SystemAlertsWidget::class,
+        ]);
+
+        $components = [];
+
+        if ($topWidgets !== []) {
+            $components[] = Grid::make(1)
+                ->columnSpanFull()
+                ->schema(fn (): array => $this->getWidgetsSchemaComponents($topWidgets));
+        }
+
+        if (($primaryWidgets !== []) && ($supportingWidgets !== [])) {
+            $components[] = Grid::make([
+                'default' => 1,
+                'xl' => 3,
+            ])
+                ->columnSpanFull()
+                ->schema([
+                    Grid::make(1)
+                        ->columnSpan([
+                            'default' => 1,
+                            'xl' => 2,
+                        ])
+                        ->schema(fn (): array => $this->getWidgetsSchemaComponents($primaryWidgets)),
+                    Grid::make(1)
+                        ->columnSpan([
+                            'default' => 1,
+                            'xl' => 1,
+                        ])
+                        ->schema(fn (): array => $this->getWidgetsSchemaComponents($supportingWidgets)),
+                ]);
+        } elseif ($primaryWidgets !== []) {
+            $components[] = Grid::make(1)
+                ->columnSpanFull()
+                ->schema(fn (): array => $this->getWidgetsSchemaComponents($primaryWidgets));
+        } elseif ($supportingWidgets !== []) {
+            $components[] = Grid::make(1)
+                ->columnSpanFull()
+                ->schema(fn (): array => $this->getWidgetsSchemaComponents($supportingWidgets));
+        }
+
+        if ($remainingWidgets !== []) {
+            $components[] = Grid::make(1)
+                ->columnSpanFull()
+                ->schema(fn (): array => $this->getWidgetsSchemaComponents($remainingWidgets));
+        }
+
+        return Grid::make($this->getColumns())
+            ->schema($components);
+    }
+
+    /**
+     * @param  array<class-string<Widget> | WidgetConfiguration>  $widgets
+     * @param  list<class-string>  $classes
+     * @return list<class-string<Widget> | WidgetConfiguration>
+     */
+    private function widgetsIn(array $widgets, array $classes): array
+    {
+        return array_values(array_filter(
+            $widgets,
+            fn (string|WidgetConfiguration $widget): bool => in_array($this->normalizeWidgetClass($widget), $classes, true),
+        ));
+    }
+
+    /**
+     * @param  array<class-string<Widget> | WidgetConfiguration>  $widgets
+     * @param  list<class-string>  $classes
+     * @return list<class-string<Widget> | WidgetConfiguration>
+     */
+    private function widgetsExcept(array $widgets, array $classes): array
+    {
+        return array_values(array_filter(
+            $widgets,
+            fn (string|WidgetConfiguration $widget): bool => ! in_array($this->normalizeWidgetClass($widget), $classes, true),
+        ));
     }
 
     public static function canAccess(): bool

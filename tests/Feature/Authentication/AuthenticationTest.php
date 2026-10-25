@@ -1,5 +1,6 @@
 <?php
 
+use App\Administration\Enums\RoleName;
 use App\Core\Administration\Filament\Pages\Auth\Login as AdminLogin;
 use App\Core\Shared\Enums\TenantStatus;
 use App\Core\Shared\Enums\UserStatus;
@@ -164,6 +165,35 @@ test('users can logout', function () {
     $component
         ->assertHasNoErrors()
         ->assertRedirect('/');
+
+    $this->assertGuest();
+});
+
+test('tenant users logout to their verified tenant login entry', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['slug' => 'kadmay']);
+    $company = $this->company($tenant, ['is_default' => true]);
+    $user = $this->tenantUser($tenant, [], [RoleName::CompanyAdministrator->value]);
+    $user->companies()->sync([$company->getKey()]);
+
+    $this->actingAs($user)
+        ->withSession(['active_company_id' => $company->getKey()])
+        ->post(route('filament.admin.auth.logout'))
+        ->assertRedirect(route('atlas.tenant-login', $tenant));
+
+    $this->assertGuest();
+});
+
+test('platform super administrators logout to the generic Atlas login', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant(['slug' => 'kadmay']);
+    $user = $this->tenantUser($tenant, [], [RoleName::SuperAdministrator->value]);
+
+    $this->actingAs($user)
+        ->post(route('filament.admin.auth.logout'))
+        ->assertRedirect('/admin/login');
 
     $this->assertGuest();
 });

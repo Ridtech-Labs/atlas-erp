@@ -117,6 +117,43 @@ test('tenant users remain scoped to their own tenant and cannot enter or exit su
         ->assertDontSee('Other Tenant');
 });
 
+test('an authenticated tenant user can enter only their own canonical workspace URL', function () {
+    $this->seedAccessControl();
+
+    $tenantA = $this->tenant(['name' => 'Kadmay', 'slug' => 'kadmay']);
+    $tenantB = $this->tenant(['name' => 'Other Tenant', 'slug' => 'other-tenant']);
+    $company = $this->company($tenantA, ['name' => 'Kadmay']);
+    $user = $this->tenantUser($tenantA, [], [RoleName::CompanyAdministrator->value]);
+    $user->companies()->sync([$company->getKey()]);
+
+    $this->actingAs($user)
+        ->withSession(['active_company_id' => $company->getKey()])
+        ->get(route('atlas.tenant-workspace', $tenantA))
+        ->assertRedirect('/admin');
+
+    $this->actingAs($user)
+        ->withSession(['active_company_id' => $company->getKey()])
+        ->get(route('atlas.tenant-workspace', $tenantB))
+        ->assertForbidden();
+});
+
+test('canonical workspace URLs reject inactive tenants and support administrators without an entered workspace', function () {
+    $this->seedAccessControl();
+
+    $inactive = $this->tenant(['slug' => 'inactive', 'status' => TenantStatus::Inactive->value]);
+    $active = $this->tenant(['slug' => 'kadmay']);
+    $tenantUser = $this->tenantUser($inactive, [], [RoleName::CompanyAdministrator->value]);
+    $superAdministrator = $this->tenantUser($active, [], [RoleName::SuperAdministrator->value]);
+
+    $this->actingAs($tenantUser)
+        ->get(route('atlas.tenant-workspace', $inactive))
+        ->assertNotFound();
+
+    $this->actingAs($superAdministrator)
+        ->get(route('atlas.tenant-workspace', $active))
+        ->assertForbidden();
+});
+
 test('the tenant resource exposes workspace entry only to platform super administrators', function () {
     $this->seedAccessControl();
 
