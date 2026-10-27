@@ -20,7 +20,9 @@ class ActiveTenantResolver
             $supportTenantId = session('support_tenant_id');
 
             if (is_numeric($supportTenantId)) {
-                return Tenant::query()->find((int) $supportTenantId);
+                $tenant = Tenant::query()->find((int) $supportTenantId);
+
+                return $tenant?->isActive() ? $tenant : null;
             }
 
             return null;

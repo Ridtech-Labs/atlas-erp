@@ -122,6 +122,40 @@ test('platform session has no implicit company context', function () {
     expect(app(ActiveCompanyResolver::class)->resolveFor($user))->toBeNull();
 });
 
+test('a super administrator can select only companies in an entered support tenant workspace', function () {
+    $this->seedAccessControl();
+
+    $homeTenant = $this->tenant(['name' => 'Atlas Platform']);
+    $homeCompany = $this->company($homeTenant, ['name' => 'Atlas Platform Company']);
+    $supportTenant = $this->tenant(['name' => 'Kadmay Holdings']);
+    $supportCompanyA = $this->company($supportTenant, ['name' => 'Kadmay Logistics']);
+    $supportCompanyB = $this->company($supportTenant, ['name' => 'Kadmay Marine']);
+    $otherTenant = $this->tenant(['name' => 'Other Holdings']);
+    $otherCompany = $this->company($otherTenant, ['name' => 'Other Logistics']);
+    $user = $this->tenantUser($homeTenant, [], [RoleName::SuperAdministrator->value]);
+    $user->companies()->sync([$homeCompany->getKey()]);
+
+    $this->actingAs($user)
+        ->post(route('atlas.support-workspace.enter', $supportTenant))
+        ->assertRedirect('/admin')
+        ->assertSessionHas('support_tenant_id', $supportTenant->getKey());
+
+    $resolver = app(ActiveCompanyResolver::class);
+
+    expect($resolver->authorizedCompaniesFor($user)->pluck('id')->all())
+        ->toBe([$supportCompanyA->getKey(), $supportCompanyB->getKey()])
+        ->and($resolver->userCanAccessCompany($user, $supportCompanyA))->toBeTrue()
+        ->and($resolver->userCanAccessCompany($user, $otherCompany))->toBeFalse();
+
+    $this->post(route('atlas.company-context.switch'), ['company_id' => $supportCompanyB->getKey()])
+        ->assertRedirect();
+
+    expect($resolver->resolveFor($user)?->getKey())->toBe($supportCompanyB->getKey());
+
+    $this->post(route('atlas.company-context.switch'), ['company_id' => $otherCompany->getKey()])
+        ->assertNotFound();
+});
+
 test('client creation assigns the active company and matching tenant id', function () {
     $this->seedAccessControl();
 

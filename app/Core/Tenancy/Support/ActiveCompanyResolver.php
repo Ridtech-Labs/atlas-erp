@@ -121,12 +121,14 @@ class ActiveCompanyResolver
             return false;
         }
 
-        $tenant ??= $this->tenantResolver->resolveFor($user);
+        $activeTenant = $this->tenantResolver->resolveFor($user);
+        $tenant ??= $activeTenant;
 
-        if (! $tenant instanceof Tenant || $tenant->getKey() !== $user->tenant_id) {
+        if (! $tenant instanceof Tenant || ! $activeTenant instanceof Tenant) {
             return false;
         }
 
-        return $user->hasRole(RoleName::SuperAdministrator->value);
+        return $user->hasRole(RoleName::SuperAdministrator->value)
+            && $activeTenant->is($tenant);
     }
 }

@@ -6,6 +6,8 @@ use App\Core\Administration\Filament\Resources\Tenants\Pages\ListTenants;
 use App\Core\Administration\Filament\Resources\Tenants\TenantResource;
 use App\Core\Shared\Enums\TenantStatus;
 use App\Core\Tenancy\Services\SupportTenantWorkspaceService;
+use App\Core\Tenancy\Support\ActiveCompanyResolver;
+use App\Core\Tenancy\Support\ActiveTenantResolver;
 use Livewire\Livewire;
 
 test('a platform super administrator can enter an active tenant workspace', function () {
@@ -88,6 +90,61 @@ test('a super administrator cannot switch support tenants through a direct entry
     $this->actingAs($user)
         ->withSession(['support_tenant_id' => $tenantA->getKey()])
         ->post(route('atlas.support-workspace.enter', $tenantB))
+        ->assertForbidden();
+});
+
+test('a super administrator can enter another tenant only after exiting the current support workspace', function () {
+    $this->seedAccessControl();
+
+    $homeTenant = $this->tenant(['name' => 'Atlas Platform']);
+    $tenantA = $this->tenant(['name' => 'Kadmay']);
+    $tenantB = $this->tenant(['name' => 'Other Tenant']);
+    $companyA = $this->company($tenantA, ['name' => 'Kadmay Logistics']);
+    $companyB = $this->company($tenantB, ['name' => 'Other Logistics']);
+    $user = $this->tenantUser($homeTenant, [], [RoleName::SuperAdministrator->value]);
+
+    $this->actingAs($user)
+        ->post(route('atlas.support-workspace.enter', $tenantA))
+        ->assertRedirect('/admin');
+
+    $this->post(route('atlas.support-workspace.enter', $tenantB))
+        ->assertForbidden();
+
+    $this->post(route('atlas.company-context.switch'), ['company_id' => $companyA->getKey()])
+        ->assertRedirect();
+
+    $this->post(route('atlas.support-workspace.exit'))
+        ->assertRedirect('/admin')
+        ->assertSessionMissing('support_tenant_id')
+        ->assertSessionMissing('active_company_id');
+
+    $this->post(route('atlas.support-workspace.enter', $tenantB))
+        ->assertRedirect('/admin')
+        ->assertSessionHas('support_tenant_id', $tenantB->getKey());
+
+    $this->post(route('atlas.company-context.switch'), ['company_id' => $companyB->getKey()])
+        ->assertRedirect()
+        ->assertSessionHas('active_company_id', $companyB->getKey());
+});
+
+test('an inactive or stale support tenant session cannot resolve companies', function () {
+    $this->seedAccessControl();
+
+    $homeTenant = $this->tenant(['name' => 'Atlas Platform']);
+    $inactiveTenant = $this->tenant(['name' => 'Inactive Tenant', 'status' => TenantStatus::Inactive->value]);
+    $inactiveCompany = $this->company($inactiveTenant, ['name' => 'Inactive Company']);
+    $user = $this->tenantUser($homeTenant, [], [RoleName::SuperAdministrator->value]);
+
+    $this->actingAs($user)
+        ->withSession([
+            'support_tenant_id' => $inactiveTenant->getKey(),
+            'active_company_id' => $inactiveCompany->getKey(),
+        ]);
+
+    expect(app(ActiveTenantResolver::class)->resolveFor($user))->toBeNull()
+        ->and(app(ActiveCompanyResolver::class)->resolveFor($user))->toBeNull();
+
+    $this->post(route('atlas.company-context.switch'), ['company_id' => $inactiveCompany->getKey()])
         ->assertForbidden();
 });
 
