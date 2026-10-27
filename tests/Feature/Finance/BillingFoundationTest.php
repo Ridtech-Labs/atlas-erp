@@ -17,9 +17,11 @@ use App\Finance\Actions\RateAgreements\UpdateRateAgreementAction;
 use App\Finance\Enums\BillingBatchStatus;
 use App\Finance\Enums\BillingUnit;
 use App\Finance\Enums\RateAgreementStatus;
+use App\Finance\Models\BillingBatchLine;
 use App\Finance\Models\RateAgreement;
 use App\Finance\Services\BillingBatchEligibilityService;
 use App\Finance\Services\RateResolverService;
+use App\Operations\Actions\JobCards\MarkJobCardBillingReadyAction;
 use App\Operations\Enums\JobCardApprovalStatus;
 use App\Operations\Enums\JobStatus;
 use App\Operations\Models\Job;
@@ -694,6 +696,34 @@ test('rate agreement actions persist only fields applicable to the billing unit'
     expect($hourlyLine->equipment_reference)->toBe('Reach Stacker')
         ->and($hourlyLine->pickup_point)->toBeNull()
         ->and($hourlyLine->destination)->toBeNull();
+});
+
+test('legacy direct job card billing readiness cannot bypass Finance batch preparation', function () {
+    $this->seedAccessControl();
+
+    $tenant = $this->tenant();
+    $company = $this->company($tenant, ['name' => 'Kadmay']);
+    $finance = $this->tenantUser($tenant, ['email' => 'finance-direct-billing-ready@example.test'], [RoleName::FinanceManager->value]);
+    $finance->companies()->sync([$company->getKey()]);
+    session(['active_company_id' => $company->getKey()]);
+
+    $client = Client::factory()->create([
+        'tenant_id' => $tenant->getKey(),
+        'company_id' => $company->getKey(),
+    ]);
+    $jobCard = financeVerifiedJobCard($client, [
+        'hourly_rate' => 999.00,
+        'rate_currency' => 'GHS',
+    ]);
+
+    expect(fn () => app(MarkJobCardBillingReadyAction::class)->execute($jobCard, $finance))
+        ->toThrow(BusinessException::class, 'Client Job Cards become billing ready only when Finance prepares their Billing Batch.');
+
+    expect($jobCard->fresh()->approval_status)->toBe(JobCardApprovalStatus::Verified)
+        ->and($jobCard->fresh()->billing_ready_at)->toBeNull()
+        ->and($jobCard->fresh()->billing_ready_by)->toBeNull()
+        ->and($jobCard->fresh()->billable_amount)->toBeNull()
+        ->and(BillingBatchLine::query()->where('job_card_id', $jobCard->getKey())->exists())->toBeFalse();
 });
 
 test('finance manager can create a billing batch from verified evidence and snapshot commercial values', function () {

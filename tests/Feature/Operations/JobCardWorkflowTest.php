@@ -809,7 +809,7 @@ test('data entry clerk can record and submit a client job card but cannot verify
     ])->save();
 
     expect(fn () => app(MarkJobCardBillingReadyAction::class)->execute($verified->fresh(), $clerk))
-        ->toThrow(BusinessException::class, 'You are not allowed to mark this client Job Card as billing ready.');
+        ->toThrow(BusinessException::class, 'Client Job Cards become billing ready only when Finance prepares their Billing Batch.');
 });
 
 test('operations manager without accounts review permission cannot review or return a legacy pending job card', function () {
@@ -1544,7 +1544,7 @@ test('cross company and cross tenant verifiers are denied and billing ready stil
         ->toThrow(BusinessException::class, 'You are not allowed to review this client Job Card for billing.');
 
     expect(fn () => app(MarkJobCardBillingReadyAction::class)->execute($submitted->fresh(), $crossCompanyVerifier))
-        ->toThrow(BusinessException::class, 'You are not allowed to mark this client Job Card as billing ready.');
+        ->toThrow(BusinessException::class, 'Client Job Cards become billing ready only when Finance prepares their Billing Batch.');
 });
 
 test('existing jobs remain valid without job cards', function () {
