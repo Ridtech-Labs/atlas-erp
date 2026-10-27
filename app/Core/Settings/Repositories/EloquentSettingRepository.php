@@ -23,10 +23,21 @@ class EloquentSettingRepository implements SettingRepositoryInterface
             ->get();
     }
 
+    public function allForCompany(int $tenantId, int $companyId): Collection
+    {
+        return Setting::query()
+            ->where('tenant_id', $tenantId)
+            ->where('company_id', $companyId)
+            ->orderBy('group')
+            ->orderBy('key')
+            ->get();
+    }
+
     public function upsert(SettingData $settingData): void
     {
         $setting = Setting::query()->firstOrNew([
             'tenant_id' => $settingData->tenantId,
+            'company_id' => $settingData->companyId,
             'group' => $settingData->group,
             'key' => $settingData->key,
         ]);

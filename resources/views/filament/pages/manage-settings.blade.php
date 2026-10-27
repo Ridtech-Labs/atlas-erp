@@ -4,35 +4,13 @@
             <div class="max-w-3xl">
                 <h2 class="text-lg font-semibold text-[var(--atlas-color-text-primary)]">Workspace settings</h2>
                 <p class="mt-2 text-sm leading-6 text-[var(--atlas-color-text-secondary)]">
-                    Shape how {{ auth()->user()?->tenant?->name ?? 'your company' }} appears to internal teams. These controls affect branding, localisation, and notification defaults.
+                    Configure localisation and notification defaults for the active company. Company identity and tenant branding are managed separately.
                 </p>
             </div>
         </section>
 
-        <x-filament::section heading="Company profile" description="Keep business-facing details accurate across the workspace.">
+        <x-filament::section heading="Company preferences" description="Choose how dates, times, and language appear for the active company.">
             <div class="grid gap-6 md:grid-cols-2">
-                <label class="block">
-                    <span class="atlas-settings-field-label">Company display name</span>
-                    <input wire:model="general.name" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('general.name') ? 'true' : 'false' }}" />
-                    <p class="mt-1.5 text-xs text-[var(--atlas-color-text-muted)]">Used in workspace headers and internal references.</p>
-                    @error('general.name') <p class="atlas-settings-field-error">{{ $message }}</p> @enderror
-                </label>
-                <label class="block">
-                    <span class="atlas-settings-field-label">Timezone</span>
-                    <input wire:model="general.timezone" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('general.timezone') ? 'true' : 'false' }}" />
-                    <p class="mt-1.5 text-xs text-[var(--atlas-color-text-muted)]">Determines scheduling, reminders, and timestamps.</p>
-                    @error('general.timezone') <p class="atlas-settings-field-error">{{ $message }}</p> @enderror
-                </label>
-                <label class="block">
-                    <span class="atlas-settings-field-label">Currency</span>
-                    <input wire:model="general.currency" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('general.currency') ? 'true' : 'false' }}" />
-                    @error('general.currency') <p class="atlas-settings-field-error">{{ $message }}</p> @enderror
-                </label>
-                <label class="block">
-                    <span class="atlas-settings-field-label">Country</span>
-                    <input wire:model="general.country" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('general.country') ? 'true' : 'false' }}" />
-                    @error('general.country') <p class="atlas-settings-field-error">{{ $message }}</p> @enderror
-                </label>
                 <label class="block">
                     <span class="atlas-settings-field-label">Date format</span>
                     <input wire:model="general.date_format" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('general.date_format') ? 'true' : 'false' }}" />
@@ -43,21 +21,10 @@
                     <input wire:model="general.time_format" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('general.time_format') ? 'true' : 'false' }}" />
                     @error('general.time_format') <p class="atlas-settings-field-error">{{ $message }}</p> @enderror
                 </label>
-                <label class="block md:col-span-2">
+                <label class="block">
                     <span class="atlas-settings-field-label">Default language</span>
                     <input wire:model="general.language" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('general.language') ? 'true' : 'false' }}" />
                     @error('general.language') <p class="atlas-settings-field-error">{{ $message }}</p> @enderror
-                </label>
-            </div>
-        </x-filament::section>
-
-        <x-filament::section heading="Branding" description="Set the visual defaults for the current workspace.">
-            <div class="grid gap-6 md:grid-cols-2">
-                <label class="block">
-                    <span class="atlas-settings-field-label">Primary brand preference</span>
-                    <input wire:model="branding.primary_brand_preference" type="text" class="atlas-settings-control" aria-invalid="{{ $errors->has('branding.primary_brand_preference') ? 'true' : 'false' }}" />
-                    <p class="mt-1.5 text-xs text-[var(--atlas-color-text-muted)]">Used to guide future workspace theming and exported assets.</p>
-                    @error('branding.primary_brand_preference') <p class="atlas-settings-field-error">{{ $message }}</p> @enderror
                 </label>
             </div>
         </x-filament::section>

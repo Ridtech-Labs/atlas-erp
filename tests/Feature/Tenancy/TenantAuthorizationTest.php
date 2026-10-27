@@ -27,7 +27,7 @@ test('tenant user can not access another company users', function () {
         ->and(Gate::forUser($user)->allows('update', $otherUser))->toBeFalse();
 });
 
-test('new tenant owned settings receive the current company id', function () {
+test('legacy tenant settings remain scoped to the current tenant', function () {
     $tenant = $this->tenant();
     $this->setTenantContext($tenant);
 

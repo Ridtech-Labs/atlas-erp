@@ -23,6 +23,14 @@ class SettingService
         return $this->settings->allForTenant($tenantId);
     }
 
+    /**
+     * @return Collection<int, Setting>
+     */
+    public function allForCompany(int $tenantId, int $companyId): Collection
+    {
+        return $this->settings->allForCompany($tenantId, $companyId);
+    }
+
     public function update(SettingData $settingData): void
     {
         $this->settings->upsert($settingData);

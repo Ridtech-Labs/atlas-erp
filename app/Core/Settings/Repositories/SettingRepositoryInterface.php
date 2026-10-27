@@ -15,5 +15,10 @@ interface SettingRepositoryInterface
      */
     public function allForTenant(?int $tenantId): Collection;
 
+    /**
+     * @return Collection<int, Setting>
+     */
+    public function allForCompany(int $tenantId, int $companyId): Collection;
+
     public function upsert(SettingData $settingData): void;
 }

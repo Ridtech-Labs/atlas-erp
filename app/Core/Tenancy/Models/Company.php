@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Core\Tenancy\Models;
 
+use App\Core\Settings\Models\Setting;
 use App\Core\Shared\Concerns\HasPublicUuid;
 use App\CRM\Models\Client;
 use App\Finance\Models\BillingBatch;
@@ -63,6 +64,14 @@ class Company extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    /**
+     * @return HasMany<Setting, $this>
+     */
+    public function settings(): HasMany
+    {
+        return $this->hasMany(Setting::class);
     }
 
     /**

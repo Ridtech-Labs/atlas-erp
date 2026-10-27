@@ -131,32 +131,19 @@ class DatabaseSeeder extends Seeder
 
             app(SettingService::class)->update(new SettingData(
                 tenantId: $tenant->id,
+                companyId: $atlasCompany->getKey(),
                 group: 'company',
-                key: 'profile',
+                key: 'preferences',
                 value: [
-                    'name' => $tenant->name,
-                    'timezone' => $tenant->timezone,
-                    'currency' => $tenant->currency,
                     'date_format' => 'Y-m-d',
                     'time_format' => 'H:i',
-                    'country' => $tenant->country,
                     'language' => 'en',
                 ],
             ));
 
             app(SettingService::class)->update(new SettingData(
                 tenantId: $tenant->id,
-                group: 'branding',
-                key: 'identity',
-                value: [
-                    'logo' => null,
-                    'small_logo' => null,
-                    'primary_brand_preference' => 'amber',
-                ],
-            ));
-
-            app(SettingService::class)->update(new SettingData(
-                tenantId: $tenant->id,
+                companyId: $atlasCompany->getKey(),
                 group: 'notifications',
                 key: 'channels',
                 value: [

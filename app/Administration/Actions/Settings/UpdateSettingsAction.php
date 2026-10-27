@@ -19,7 +19,9 @@ class UpdateSettingsAction
 
     public function execute(SettingData $settingData, User $actor): void
     {
-        if (! $actor->can('settings.manage') || ! $this->access->canManageTenant($actor, $settingData->tenantId)) {
+        if ($settingData->companyId === null
+            || ! $actor->can('settings.update')
+            || ! $this->access->canAccessActiveOperationalCompany($actor, $settingData->companyId, $settingData->tenantId)) {
             throw new BusinessException('You are not allowed to update settings for this company.', 403);
         }
 

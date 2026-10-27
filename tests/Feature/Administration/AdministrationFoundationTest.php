@@ -65,25 +65,31 @@ test('activity logs respect tenant boundaries for company administrators', funct
 });
 
 test('settings updates are stored for the authenticated users company only', function () {
-    $user = User::factory()->create();
-    $otherUser = User::factory()->create();
+    $tenant = $this->tenant();
+    $company = $this->company($tenant);
+    $user = $this->tenantUser($tenant);
+    $otherTenant = $this->tenant();
+    $otherCompany = $this->company($otherTenant);
 
     $this->actingAs($user);
 
     app(UpdateSettingAction::class)->execute(new SettingData(
-        tenantId: $user->tenant_id,
+        tenantId: $tenant->getKey(),
         group: 'notifications',
         key: 'channels',
         value: ['email_notifications_enabled' => false, 'database_notifications_enabled' => true],
+        companyId: $company->getKey(),
     ));
 
     expect(Setting::query()
-        ->where('tenant_id', $user->tenant_id)
+        ->where('tenant_id', $tenant->getKey())
+        ->where('company_id', $company->getKey())
         ->where('group', 'notifications')
         ->where('key', 'channels')
         ->exists())->toBeTrue()
         ->and(Setting::query()
-            ->where('tenant_id', $otherUser->tenant_id)
+            ->where('tenant_id', $otherTenant->getKey())
+            ->where('company_id', $otherCompany->getKey())
             ->where('group', 'notifications')
             ->where('key', 'channels')
             ->exists())->toBeFalse();

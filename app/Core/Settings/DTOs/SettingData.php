@@ -12,5 +12,6 @@ class SettingData
         public readonly string $key,
         public readonly mixed $value,
         public readonly bool $isEncrypted = false,
+        public readonly ?int $companyId = null,
     ) {}
 }

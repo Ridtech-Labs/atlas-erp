@@ -6,6 +6,7 @@ namespace App\Core\Settings\Models;
 
 use App\Core\Shared\Concerns\BelongsToTenant;
 use App\Core\Shared\Concerns\HasPublicUuid;
+use App\Core\Tenancy\Models\Company;
 use App\Core\Tenancy\Models\Tenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,7 @@ class Setting extends Model
 
     protected $fillable = [
         'tenant_id',
+        'company_id',
         'uuid',
         'group',
         'key',
@@ -38,5 +40,13 @@ class Setting extends Model
     public function tenant(): BelongsTo
     {
         return $this->belongsTo(Tenant::class);
+    }
+
+    /**
+     * @return BelongsTo<Company, $this>
+     */
+    public function company(): BelongsTo
+    {
+        return $this->belongsTo(Company::class);
     }
 }
