@@ -13,11 +13,13 @@
     use App\Core\Administration\Filament\Resources\FleetAssetTypes\FleetAssetTypeResource;
     use App\Core\Administration\Filament\Resources\Jobs\JobResource;
     use App\Core\Administration\Filament\Resources\InventoryItems\InventoryItemResource;
+    use App\Core\Administration\Filament\Resources\StorageLocations\StorageLocationResource;
     use App\Core\Administration\Filament\Resources\Personnel\PersonnelResource;
     use App\Core\Administration\Filament\Resources\RateAgreements\RateAgreementResource;
     use App\Core\Administration\Filament\Resources\Roles\RoleResource;
     use App\Core\Administration\Filament\Resources\Tenants\TenantResource;
     use App\Core\Administration\Filament\Resources\Users\UserResource;
+    use App\Core\Administration\Filament\Resources\Warehouses\WarehouseResource;
     use App\Core\Tenancy\Services\TenantBrandingService;
 
     $adminUrl = null;
@@ -137,6 +139,20 @@
                     'label' => 'Inventory',
                     'url' => InventoryItemResource::canViewAny() ? InventoryItemResource::getUrl('index') : null,
                     'active' => request()->routeIs('filament.admin.resources.inventory-items.*'),
+                    'disabled' => false,
+                    'icon' => 'inventory',
+                ],
+                [
+                    'label' => 'Warehouses',
+                    'url' => WarehouseResource::canViewAny() ? WarehouseResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.warehouses.*'),
+                    'disabled' => false,
+                    'icon' => 'inventory',
+                ],
+                [
+                    'label' => 'Storage Locations',
+                    'url' => StorageLocationResource::canViewAny() ? StorageLocationResource::getUrl('index') : null,
+                    'active' => request()->routeIs('filament.admin.resources.storage-locations.*'),
                     'disabled' => false,
                     'icon' => 'inventory',
                 ],

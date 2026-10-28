@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Inventory\Policies;
+
+use App\Administration\Enums\PermissionName;
+use App\Administration\Services\AdministrationAccessService;
+use App\Inventory\Models\Warehouse;
+use App\Models\User;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+
+class WarehousePolicy
+{
+    public function __construct(
+        private readonly AdministrationAccessService $access,
+    ) {}
+
+    public function viewAny(User $user): bool
+    {
+        return $this->hasPermission($user, PermissionName::WarehousesView->value) && $this->access->hasActiveCompanyContext($user);
+    }
+
+    public function view(User $user, Warehouse $warehouse): bool
+    {
+        return $this->hasPermission($user, PermissionName::WarehousesView->value) && $this->access->canAccessActiveOperationalCompany($user, $warehouse->company_id, $warehouse->tenant_id);
+    }
+
+    public function create(User $user): bool
+    {
+        return $this->hasPermission($user, PermissionName::WarehousesManage->value) && $this->access->hasActiveCompanyContext($user);
+    }
+
+    public function update(User $user, Warehouse $warehouse): bool
+    {
+        return $this->hasPermission($user, PermissionName::WarehousesManage->value) && $this->access->canAccessActiveOperationalCompany($user, $warehouse->company_id, $warehouse->tenant_id);
+    }
+
+    public function delete(User $user, Warehouse $warehouse): bool
+    {
+        return false;
+    }
+
+    private function hasPermission(User $user, string $permission): bool
+    {
+        try {
+            return $user->hasPermissionTo($permission);
+        } catch (PermissionDoesNotExist) {
+            return false;
+        }
+    }
+}

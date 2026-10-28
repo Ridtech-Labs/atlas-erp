@@ -21,6 +21,8 @@ use App\Fleet\Models\FleetAssetType;
 use App\Fleet\Models\JobAssetAssignment;
 use App\Inventory\Models\InventoryItem;
 use App\Inventory\Models\StockMovement;
+use App\Inventory\Models\StorageLocation;
+use App\Inventory\Models\Warehouse;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
@@ -71,6 +73,8 @@ class AppServiceProvider extends ServiceProvider
             'job_asset_assignment' => JobAssetAssignment::class,
             'inventory_item' => InventoryItem::class,
             'stock_movement' => StockMovement::class,
+            'warehouse' => Warehouse::class,
+            'storage_location' => StorageLocation::class,
         ]);
     }
 }

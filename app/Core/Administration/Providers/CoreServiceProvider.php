@@ -31,6 +31,14 @@ use App\Fleet\Models\JobAssetAssignment;
 use App\Fleet\Policies\FleetAssetPolicy;
 use App\Fleet\Policies\FleetAssetTypePolicy;
 use App\Fleet\Policies\JobAssetAssignmentPolicy;
+use App\Inventory\Models\InventoryItem;
+use App\Inventory\Models\StockMovement;
+use App\Inventory\Models\StorageLocation;
+use App\Inventory\Models\Warehouse;
+use App\Inventory\Policies\InventoryItemPolicy;
+use App\Inventory\Policies\StockMovementPolicy;
+use App\Inventory\Policies\StorageLocationPolicy;
+use App\Inventory\Policies\WarehousePolicy;
 use App\Models\User;
 use App\Operations\Models\Job;
 use App\Operations\Models\JobCard;
@@ -71,6 +79,10 @@ class CoreServiceProvider extends ServiceProvider
         Gate::policy(FleetAssetType::class, FleetAssetTypePolicy::class);
         Gate::policy(FleetAsset::class, FleetAssetPolicy::class);
         Gate::policy(JobAssetAssignment::class, JobAssetAssignmentPolicy::class);
+        Gate::policy(InventoryItem::class, InventoryItemPolicy::class);
+        Gate::policy(StockMovement::class, StockMovementPolicy::class);
+        Gate::policy(Warehouse::class, WarehousePolicy::class);
+        Gate::policy(StorageLocation::class, StorageLocationPolicy::class);
 
         Gate::define('manageSettings', fn (User $user): bool => $this->hasPermission($user, 'settings.manage') || $this->hasPermission($user, 'settings.update'));
         Gate::define('viewHealth', fn (User $user): bool => $this->hasPermission($user, 'health.view'));
